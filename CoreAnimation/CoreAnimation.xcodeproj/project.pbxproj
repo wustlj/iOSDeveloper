@@ -1,0 +1,300 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		30D64A4014BE7AD700F746E0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D64A3F14BE7AD700F746E0 /* UIKit.framework */; };
+		30D64A4214BE7AD700F746E0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D64A4114BE7AD700F746E0 /* Foundation.framework */; };
+		30D64A4414BE7AD700F746E0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D64A4314BE7AD700F746E0 /* CoreGraphics.framework */; };
+		30D64A4A14BE7AD700F746E0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30D64A4814BE7AD700F746E0 /* InfoPlist.strings */; };
+		30D64A4C14BE7AD700F746E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D64A4B14BE7AD700F746E0 /* main.m */; };
+		30D64A5014BE7AD700F746E0 /* KAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D64A4F14BE7AD700F746E0 /* KAppDelegate.m */; };
+		30D64A5314BE7AD700F746E0 /* KViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D64A5214BE7AD700F746E0 /* KViewController.m */; };
+		30D64A5614BE7AD700F746E0 /* KViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 30D64A5414BE7AD700F746E0 /* KViewController.xib */; };
+		30D64A5D14BE7B3C00F746E0 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D64A5C14BE7B3C00F746E0 /* QuartzCore.framework */; };
+		30D64A6D14BE8E2100F746E0 /* title0.png in Resources */ = {isa = PBXBuildFile; fileRef = 30D64A6B14BE8E2100F746E0 /* title0.png */; };
+		30D64A6E14BE8E2100F746E0 /* title2.png in Resources */ = {isa = PBXBuildFile; fileRef = 30D64A6C14BE8E2100F746E0 /* title2.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		30D64A3B14BE7AD700F746E0 /* CoreAnimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreAnimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30D64A3F14BE7AD700F746E0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		30D64A4114BE7AD700F746E0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		30D64A4314BE7AD700F746E0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		30D64A4714BE7AD700F746E0 /* CoreAnimation-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CoreAnimation-Info.plist"; sourceTree = "<group>"; };
+		30D64A4914BE7AD700F746E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		30D64A4B14BE7AD700F746E0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		30D64A4D14BE7AD700F746E0 /* CoreAnimation-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreAnimation-Prefix.pch"; sourceTree = "<group>"; };
+		30D64A4E14BE7AD700F746E0 /* KAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KAppDelegate.h; sourceTree = "<group>"; };
+		30D64A4F14BE7AD700F746E0 /* KAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KAppDelegate.m; sourceTree = "<group>"; };
+		30D64A5114BE7AD700F746E0 /* KViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KViewController.h; sourceTree = "<group>"; };
+		30D64A5214BE7AD700F746E0 /* KViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KViewController.m; sourceTree = "<group>"; };
+		30D64A5514BE7AD700F746E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KViewController.xib; sourceTree = "<group>"; };
+		30D64A5C14BE7B3C00F746E0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		30D64A6B14BE8E2100F746E0 /* title0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = title0.png; path = Resources/title0.png; sourceTree = "<group>"; };
+		30D64A6C14BE8E2100F746E0 /* title2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = title2.png; path = Resources/title2.png; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		30D64A3814BE7AD700F746E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30D64A4414BE7AD700F746E0 /* CoreGraphics.framework in Frameworks */,
+				30D64A5D14BE7B3C00F746E0 /* QuartzCore.framework in Frameworks */,
+				30D64A4014BE7AD700F746E0 /* UIKit.framework in Frameworks */,
+				30D64A4214BE7AD700F746E0 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		30D64A3014BE7AD600F746E0 = {
+			isa = PBXGroup;
+			children = (
+				30D64A5E14BE7B9000F746E0 /* Resources */,
+				30D64A4514BE7AD700F746E0 /* CoreAnimation */,
+				30D64A3E14BE7AD700F746E0 /* Frameworks */,
+				30D64A3C14BE7AD700F746E0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		30D64A3C14BE7AD700F746E0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				30D64A3B14BE7AD700F746E0 /* CoreAnimation.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		30D64A3E14BE7AD700F746E0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				30D64A5C14BE7B3C00F746E0 /* QuartzCore.framework */,
+				30D64A3F14BE7AD700F746E0 /* UIKit.framework */,
+				30D64A4114BE7AD700F746E0 /* Foundation.framework */,
+				30D64A4314BE7AD700F746E0 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		30D64A4514BE7AD700F746E0 /* CoreAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				30D64A4E14BE7AD700F746E0 /* KAppDelegate.h */,
+				30D64A4F14BE7AD700F746E0 /* KAppDelegate.m */,
+				30D64A5114BE7AD700F746E0 /* KViewController.h */,
+				30D64A5214BE7AD700F746E0 /* KViewController.m */,
+				30D64A5414BE7AD700F746E0 /* KViewController.xib */,
+				30D64A4614BE7AD700F746E0 /* Supporting Files */,
+			);
+			path = CoreAnimation;
+			sourceTree = "<group>";
+		};
+		30D64A4614BE7AD700F746E0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				30D64A4714BE7AD700F746E0 /* CoreAnimation-Info.plist */,
+				30D64A4814BE7AD700F746E0 /* InfoPlist.strings */,
+				30D64A4B14BE7AD700F746E0 /* main.m */,
+				30D64A4D14BE7AD700F746E0 /* CoreAnimation-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		30D64A5E14BE7B9000F746E0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				30D64A6B14BE8E2100F746E0 /* title0.png */,
+				30D64A6C14BE8E2100F746E0 /* title2.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		30D64A3A14BE7AD700F746E0 /* CoreAnimation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30D64A5914BE7AD700F746E0 /* Build configuration list for PBXNativeTarget "CoreAnimation" */;
+			buildPhases = (
+				30D64A3714BE7AD700F746E0 /* Sources */,
+				30D64A3814BE7AD700F746E0 /* Frameworks */,
+				30D64A3914BE7AD700F746E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CoreAnimation;
+			productName = CoreAnimation;
+			productReference = 30D64A3B14BE7AD700F746E0 /* CoreAnimation.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		30D64A3214BE7AD600F746E0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Archermind;
+			};
+			buildConfigurationList = 30D64A3514BE7AD600F746E0 /* Build configuration list for PBXProject "CoreAnimation" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 30D64A3014BE7AD600F746E0;
+			productRefGroup = 30D64A3C14BE7AD700F746E0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				30D64A3A14BE7AD700F746E0 /* CoreAnimation */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		30D64A3914BE7AD700F746E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30D64A4A14BE7AD700F746E0 /* InfoPlist.strings in Resources */,
+				30D64A5614BE7AD700F746E0 /* KViewController.xib in Resources */,
+				30D64A6D14BE8E2100F746E0 /* title0.png in Resources */,
+				30D64A6E14BE8E2100F746E0 /* title2.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		30D64A3714BE7AD700F746E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30D64A4C14BE7AD700F746E0 /* main.m in Sources */,
+				30D64A5014BE7AD700F746E0 /* KAppDelegate.m in Sources */,
+				30D64A5314BE7AD700F746E0 /* KViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		30D64A4814BE7AD700F746E0 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				30D64A4914BE7AD700F746E0 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		30D64A5414BE7AD700F746E0 /* KViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				30D64A5514BE7AD700F746E0 /* en */,
+			);
+			name = KViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		30D64A5714BE7AD700F746E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		30D64A5814BE7AD700F746E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		30D64A5A14BE7AD700F746E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreAnimation/CoreAnimation-Prefix.pch";
+				INFOPLIST_FILE = "CoreAnimation/CoreAnimation-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		30D64A5B14BE7AD700F746E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CoreAnimation/CoreAnimation-Prefix.pch";
+				INFOPLIST_FILE = "CoreAnimation/CoreAnimation-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		30D64A3514BE7AD600F746E0 /* Build configuration list for PBXProject "CoreAnimation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30D64A5714BE7AD700F746E0 /* Debug */,
+				30D64A5814BE7AD700F746E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30D64A5914BE7AD700F746E0 /* Build configuration list for PBXNativeTarget "CoreAnimation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30D64A5A14BE7AD700F746E0 /* Debug */,
+				30D64A5B14BE7AD700F746E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 30D64A3214BE7AD600F746E0 /* Project object */;
+}
