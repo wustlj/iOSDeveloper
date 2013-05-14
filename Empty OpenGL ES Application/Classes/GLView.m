@@ -66,8 +66,8 @@
 - (void)drawView 
 {
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-    [delegate drawView:self];
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+    [delegate drawView:self];
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 - (void)layoutSubviews 
