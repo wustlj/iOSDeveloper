@@ -7,83 +7,103 @@
 //
 
 #import "OpenGLView.h"
+#import <QuartzCore/QuartzCore.h>
+
+
+@interface OpenGLView ()
+@property (nonatomic, retain) EAGLContext *context;
+- (BOOL) createFramebuffer;
+- (void) destroyFramebuffer;
+@end
+
 
 @implementation OpenGLView
 
+@synthesize context;
 @synthesize delegate;
 
-+ (Class)layerClass {
++ (Class)layerClass
+{
     return [CAEAGLLayer class];
 }
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+- (id)initWithFrame:(CGRect)frame {
+    
+    if ((self = [super initWithFrame:frame])) {
     }
     return self;
 }
-
-- (void)dealloc {
-    delegate = nil;
-    
-    [super dealloc];
-}
-
 - (void)setupLayer {
-    _eaglLayer = (CAEAGLLayer *)self.layer;
-    _eaglLayer.opaque = YES;
-    _eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
+    
+    eaglLayer.opaque = YES;
+    eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
 }
 
 - (void)setupContext {
-    EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
-    _context = [[EAGLContext alloc] initWithAPI:api];
-    if (!_context) {
-        NSLog(@"Failed to initialize OpenGLES 2.0 context");
-        exit(1);
+#if kAttemptToUseOpenGLES2
+    context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    if (context == NULL)
+    {
+#endif
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+        
+        if (!context || ![EAGLContext setCurrentContext:context]) {
+            [self release];
+        }
+#if kAttemptToUseOpenGLES2
     }
-    if (![EAGLContext setCurrentContext:_context]) {
-        NSLog(@"Failed to set current OpenGL context");
-        exit(1);
-    }
+#endif
 }
 
-- (void)setupRenderBuffer {
-    glGenBuffers(1, &_colorRenderBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _colorRenderBuffer);
-    [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_eaglLayer];
-}
-
-- (void)setupFrameBuffer {
-    glGenBuffers(1, &_frameBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _colorRenderBuffer);
-}
-
-- (void)destoryRenderAndFrameBuffer {
-    glDeleteRenderbuffers(1, &_colorRenderBuffer);
-    _colorRenderBuffer = 0;
-    glDeleteFramebuffers(1, &_frameBuffer);
-    _frameBuffer = 0;
-}
-
-- (void)render {
+- (void)drawView
+{
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [delegate drawView:self];
-    [_context presentRenderbuffer:GL_RENDERBUFFER];
+    [context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
-
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [self setupLayer];
     [self setupContext];
-
-    [self destoryRenderAndFrameBuffer];
-    [self setupRenderBuffer];
-    [self setupFrameBuffer];
-    [delegate setupView:self];
+    [self destroyFramebuffer];
+    [self createFramebuffer];
+    [self drawView];
+}
+- (BOOL)createFramebuffer
+{
+    glGenFramebuffersOES(1, &viewFramebuffer);
+    glGenRenderbuffersOES(1, &viewRenderbuffer);
+    
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+    [context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
+    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
         
-    [self render];
+    if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
+    {
+        NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
+        return NO;
+    }
+    [delegate setupView:self];
+    return YES;
+}
+- (void)destroyFramebuffer
+{
+    glDeleteFramebuffersOES(1, &viewFramebuffer);
+    viewFramebuffer = 0;
+    glDeleteRenderbuffersOES(1, &viewRenderbuffer);
+    viewRenderbuffer = 0;
+}
+
+- (void)dealloc
+{    
+    if ([EAGLContext currentContext] == context)
+        [EAGLContext setCurrentContext:nil];
+    
+    [context release];
+    [super dealloc];
 }
 
 @end

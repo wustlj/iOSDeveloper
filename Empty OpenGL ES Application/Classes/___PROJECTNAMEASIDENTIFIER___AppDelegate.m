@@ -23,12 +23,12 @@
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-	glView.animationInterval = 1.0 / kInactiveRenderingFrequency;
+//	glView.animationInterval = 1.0 / kInactiveRenderingFrequency;
 }
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-	glView.animationInterval = 1.0 / 60.0;
+//	glView.animationInterval = 1.0 / 60.0;
 }
 
 

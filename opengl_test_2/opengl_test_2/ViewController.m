@@ -36,42 +36,100 @@
     [super dealloc];
 }
 
-- (void)drawView:(UIView *)theView {
+- (void)drawView:(UIView *)theView
+{
+//    static const GLfloat triangle[] = {0, 1, -3.0, -1, 0, -3.0, 1, 0, -3.0};
+    
+    const GLfloat triangle[] = {-0.5, -0.5, -3, 0.5, -0.5, -3, -0.5, 0.5, -3, 0.5, 0.5, -3};
+    
+    const GLfloat triangleColor[] = {
+      1, 0, 0, 1,
+      0, 1, 0, 1,
+      0, 0, 1, 1,
+      1, 1, 0, 1,
+    };
+    
     glLoadIdentity();
-    glClearColor(0.7, 0.7, 0.7, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnableClientState(GL_VERTEX_ARRAY);
+    
+//    static GLfloat rot = -45.0;
+//    glRotatef(rot, 0, 0, 1);
+//    glTranslatef(-1, 0, 0);
+//    glScalef(1.5, 1.5, 1);
+    
 
-    glColor4f(1.0, 1.0, 0, 1.0);
-    GLfloat triangle[] = {0, 1, -3, -1, 0, -3, 1, 0, -3};
+    glClearColor(0.7, 0.7, 0.7, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glShadeModel(GL_FLAT);
+    
+//    glColor4f(1.0, 0.0, 0.0, 1.0);
     glVertexPointer(3, GL_FLOAT, 0, triangle);
-    glDrawArrays(GL_TRIANGLES, 0, 9);
+    glColorPointer(4, GL_FLOAT, 0, triangleColor);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 12);
+    
     glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    //    glDisableClientState(GL_NORMAL_ARRAY);
+    
+//    static NSTimeInterval lastDrawTime;
+//    if (lastDrawTime)
+//    {
+//        NSTimeInterval timeSinceLastDraw = [NSDate timeIntervalSinceReferenceDate] - lastDrawTime;
+//        rot+=50 * timeSinceLastDraw;
+//    }
+//    lastDrawTime = [NSDate timeIntervalSinceReferenceDate];
+//    NSLog(@"%f", rot);
 }
 
 -(void)setupView:(UIView*)view
 {
-
-	const GLfloat zNear = 0.01, zFar = 1000.0, fieldOfView = 45.0;
 	GLfloat size;
 	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
-	size = zNear * tanf(DEGREES_TO_RADIANS(fieldOfView) / 2.0);
-    NSLog(@"%f", size);
+	size = kZNear * tanf(DEGREES_TO_RADIANS(kFieldOfView) / 2.0);
 	CGRect rect = view.bounds;
     
-//    glOrthox(-1.0, 1.0, -1.0 / (rect.size.width / rect.size.height), 1.0 / (rect.size.width / rect.size.height), 3.0, -3.0);
-
-//    glOrthof(-3.0f, 3.0f, -3.0f, 3.0f, -zNear, -zFar);
-
-    //视口变换
-	glViewport(0, 0, rect.size.width, rect.size.height);
-	
+    //    glOrthox(-1.0, 1.0, -1.0 / (rect.size.width / rect.size.height), 1.0 / (rect.size.width / rect.size.height), 3.0, -3.0);
+    
     //投影变换
 	glFrustumf(-size, size, -size / (rect.size.width / rect.size.height), size /
-			   (rect.size.width / rect.size.height), zNear, zFar);
+			   (rect.size.width / rect.size.height), kZNear, kZFar);
+    
+    //视口变换
+	glViewport(0, 0, rect.size.width, rect.size.height);
     
 	glMatrixMode(GL_MODELVIEW);
+    
+    //    //开启光效
+    //    glEnable(GL_LIGHTING);
+    //
+    //    //打开0光源
+    //    glEnable(GL_LIGHT0);
+    //
+    //    //环境光
+    //    const GLfloat light0Ambient[] = {0.1, 0.1, 0.1, 1};
+    //    glLightfv(GL_LIGHT0, GL_AMBIENT, light0Ambient);
+    //
+    //    //散射光
+    //    const GLfloat light0Diffuse[] = {0.7, 0.7, 0.7, 1.0};
+    //    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0Diffuse);
+    //
+    //    //高光
+    //    const GLfloat light0Specular[] = {0.7, 0.7, 0.7, 1.0};
+    //    glLightfv(GL_LIGHT0, GL_SPECULAR, light0Specular);
+    //
+    //    //光源位置
+    //    const GLfloat light0Position[] = {10.0, 10.0, 10.0, 0.0};
+    //    glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
+    //    
+    //    //光源方向
+    //    const GLfloat light0Direction[] = {0.0, 0.0, -1.0};
+    //    glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0Direction);
+    //    
+    //    //光源角度
+    //    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45.0);
     
 	glLoadIdentity();
 }

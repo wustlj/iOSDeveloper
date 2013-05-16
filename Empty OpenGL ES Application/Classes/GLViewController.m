@@ -148,38 +148,38 @@
     
     glLoadIdentity();
     
-//    glTranslatef(0.0f,0.0f,-3.0f);
-//    glRotatef(rot,1.0f,1.0f,1.0f);
+    glTranslatef(0.0f,0.0f,-3.0f);
+    glRotatef(rot,1.0f,1.0f,1.0f);
     
     glClearColor(0.7, 0.7, 0.7, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glEnableClientState(GL_VERTEX_ARRAY);
-//    glEnableClientState(GL_COLOR_ARRAY);
-//    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
     
     glColor4f(1.0, 0.0, 0.0, 1.0);
     
-//    glVertexPointer(3, GL_FLOAT, 0, vertices);
-//    glColorPointer(4, GL_FLOAT, 0, colors);
-//    glNormalPointer(GL_FLOAT, 0, normals);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glColorPointer(4, GL_FLOAT, 0, colors);
+    glNormalPointer(GL_FLOAT, 0, normals);
     
-    glVertexPointer(3, GL_FLOAT, 0, &triangle);
-    glDrawArrays(GL_TRIANGLES, 0, 9);
+//    glVertexPointer(3, GL_FLOAT, 0, &triangle);
+//    glDrawArrays(GL_TRIANGLES, 0, 9);
     
-//    glDrawElements(GL_TRIANGLES, 60, GL_UNSIGNED_BYTE, icosahedronFaces);
+    glDrawElements(GL_TRIANGLES, 60, GL_UNSIGNED_BYTE, icosahedronFaces);
     
     glDisableClientState(GL_VERTEX_ARRAY);
-//    glDisableClientState(GL_COLOR_ARRAY);
-//    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
     
-//    static NSTimeInterval lastDrawTime;
-//    if (lastDrawTime)
-//    {
-//        NSTimeInterval timeSinceLastDraw = [NSDate timeIntervalSinceReferenceDate] - lastDrawTime;
-//        rot+=50 * timeSinceLastDraw;
-//    }
-//    lastDrawTime = [NSDate timeIntervalSinceReferenceDate];
+    static NSTimeInterval lastDrawTime;
+    if (lastDrawTime)
+    {
+        NSTimeInterval timeSinceLastDraw = [NSDate timeIntervalSinceReferenceDate] - lastDrawTime;
+        rot+=50 * timeSinceLastDraw;
+    }
+    lastDrawTime = [NSDate timeIntervalSinceReferenceDate];
     
 //    if (vertex!=NULL) {
 //        free(vertex);
