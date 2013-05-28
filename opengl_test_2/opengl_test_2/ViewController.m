@@ -38,10 +38,12 @@
 
 - (void)drawView:(UIView *)theView
 {    
-    const GLfloat triangle[] = {-1.0, -1.0, -3,
-                                1.0, -1.0, -3,
-                                -1.0, 1.0, -3,
-                                1.0, 1.0, -3};
+    const GLfloat triangle[] = {
+        -1.0, -1.0, -3,
+         1.0, -1.0, -3,
+        -1.0,  1.0, -3,
+         1.0,  1.0, -3
+    };
     
     const GLfloat triangleColor[] = {
       1, 0, 0, 1,
@@ -65,7 +67,36 @@
     
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
-}
+    
+/* 正四面体
+    const GLfloat vertices[] = {
+         0    ,  1.0,  0  ,
+        -0.866, -0.5,  0.5,
+         0.866, -0.5,  0.5,
+         0    ,  0  , -1  ,
+         0    ,  1.0,  0  ,
+        -0.866, -0.5,  0.5 
+     };
+     
+    const GLfloat vertexColor[] = {
+         1, 0, 0, 1,
+         0, 1, 0, 1,
+         0, 0, 1, 1,
+         1, 1, 0, 1,
+         1, 1, 0, 1,
+         0, 1, 1, 0,
+    };
+ 
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glColorPointer(4, GL_FLOAT, 0, vertexColor);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glRotatef(45, 0, 1, 0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 6);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+*/
+ }
 
 -(void)setupView:(UIView*)view
 {
@@ -82,12 +113,15 @@
 	    
     //正交变换 
     size = 1.0f;
-    glOrthof(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), -5, 5);// glOrthof与glOrthox不同，注意区别。zNear和zFar注意与glFrustumf不同
-    
+    glOrthof(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), -5, 5);
+    // glOrthof与glOrthox不同，注意区别。zNear和zFar注意与glFrustumf不同
+
+/*
     //投影变换
-//    size = kZNear * tanf(DEGREES_TO_RADIANS(kFieldOfView) / 2.0);
-//	glFrustumf(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), kZNear, kZFar);
-    
+    size = kZNear * tanf(DEGREES_TO_RADIANS(kFieldOfView) / 2.0);
+	glFrustumf(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), kZNear, kZFar);
+*/  
+ 
 	glMatrixMode(GL_MODELVIEW);
     
 //    //开启光效
