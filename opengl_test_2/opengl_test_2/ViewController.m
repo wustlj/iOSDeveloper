@@ -38,10 +38,10 @@
 
 - (void)drawView:(UIView *)theView
 {    
-    const GLfloat triangle[] = {-0.5, -0.5, -3,
-                                0.5, -0.5, -3,
-                                -0.5, 0.5, -3,
-                                0.5, 0.5, -3};
+    const GLfloat triangle[] = {-1.0, -1.0, -3,
+                                1.0, -1.0, -3,
+                                -1.0, 1.0, -3,
+                                1.0, 1.0, -3};
     
     const GLfloat triangleColor[] = {
       1, 0, 0, 1,
@@ -70,20 +70,23 @@
 -(void)setupView:(UIView*)view
 {
 	GLfloat size;
-	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-	size = kZNear * tanf(DEGREES_TO_RADIANS(kFieldOfView) / 2.0);
 	CGRect rect = view.bounds;
-    
-    //    glOrthox(-1.0, 1.0, -1.0 / (rect.size.width / rect.size.height), 1.0 / (rect.size.width / rect.size.height), 3.0, -3.0);
-    
-    //投影变换
-	glFrustumf(-size, size, -size / (rect.size.width / rect.size.height), size /
-			   (rect.size.width / rect.size.height), kZNear, kZFar);
+
+	glEnable(GL_DEPTH_TEST);
     
     //视口变换
 	glViewport(0, 0, rect.size.width, rect.size.height);
+    
+	glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+	    
+    //正交变换 
+    size = 1.0f;
+    glOrthof(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), -5, 5);// glOrthof与glOrthox不同，注意区别。zNear和zFar注意与glFrustumf不同
+    
+    //投影变换
+//    size = kZNear * tanf(DEGREES_TO_RADIANS(kFieldOfView) / 2.0);
+//	glFrustumf(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), kZNear, kZFar);
     
 	glMatrixMode(GL_MODELVIEW);
     
