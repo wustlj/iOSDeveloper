@@ -37,7 +37,27 @@
 }
 
 - (void)drawView:(UIView *)theView
-{    
+{
+    glLoadIdentity();
+    
+    glClearColor(0.7, 0.7, 0.7, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glShadeModel(GL_SMOOTH);
+    
+    const GLfloat vertices[] = {
+        -1, -1, -1,
+         1, -1, -1,
+         0,  1, -1,
+    };
+//    glColor4f(1.0, 0, 0, 1.0);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDisableClientState(GL_VERTEX_ARRAY);
+
+/* 正方形
+    glShadeModel(GL_FLAT);
     const GLfloat triangle[] = {
         -1.0, -1.0, -3,
          1.0, -1.0, -3,
@@ -52,13 +72,6 @@
       1, 1, 0, 1,
     };
     
-    glLoadIdentity();
-
-    glClearColor(0.7, 0.7, 0.7, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    glShadeModel(GL_FLAT);
-    
     glVertexPointer(3, GL_FLOAT, 0, triangle);
     glColorPointer(4, GL_FLOAT, 0, triangleColor);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -67,6 +80,7 @@
     
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+*/
     
 /* 正四面体
     const GLfloat vertices[] = {
@@ -96,7 +110,7 @@
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
 */
- }
+}
 
 -(void)setupView:(UIView*)view
 {
@@ -123,36 +137,43 @@
 */  
  
 	glMatrixMode(GL_MODELVIEW);
-    
-//    //开启光效
-//    glEnable(GL_LIGHTING);
-//
-//    //打开0光源
-//    glEnable(GL_LIGHT0);
-//
-//    //环境光
-//    const GLfloat light0Ambient[] = {0.1, 0.1, 0.1, 1};
-//    glLightfv(GL_LIGHT0, GL_AMBIENT, light0Ambient);
-//
-//    //散射光
-//    const GLfloat light0Diffuse[] = {0.7, 0.7, 0.7, 1.0};
-//    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0Diffuse);
-//
-//    //高光
-//    const GLfloat light0Specular[] = {0.7, 0.7, 0.7, 1.0};
-//    glLightfv(GL_LIGHT0, GL_SPECULAR, light0Specular);
-//
-//    //光源位置
-//    const GLfloat light0Position[] = {10.0, 10.0, 10.0, 0.0};
-//    glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
+  
+//    GLfloat ambient[] = {1.0, 0, 0, 1.0};
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
 //    
-//    //光源方向
-//    const GLfloat light0Direction[] = {0.0, 0.0, -1.0};
-//    glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0Direction);
-//    
-//    //光源角度
-//    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45.0);
+//    GLfloat lmodel_embient[] = {1.0, 1.0, 1.0, 1.0};
+//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_embient);
     
+/* 设置光源
+    //开启光效
+    glEnable(GL_LIGHTING);
+
+    //打开0光源
+    glEnable(GL_LIGHT0);
+
+    //环境光
+    const GLfloat light0Ambient[] = {0.2, 0.2, 0.2, 1};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light0Ambient);
+
+    //散射光
+    const GLfloat light0Diffuse[] = {0.5, 0.5, 0.5, 1.0};
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0Diffuse);
+
+    //高光
+    const GLfloat light0Specular[] = {0.7, 0.7, 0.7, 1.0};
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light0Specular);
+
+    //光源位置
+    const GLfloat light0Position[] = {10.0, 10.0, 10.0, 0.0};
+    glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
+    
+    //光源方向
+    const GLfloat light0Direction[] = {0.0, 0.0, -1.0};
+    glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0Direction);
+    
+    //光源角度
+    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45.0);
+*/
 	glLoadIdentity();
 }
 
