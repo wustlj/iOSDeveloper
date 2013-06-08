@@ -17,7 +17,7 @@
 #define kZFar                           1000.0
 #define kFieldOfView                    45.0
 // Set to 1 if you want it to attempt to create a 2.0 context
-#define kAttemptToUseOpenGLES2          0
+#define kAttemptToUseOpenGLES2          1
 // Macros
 #define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
 

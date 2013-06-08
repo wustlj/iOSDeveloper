@@ -28,8 +28,8 @@
 		04D4828A1762D55A0013C179 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D482891762D55A0013C179 /* QuartzCore.framework */; };
 		04D4828C1762D5600013C179 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D4828B1762D5600013C179 /* OpenGLES.framework */; };
 		04D482931762DF150013C179 /* GLESUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D482921762DF150013C179 /* GLESUtils.m */; };
-		04D482A01762F4160013C179 /* FragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 04D4829E1762F4160013C179 /* FragmentShader.glsl */; };
-		04D482A11762F4160013C179 /* VertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 04D4829F1762F4160013C179 /* VertexShader.glsl */; };
+		04D482B3176305340013C179 /* FragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 04D482B11763052C0013C179 /* FragmentShader.glsl */; };
+		04D482B4176305340013C179 /* VertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 04D482B21763052C0013C179 /* VertexShader.glsl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,8 +71,8 @@
 		04D4828B1762D5600013C179 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		04D482911762DF150013C179 /* GLESUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESUtils.h; sourceTree = "<group>"; };
 		04D482921762DF150013C179 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
-		04D4829E1762F4160013C179 /* FragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FragmentShader.glsl; sourceTree = "<group>"; };
-		04D4829F1762F4160013C179 /* VertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VertexShader.glsl; sourceTree = "<group>"; };
+		04D482B11763052C0013C179 /* FragmentShader.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = FragmentShader.glsl; sourceTree = "<group>"; };
+		04D482B21763052C0013C179 /* VertexShader.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = VertexShader.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,8 +146,8 @@
 				04D4824D1762D38C0013C179 /* Supporting Files */,
 				04D482911762DF150013C179 /* GLESUtils.h */,
 				04D482921762DF150013C179 /* GLESUtils.m */,
-				04D4829E1762F4160013C179 /* FragmentShader.glsl */,
-				04D4829F1762F4160013C179 /* VertexShader.glsl */,
+				04D482B11763052C0013C179 /* FragmentShader.glsl */,
+				04D482B21763052C0013C179 /* VertexShader.glsl */,
 			);
 			path = opengl_test_3;
 			sourceTree = "<group>";
@@ -256,13 +256,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04D482B3176305340013C179 /* FragmentShader.glsl in Resources */,
+				04D482B4176305340013C179 /* VertexShader.glsl in Resources */,
 				04D482511762D38C0013C179 /* InfoPlist.strings in Resources */,
 				04D482591762D38C0013C179 /* Default.png in Resources */,
 				04D4825B1762D38C0013C179 /* Default@2x.png in Resources */,
 				04D4825D1762D38C0013C179 /* Default-568h@2x.png in Resources */,
 				04D482631762D38C0013C179 /* ViewController.xib in Resources */,
-				04D482A01762F4160013C179 /* FragmentShader.glsl in Resources */,
-				04D482A11762F4160013C179 /* VertexShader.glsl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,6 +475,7 @@
 				04D4827D1762D38C0013C179 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		04D4827E1762D38C0013C179 /* Build configuration list for PBXNativeTarget "opengl_test_3Tests" */ = {
 			isa = XCConfigurationList;
@@ -483,6 +484,7 @@
 				04D482801762D38C0013C179 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

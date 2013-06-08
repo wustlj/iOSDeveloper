@@ -45,19 +45,17 @@
 }
 
 - (void)setupContext {
-#if kAttemptToUseOpenGLES2
     context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     if (context == NULL)
     {
-#endif
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
         
         if (!context || ![EAGLContext setCurrentContext:context]) {
             [self release];
         }
-#if kAttemptToUseOpenGLES2
     }
-#endif
+
+    [EAGLContext setCurrentContext:context];
 }
 
 - (void)setupProgram {
@@ -107,11 +105,19 @@
 {
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+    
     [delegate drawView:self];
+    
+    [self render];
+    
+    [context presentRenderbuffer:GL_RENDERBUFFER_OES];
+}
+
+- (void)render {
     glLoadIdentity();
     
     glClearColor(0.7, 0.7, 0.7, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     
     GLfloat vertices[] = {
         0.0f,  0.5f, 0.0f,
@@ -126,16 +132,12 @@
     // Draw triangle
     //
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    [context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 
 - (void)layoutSubviews
 {
-//    [self setupLayer];
-//    [self setupContext];
     [self destroyFramebuffer];
     [self createFramebuffer];
-//    [self setupProgram];
     [self drawView];
 }
 
