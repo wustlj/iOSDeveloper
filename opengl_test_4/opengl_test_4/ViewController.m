@@ -41,7 +41,7 @@
 }
 
 - (void)loadTexture {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Brick" ofType:@"png"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"png"];
     NSData *texData = [[NSData alloc] initWithContentsOfFile:path];
     UIImage *image = [[UIImage alloc] initWithData:texData];
     if (image == nil)
@@ -122,7 +122,7 @@
 	GLenum err;
     
     
-    GLfloat _scale = 1.5f;
+    GLfloat _scale = 1.0f;
     GLfloat _rotate = 0.0f;
     
     glScalef(_scale, _scale, 1.0f);
@@ -166,16 +166,16 @@
     
     //正交变换
     size = 1.0f;
-//    glOrthof(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), -5, 5);
+//    glOrthof(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), 1.0f, 10.0f);
     // glOrthof与glOrthox不同，注意区别。zNear和zFar注意与glFrustumf不同
     
     glFrustumf(-1.0f, 1.0f, -1.5, 1.5, 1.0f, 10.0f);
     
-    /*
+/*
      //投影变换
      size = kZNear * tanf(DEGREES_TO_RADIANS(kFieldOfView) / 2.0);
      glFrustumf(-size, size, -size / (rect.size.width / rect.size.height), size / (rect.size.width / rect.size.height), kZNear, kZFar);
-     */
+*/
     
 	glMatrixMode(GL_MODELVIEW);
     
