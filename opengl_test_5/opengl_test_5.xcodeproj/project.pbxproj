@@ -110,16 +110,10 @@
 		04D4BB82176F785200E2DE80 /* opengl_test_5 */ = {
 			isa = PBXGroup;
 			children = (
-				04D4BBB3176F7BBB00E2DE80 /* ksMatrix.c */,
-				04D4BBB4176F7BBB00E2DE80 /* ksMatrix.h */,
-				04D4BBB5176F7BBB00E2DE80 /* ksVector.c */,
-				04D4BBB6176F7BBB00E2DE80 /* ksVector.h */,
-				04D4BBA1176F797600E2DE80 /* FragmentShader.glsl */,
-				04D4BBA2176F797600E2DE80 /* GLESUtils.h */,
-				04D4BBA3176F797600E2DE80 /* GLESUtils.m */,
+				04E1CC431771653500FCD70F /* Util */,
+				04E1CC421771652400FCD70F /* Shader */,
 				04D4BBA4176F797600E2DE80 /* OpenGLView.h */,
 				04D4BBA5176F797600E2DE80 /* OpenGLView.m */,
-				04D4BBA6176F797600E2DE80 /* VertexShader.glsl */,
 				04D4BB8B176F785200E2DE80 /* AppDelegate.h */,
 				04D4BB8C176F785200E2DE80 /* AppDelegate.m */,
 				04D4BB94176F785200E2DE80 /* ViewController.h */,
@@ -142,6 +136,28 @@
 				04D4BB92176F785200E2DE80 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		04E1CC421771652400FCD70F /* Shader */ = {
+			isa = PBXGroup;
+			children = (
+				04D4BBA1176F797600E2DE80 /* FragmentShader.glsl */,
+				04D4BBA6176F797600E2DE80 /* VertexShader.glsl */,
+			);
+			name = Shader;
+			sourceTree = "<group>";
+		};
+		04E1CC431771653500FCD70F /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				04D4BBA2176F797600E2DE80 /* GLESUtils.h */,
+				04D4BBA3176F797600E2DE80 /* GLESUtils.m */,
+				04D4BBB3176F7BBB00E2DE80 /* ksMatrix.c */,
+				04D4BBB4176F7BBB00E2DE80 /* ksMatrix.h */,
+				04D4BBB5176F7BBB00E2DE80 /* ksVector.c */,
+				04D4BBB6176F7BBB00E2DE80 /* ksVector.h */,
+			);
+			name = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -334,6 +350,7 @@
 				04D4BB9E176F785200E2DE80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

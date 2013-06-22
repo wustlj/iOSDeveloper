@@ -140,8 +140,6 @@
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     
-//    [delegate drawView:self];
-    
     [self render];
 }
 
