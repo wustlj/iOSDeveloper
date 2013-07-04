@@ -16,10 +16,9 @@
 #define kZNear                          0.01
 #define kZFar                           1000.0
 #define kFieldOfView                    45.0
-// Set to 1 if you want it to attempt to create a 2.0 context
-#define kAttemptToUseOpenGLES2          0
 // Macros
 #define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
+#define SCREEN_BOUND  ([UIScreen mainScreen].bounds)
 
 @protocol OpenGLViewDelegate
 - (void)drawView:(UIView *)theView;
@@ -30,10 +29,15 @@
 {
     EAGLContext *context;
     GLuint viewRenderbuffer, viewFramebuffer;
+    GLuint _programHandle;
+    GLuint _positionSlot;
     CADisplayLink *_displayLink;
-    float _rotateColorCube;
+    CGFloat _rotate;
+    GLuint texture;
 }
 @property (assign) id<OpenGLViewDelegate> delegate;
-@property (nonatomic, assign) float rotateColorCube;
+@property (nonatomic, readonly) GLuint positionSlot;
+@property (nonatomic, assign) CGFloat rotate;
 - (void)drawView;
+- (void)toggleDisplayLink;
 @end

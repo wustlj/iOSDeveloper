@@ -21,6 +21,7 @@
 
 @synthesize context;
 @synthesize delegate;
+@synthesize rotateColorCube = _rotateColorCube;
 
 + (Class)layerClass
 {
@@ -104,6 +105,26 @@
     
     [context release];
     [super dealloc];
+}
+
+- (void)toggleDisplayLink {
+    if (_displayLink == nil) {
+        _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkCallBack:)];
+        [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    } else {
+        [_displayLink invalidate];
+        [_displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        _displayLink = nil;
+    }
+}
+
+- (void)displayLinkCallBack:(CADisplayLink*)displayLink
+{
+    NSLog(@"%f", displayLink.duration);
+    _rotateColorCube += displayLink.duration * 90;
+    NSLog(@"%f", _rotateColorCube);
+    
+    [self drawView];
 }
 
 @end

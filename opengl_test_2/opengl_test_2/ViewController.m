@@ -22,6 +22,12 @@
     _openGLView = [[OpenGLView alloc] initWithFrame:_boundFrame];
     _openGLView.delegate = self;
     [self.view addSubview:_openGLView];
+    
+    UIButton *rotateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rotateBtn setFrame:CGRectMake(250, 20, 50, 50)];
+    [rotateBtn setTitle:@"rotate" forState:UIControlStateNormal];
+    [rotateBtn addTarget:self action:@selector(rotate:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:rotateBtn];
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,8 +42,20 @@
     [super dealloc];
 }
 
+- (void)rotate:(id)sender {
+    UIButton *btn = (UIButton *)sender;
+    if ([btn.titleLabel.text isEqualToString:@"rotate"]) {
+        [btn setTitle:@"stop" forState:UIControlStateNormal];
+    } else {
+        [btn setTitle:@"rotate" forState:UIControlStateNormal];
+    }
+    
+    [_openGLView toggleDisplayLink];
+}
+
 - (void)drawView:(UIView *)theView
 {
+/* 三角形
     glLoadIdentity();
     
     glClearColor(0.7, 0.7, 0.7, 1.0);
@@ -55,7 +73,8 @@
     glEnableClientState(GL_VERTEX_ARRAY);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableClientState(GL_VERTEX_ARRAY);
-
+*/
+    
 /* 正方形
     glShadeModel(GL_FLAT);
     const GLfloat triangle[] = {
@@ -82,34 +101,42 @@
     glDisableClientState(GL_COLOR_ARRAY);
 */
     
-/* 正四面体
+///* 正四面体
     const GLfloat vertices[] = {
-         0    ,  1.0,  0  ,
-        -0.866, -0.5,  0.5,
-         0.866, -0.5,  0.5,
-         0    ,  0  , -1  ,
-         0    ,  1.0,  0  ,
-        -0.866, -0.5,  0.5 
+         0    ,  1.0,  0  ,  //0
+        -0.866, -0.5,  0.5,  //1
+         0.866, -0.5,  0.5,  //2
+         0    , -0.5,  -1 ,  //3
      };
      
     const GLfloat vertexColor[] = {
-         1, 0, 0, 1,
-         0, 1, 0, 1,
-         0, 0, 1, 1,
-         1, 1, 0, 1,
-         1, 1, 0, 1,
-         0, 1, 1, 0,
+         1, 0, 0, 1, //0
+         0, 1, 0, 1, //1
+         0, 0, 1, 1, //2
+         0, 1, 1, 1, //3
+    };
+    
+    GLubyte indices[] = {
+        0, 1, 2,
+        0, 2, 3,
+        0, 3, 1,
+        1, 2, 3,
     };
  
+    glLoadIdentity();
+    glClearColor(0.7, 0.7, 0.7, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    
+    
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glColorPointer(4, GL_FLOAT, 0, vertexColor);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
-    glRotatef(45, 0, 1, 0);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 6);
+    glRotatef(_openGLView.rotateColorCube, 0, 1, 0);
+//    glDrawArrays(GL_TRIANGLES, 0, 12);
+    glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLubyte), GL_UNSIGNED_BYTE, indices);// warning: is GL_UNSIGNED_BYTE not GL_UNSIGNED_INT
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
-*/
+//*/
 }
 
 -(void)setupView:(UIView*)view
