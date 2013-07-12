@@ -35,12 +35,32 @@
         [self setupLayer];
         [self setupContext];
         [self genTexture];
-        [self loadTexture1];
+        [self loadTexture];
         _rotate = 0.0f;
 //        [self setupProgram];
     }
     return self;
 }
+
+- (void)dealloc {
+    if ([EAGLContext currentContext] == context)
+        [EAGLContext setCurrentContext:nil];
+    
+    [context release];
+    [super dealloc];
+}
+
+- (void)layoutSubviews {
+    [EAGLContext setCurrentContext:context];
+    [self destroyFramebuffer];
+    [self createFramebuffer];
+    
+    [delegate setupView:self];
+    
+    [self drawView];
+}
+
+#pragma mark - Setup
 
 - (void)setupLayer {
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
@@ -107,6 +127,8 @@
     _positionSlot = glGetAttribLocation(_programHandle, "vPosition");
 }
 
+#pragma mark - Texture
+
 - (void)genTexture {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -114,29 +136,6 @@
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-}
-
--(void)loadTexture1{
-	CGImageRef textureImage=[UIImage imageNamed:@"Brick.png"].CGImage;
-	if (textureImage==nil) {
-		NSLog(@"Faild to load texture image");
-		return;
-	}
-	
-	NSInteger textWidth=CGImageGetWidth(textureImage);
-	NSInteger textHeight=CGImageGetHeight(textureImage);
-	GLubyte *textureData=(GLubyte *)malloc(textWidth*textHeight*4);
-	
-	CGContextRef textureContext=CGBitmapContextCreate(textureData, textWidth, textHeight, 8, textWidth*4, CGImageGetColorSpace(textureImage), kCGImageAlphaPremultipliedLast);
-	CGContextDrawImage(textureContext,CGRectMake(0.0,0.0, (float)textWidth, (float)textHeight),textureImage);
-	CGContextRelease(textureContext);
-    
-	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,textWidth,textHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,textureData);
-	free(textureData);
-	
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glEnable(GL_TEXTURE_2D);
 }
 
 - (void)loadTexture {
@@ -163,6 +162,50 @@
     [image release];
     [texData release];
 }
+
+#pragma mark - Frame buffer
+
+- (BOOL)createFramebuffer {
+    glGenFramebuffersOES(1, &viewFramebuffer);
+    glGenRenderbuffersOES(1, &viewRenderbuffer);
+    
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+    [context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
+    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
+    
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
+    
+    if (1) {
+		
+        glGenRenderbuffersOES(1, &depthRenderbuffer);
+        glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
+        glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
+        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
+    }
+    
+    if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
+    {
+        NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
+        return NO;
+    }
+    return YES;
+}
+
+- (void)destroyFramebuffer {
+    glDeleteFramebuffersOES(1, &viewFramebuffer);
+    viewFramebuffer = 0;
+    glDeleteRenderbuffersOES(1, &viewRenderbuffer);
+    viewRenderbuffer = 0;
+    
+    if(depthRenderbuffer) {
+        glDeleteRenderbuffersOES(1, &depthRenderbuffer);
+        depthRenderbuffer = 0;
+    }
+}
+
+#pragma mark - Draw
 
 - (void)drawView
 {
@@ -263,8 +306,8 @@
 	glTexCoordPointer(2, GL_SHORT, 0, squareTextureCoords);
 	
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-//	glPushMatrix();
-//	{
+	glPushMatrix();
+	{
         glTranslatef(0.0, 0.0, -8.0);
         glRotatef(_rotate, 1.0, 1.0, 1.0);
         glVertexPointer(3, GL_FLOAT, 0, cubeVertices);
@@ -293,8 +336,8 @@
         // Draw the right face
         glColor4f(1.0, 0.0, 1.0, 1.0);
         glDrawArrays(GL_TRIANGLE_FAN, 20, 4);
-//    }
-//	glPopMatrix();
+    }
+	glPopMatrix();
 }
 
 - (void)renderCube {
@@ -459,37 +502,7 @@
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-- (void)layoutSubviews {
-    [EAGLContext setCurrentContext:context];
-    [self destroyFramebuffer];
-    [self createFramebuffer];
-    [self drawView];
-}
-
-- (BOOL)createFramebuffer {
-    glGenFramebuffersOES(1, &viewFramebuffer);
-    glGenRenderbuffersOES(1, &viewRenderbuffer);
-    
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
-    [context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
-    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
-        
-    if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
-    {
-        NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
-        return NO;
-    }
-    [delegate setupView:self];
-    return YES;
-}
-
-- (void)destroyFramebuffer {
-    glDeleteFramebuffersOES(1, &viewFramebuffer);
-    viewFramebuffer = 0;
-    glDeleteRenderbuffersOES(1, &viewRenderbuffer);
-    viewRenderbuffer = 0;
-}
+#pragma mark - DisplayLink
 
 - (void)toggleDisplayLink {
     if (_displayLink == nil) {
@@ -508,14 +521,6 @@
     NSLog(@"%f", _rotate);
     
     [self setNeedsLayout];
-}
-
-- (void)dealloc {    
-    if ([EAGLContext currentContext] == context)
-        [EAGLContext setCurrentContext:nil];
-    
-    [context release];
-    [super dealloc];
 }
 
 @end

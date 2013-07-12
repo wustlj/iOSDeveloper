@@ -1,0 +1,5 @@
+This sample shows a cube with texture on fixed-function pipeline.
+Import:
+I not create depthBuffer first, so th cube is always showing 4 faces, it takes me a fews times to fix it. 
+
+You could read http://www.cnblogs.com/wustlj/p/3185365.html ,this title show what's depthbuffer.

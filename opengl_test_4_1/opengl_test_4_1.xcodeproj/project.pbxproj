@@ -24,6 +24,7 @@
 		042A2B0A17775C82000FB072 /* Brick.png in Resources */ = {isa = PBXBuildFile; fileRef = 042A2B0417775C82000FB072 /* Brick.png */; };
 		042A2B0B17775C82000FB072 /* GLESUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 042A2B0617775C82000FB072 /* GLESUtils.m */; };
 		042A2B0C17775C82000FB072 /* OpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 042A2B0817775C82000FB072 /* OpenGLView.m */; };
+		04386E79178F9384004ECE7F /* README in Resources */ = {isa = PBXBuildFile; fileRef = 04386E78178F9384004ECE7F /* README */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		042A2B0617775C82000FB072 /* GLESUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLESUtils.m; sourceTree = "<group>"; };
 		042A2B0717775C82000FB072 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		042A2B0817775C82000FB072 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
+		04386E78178F9384004ECE7F /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		042A2ACD17775AE8000FB072 = {
 			isa = PBXGroup;
 			children = (
+				04386E78178F9384004ECE7F /* README */,
 				042A2AE217775AE9000FB072 /* opengl_test_4_1 */,
 				042A2ADB17775AE9000FB072 /* Frameworks */,
 				042A2AD917775AE9000FB072 /* Products */,
@@ -189,6 +192,7 @@
 				042A2AF917775AE9000FB072 /* ViewController.xib in Resources */,
 				042A2B0917775C82000FB072 /* 1.png in Resources */,
 				042A2B0A17775C82000FB072 /* Brick.png in Resources */,
+				04386E79178F9384004ECE7F /* README in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +322,7 @@
 				042A2AFE17775AE9000FB072 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

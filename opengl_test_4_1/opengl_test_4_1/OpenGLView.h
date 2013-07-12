@@ -34,6 +34,10 @@
     CADisplayLink *_displayLink;
     CGFloat _rotate;
     GLuint texture;
+    
+    GLint backingWidth;
+    GLint backingHeight;
+    GLuint depthRenderbuffer;
 }
 @property (assign) id<OpenGLViewDelegate> delegate;
 @property (nonatomic, readonly) GLuint positionSlot;
