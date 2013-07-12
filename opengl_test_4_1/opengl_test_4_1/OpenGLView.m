@@ -25,21 +25,23 @@
 @synthesize positionSlot = _positionSlot;
 @synthesize rotate = _rotate;
 
-+ (Class)layerClass
-{
++ (Class)layerClass {
     return [CAEAGLLayer class];
 }
+
 - (id)initWithFrame:(CGRect)frame {
     
     if ((self = [super initWithFrame:frame])) {
         [self setupLayer];
         [self setupContext];
         [self genTexture];
-        [self loadTexture];
+        [self loadTexture1];
+        _rotate = 0.0f;
 //        [self setupProgram];
     }
     return self;
 }
+
 - (void)setupLayer {
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
     
@@ -114,8 +116,31 @@
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
+-(void)loadTexture1{
+	CGImageRef textureImage=[UIImage imageNamed:@"Brick.png"].CGImage;
+	if (textureImage==nil) {
+		NSLog(@"Faild to load texture image");
+		return;
+	}
+	
+	NSInteger textWidth=CGImageGetWidth(textureImage);
+	NSInteger textHeight=CGImageGetHeight(textureImage);
+	GLubyte *textureData=(GLubyte *)malloc(textWidth*textHeight*4);
+	
+	CGContextRef textureContext=CGBitmapContextCreate(textureData, textWidth, textHeight, 8, textWidth*4, CGImageGetColorSpace(textureImage), kCGImageAlphaPremultipliedLast);
+	CGContextDrawImage(textureContext,CGRectMake(0.0,0.0, (float)textWidth, (float)textHeight),textureImage);
+	CGContextRelease(textureContext);
+    
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,textWidth,textHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,textureData);
+	free(textureData);
+	
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glEnable(GL_TEXTURE_2D);
+}
+
 - (void)loadTexture {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"png"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Brick" ofType:@"png"];
     NSData *texData = [[NSData alloc] initWithContentsOfFile:path];
     UIImage *image = [[UIImage alloc] initWithData:texData];
     if (image == nil)
@@ -139,7 +164,6 @@
     [texData release];
 }
 
-
 - (void)drawView
 {
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
@@ -153,55 +177,124 @@
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 
-- (void)renderTexture {
-    CGFloat vertices1[] = {
-        -1.0, -1.0, -2.0,
-         1.0, -1.0, -2.0,
-         1.0,  1.0, -2.0,
-        -1.0,  1.0, -2.0
+- (void)renderTexture {    
+    const GLfloat cubeVertices[]={
+        //正面
+        -1.0,1.0,1.0,
+        -1.0,-1.0,1.0,
+        1.0,-1.0,1.0,
+        1.0,1.0,1.0,
+        //上面
+        -1.0, 1.0, -1.0,
+        -1.0, 1.0, 1.0,
+        1.0, 1.0, 1.0,
+        1.0, 1.0, -1.0,
+        //后面
+        1.0,1.0,-1.0,
+        1.0,-1.0,-1.0,
+        -1.0,-1.0,-1.0,
+        -1.0,1.0,-1.0,
+        //底面
+        -1.0,-1.0,1.0,
+        -1.0,-1.0,-1.0,
+        1.0,-1.0,-1.0,
+        1.0,-1.0,1.0,
+        //左面
+        -1.0,1.0,-1.0,
+        -1.0,1.0,1.0,
+        -1.0,-1.0,1.0,
+        -1.0,-1.0,-1.0,
+        //右面
+        1.0,1.0,1.0,
+        1.0,1.0,-1.0,
+        1.0,-1.0,-1.0,
+        1.0,-1.0,1.0,
+	};
+	
+	const GLshort squareTextureCoords[] = {
+        // Front face
+        0, 1,       // top left
+        0, 0,       // bottom left
+        1, 0,       // bottom right
+        1, 1,       // top right
+		
+        // Top face
+        0, 1,       // top left
+        0, 0,       // bottom left
+        1, 0,       // bottom right
+        1, 1,       // top right
+		
+        // Rear face
+        0, 1,       // top left
+        0, 0,       // bottom left
+        1, 0,       // bottom right
+        1, 1,       // top right
+		
+        // Bottom face
+        0, 1,       // top left
+        0, 0,       // bottom left
+        1, 0,       // bottom right
+        1, 1,       // top right
+		
+        // Left face
+        0, 1,       // top left
+        0, 0,       // bottom left
+        1, 0,       // bottom right
+        1, 1,       // top right
+		
+        // Right face
+        0, 1,       // top left
+        0, 0,       // bottom left
+        1, 0,       // bottom right
+        1, 1,       // top right
     };
-    
-    CGFloat coords[] = {
-        0, 0,
-        1, 0,
-        1, 1,
-        0, 1,
-    };
-    
-    glLoadIdentity();
-    
-    glScalef(0.5, 0.5, 0.5);
-    glTranslatef(0.0, 0.0, 2.0);
-    glRotatef(_rotate, 1.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor4f(0.0, 1.0, 0.0, 1.0);
-    
-    glVertexPointer(3, GL_FLOAT, 0, vertices1);
-    glTexCoordPointer(2, GL_FLOAT, 0, coords);
-    
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
-    
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    
-    CGFloat vertices2[] = {
-        1.0, -1.0, -2.0,
-        1.0, -1.0, -3.0,
-        1.0,  1.0, -3.0,
-        1.0,  1.0, -2.0,
-    };
-    
+  
+    //设置我们的绘制空间
+    [EAGLContext setCurrentContext:context];
+    //将我们的绘制空间与屏幕显示空间互换
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	
     glLoadIdentity();
-    
-    glVertexPointer(3, GL_FLOAT, 0, vertices2);
-    
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisable(GL_TEXTURE_2D);
+	glTexCoordPointer(2, GL_SHORT, 0, squareTextureCoords);
+	
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+//	glPushMatrix();
+//	{
+        glTranslatef(0.0, 0.0, -8.0);
+        glRotatef(_rotate, 1.0, 1.0, 1.0);
+        glVertexPointer(3, GL_FLOAT, 0, cubeVertices);
+        glEnableClientState(GL_VERTEX_ARRAY);
+		
+        // Draw the front face in Red
+        glColor4f(1.0, 0.0, 0.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		
+        // Draw the top face in green
+        glColor4f(0.0, 1.0, 0.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 4, 4);
+		
+        // Draw the rear face in Blue
+        glColor4f(0.0, 0.0, 1.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 8, 4);
+		
+        // Draw the bottom face
+        glColor4f(1.0, 1.0, 0.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 12, 4);
+		
+        // Draw the left face
+        glColor4f(0.0, 1.0, 1.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 16, 4);
+		
+        // Draw the right face
+        glColor4f(1.0, 0.0, 1.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 20, 4);
+//    }
+//	glPopMatrix();
 }
 
 - (void)renderCube {
@@ -345,7 +438,6 @@
 		NSLog(@"Error in frame. glError: 0x%04X", err);
 }
 
-
 - (void)render {
     glLoadIdentity();
     
@@ -367,15 +459,14 @@
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
+    [EAGLContext setCurrentContext:context];
     [self destroyFramebuffer];
     [self createFramebuffer];
     [self drawView];
 }
 
-- (BOOL)createFramebuffer
-{
+- (BOOL)createFramebuffer {
     glGenFramebuffersOES(1, &viewFramebuffer);
     glGenRenderbuffersOES(1, &viewRenderbuffer);
     
@@ -393,8 +484,7 @@
     return YES;
 }
 
-- (void)destroyFramebuffer
-{
+- (void)destroyFramebuffer {
     glDeleteFramebuffersOES(1, &viewFramebuffer);
     viewFramebuffer = 0;
     glDeleteRenderbuffersOES(1, &viewRenderbuffer);
@@ -412,18 +502,15 @@
     }
 }
 
-- (void)displayLinkCallBack:(CADisplayLink*)displayLink
-{
-//    NSLog(@"%f", displayLink.duration);
-    _rotate += displayLink.duration * 90;
+- (void)displayLinkCallBack:(CADisplayLink*)displayLink {
+    _rotate +=1.0;
+//    _rotate += displayLink.duration * 90;
     NSLog(@"%f", _rotate);
     
     [self setNeedsLayout];
 }
 
-
-- (void)dealloc
-{    
+- (void)dealloc {    
     if ([EAGLContext currentContext] == context)
         [EAGLContext setCurrentContext:nil];
     

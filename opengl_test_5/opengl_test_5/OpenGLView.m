@@ -287,7 +287,7 @@
 - (void)updateColorCubeTransform {
     ksMatrixLoadIdentity(&_colorCubeModelViewMatrix);
     ksMatrixTranslate(&_colorCubeModelViewMatrix, 0.0, -2.0, -5.5);
-    ksMatrixRotate(&_colorCubeModelViewMatrix, _rotateColorCube, 0.0, 1.0, 0.0);
+    ksMatrixRotate(&_colorCubeModelViewMatrix, _rotateColorCube, 1.0, 0.0, 0.0);
         
     glUniformMatrix4fv(_modelViewSlot, 1, GL_FALSE, (GLfloat *)&_colorCubeModelViewMatrix.m[0][0]);
 }
