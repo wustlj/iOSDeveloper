@@ -253,7 +253,35 @@
         1.0,-1.0,-1.0,
         1.0,-1.0,1.0,
 	};
+    
+    const GLfloat pyramidVertices [] = {
+        -1.0, -1.0,  1.0,  // buttom
+         1.0, -1.0,  1.0,
+           0, -1.0, -1.0,
+        -1.0,  1.0,  1.0,  // top
+         1.0,  1.0,  1.0,
+           0,  1.0, -1.0,
+        -1.0, -1.0,  1.0,  // front
+         1.0, -1.0,  1.0,
+         1.0,  1.0,  1.0,
+        -1.0,  1.0,  1.0,
+        -1.0, -1.0,  1.0,  // back
+           0, -1.0, -1.0,
+        -1.0,  1.0,  1.0,
+           0,  1.0, -1.0,
+         1.0, -1.0,  1.0,  // right
+           0, -1.0, -1.0,
+           0,  1.0, -1.0,
+         1.0,  1.0,  1.0,
+    };
 	
+    const CGFloat blendRectangle[] = {
+        1.0,  1.0, -2.0,
+       -1.0,  1.0, -2.0,
+       -1.0, -1.0, -2.0,
+        1.0, -1.0, -2.0,
+    };
+    
 	const GLshort squareTextureCoords[] = {
         // Front face
         0, 1,       // top left
@@ -308,7 +336,7 @@
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glPushMatrix();
 	{
-        glTranslatef(0.0, 0.0, -8.0);
+        glTranslatef(2.0, 0.0, -8.0);
         glRotatef(_rotate, 1.0, 1.0, 1.0);
         glVertexPointer(3, GL_FLOAT, 0, cubeVertices);
         glEnableClientState(GL_VERTEX_ARRAY);
@@ -338,6 +366,51 @@
         glDrawArrays(GL_TRIANGLE_FAN, 20, 4);
     }
 	glPopMatrix();
+    
+    glPushMatrix();
+    {
+        glTranslatef(-2.0, 0.0, -8.0);
+        glRotatef(_rotate, 1.0, 1.0, 1.0);
+        glVertexPointer(3, GL_FLOAT, 0, pyramidVertices);
+        
+        glColor4f(1.0, 0.0, 0.0, 1.0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        glColor4f(0.0, 1.0, 0.0, 1.0);
+        glDrawArrays(GL_TRIANGLES, 3, 3);
+        
+        glColor4f(0.0, 0.0, 1.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 6, 4);
+        
+        glColor4f(1.0, 1.0, 0.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 10, 4);
+        
+        glColor4f(0.0, 1.0, 1.0, 1.0);
+        glDrawArrays(GL_TRIANGLE_FAN, 14, 4);
+    }
+    glPopMatrix();
+    
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    
+    glPushMatrix();
+    {
+        glTranslatef(0.0, 1.0, -2.0);
+        glVertexPointer(3, GL_FLOAT, 0, blendRectangle);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glColor4f(1.0, 0.0, 0.0, 0.4);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    }
+    glPopMatrix();
+    
+    glPushMatrix();
+    {
+        glTranslatef(0.0, -1.0, -2.0);
+        glColor4f(1.0, 1.0, 0.0, 0.4);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    }
+    glPopMatrix();
 }
 
 - (void)renderCube {
