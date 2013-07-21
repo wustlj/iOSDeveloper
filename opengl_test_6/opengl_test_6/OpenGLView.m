@@ -10,7 +10,17 @@
 #import <QuartzCore/QuartzCore.h>
 #import "GLESUtils.h"
 
+#define Z_ANGLE 45.0f
+#define CURVE_FACE_NUM 11 
+
+#define degreesToRadian(x) (M_PI * (x) / 180.0)
+
 @interface OpenGLView ()
+{
+    GLfloat curveVertices[CURVE_FACE_NUM*3*4*2];
+    GLfloat curveTextureCoords[CURVE_FACE_NUM*2*4*2];
+
+}
 @property (nonatomic, retain) EAGLContext *context;
 - (BOOL)createFramebuffer;
 - (void)destroyFramebuffer;
@@ -36,6 +46,7 @@
         [self setupContext];
         [self genTexture];
         [self loadTexture];
+        [self initCurveVertex];
         _rotate = 0.0f;
 //        [self setupProgram];
     }
@@ -215,9 +226,96 @@
 //    [delegate drawView:self];
 //    [self render];
 //    [self renderCube];
-    [self renderTexture];
+//    [self renderTexture];
+    [self renderCurve];
     
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
+}
+
+- (void)initCurveVertex {
+    float startAngle = Z_ANGLE;
+    
+    float perLength = 1.0 / (CURVE_FACE_NUM * 2);
+    float r = 1.0 / cos(degreesToRadian(startAngle));
+    for (int i = 0; i < CURVE_FACE_NUM*2; i++) {  // FACE
+        float angle = degreesToRadian(2*startAngle - 2*startAngle/CURVE_FACE_NUM * i);
+        float x = sin(angle) * r;
+        float zOffset = 1.0 - cos(angle) * r;
+        
+        // top left
+        curveVertices[(i*4 + 0)*3 + 0] = -x;
+        curveVertices[(i*4 + 0)*3 + 1] = 1.0;
+        curveVertices[(i*4 + 0)*3 + 2] = zOffset;
+        
+        // bottom left
+        curveVertices[(i*4 + 1)*3 + 0] = -x;
+        curveVertices[(i*4 + 1)*3 + 1] = -1.0;
+        curveVertices[(i*4 + 1)*3 + 2] = zOffset;
+        
+        angle = degreesToRadian(2*startAngle - 2*startAngle/CURVE_FACE_NUM * (i+1));
+        x = sin(angle) * r;
+        zOffset = 1.0 - cos(angle) * r;
+        
+        // bottom right
+        curveVertices[(i*4 + 2)*3 + 0] = -x;
+        curveVertices[(i*4 + 2)*3 + 1] = -1.0;
+        curveVertices[(i*4 + 2)*3 + 2] = zOffset;
+        
+        // top right
+        curveVertices[(i*4 + 3)*3 + 0] = -x;
+        curveVertices[(i*4 + 3)*3 + 1] = 1.0;
+        curveVertices[(i*4 + 3)*3 + 2] = zOffset;
+        
+        curveTextureCoords[(i*4 + 0)*2 + 0] = perLength * (i);
+        curveTextureCoords[(i*4 + 0)*2 + 1] = 1.0;
+        
+        curveTextureCoords[(i*4 + 1)*2 + 0] = perLength * (i);
+        curveTextureCoords[(i*4 + 1)*2 + 1] = 0.0;
+        
+        curveTextureCoords[(i*4 + 2)*2 + 0] = perLength * (i+1);
+        curveTextureCoords[(i*4 + 2)*2 + 1] = 0.0;
+        
+        curveTextureCoords[(i*4 + 3)*2 + 0] = perLength * (i+1);
+        curveTextureCoords[(i*4 + 3)*2 + 1] = 1.0;
+    }
+}
+
+- (void)renderCurve {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    
+    [EAGLContext setCurrentContext:context];
+    //将我们的绘制空间与屏幕显示空间互换
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+    
+//    [self printf:curveVertices];
+    
+    glLoadIdentity();
+    glTexCoordPointer(2, GL_FLOAT, 0, curveTextureCoords);
+    glVertexPointer(3, GL_FLOAT, 0, curveVertices);
+
+    glTranslatef(0.0f, 0.0f, -5.0f);
+    glRotatef(_rotate, 1.0, 1.0, 1.0);
+    
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    for (int i = 0; i<CURVE_FACE_NUM*3*4*2; i+=12) {
+        glDrawArrays(GL_TRIANGLE_FAN, i/3, 4);
+    }
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+- (void)printf:(float *)ver {
+    NSLog(@"-----------------------------------------");
+    for (int i =0; i < CURVE_FACE_NUM * 2 *12; i++) {
+        NSLog(@"%d>>>>>>>%f", i, ver[i]);
+    }
+    NSLog(@"-----------------------------------------");
 }
 
 - (void)renderTexture {    
@@ -367,6 +465,7 @@
     }
 	glPopMatrix();
     
+
     glPushMatrix();
     {
         glTranslatef(-2.0, 0.0, -8.0);
@@ -389,7 +488,7 @@
         glDrawArrays(GL_TRIANGLE_FAN, 14, 4);
     }
     glPopMatrix();
-    
+ 
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 //    glEnable(GL_BLEND);
 //    glBlendFunc(GL_ONE, GL_ONE);

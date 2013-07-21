@@ -1,0 +1,7 @@
+This sample shows a curve with texture on fixed-function pipeline.
+
+You can define the angle of z Coordinate by modify the Z_ANGLE in OpenGLView.m
+You can define the number of face by modify the CURVE_FACE_NUM int OpenGLView.m
+
+NOTICE:
+Don't open the @selector(printf:) in OpenGLView.m when rotate, it's waste the CPU.
