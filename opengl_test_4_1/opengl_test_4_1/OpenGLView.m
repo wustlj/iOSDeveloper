@@ -275,12 +275,12 @@
          1.0,  1.0,  1.0,
     };
 	
-    const CGFloat blendRectangle[] = {
-        1.0,  1.0, -2.0,
-       -1.0,  1.0, -2.0,
-       -1.0, -1.0, -2.0,
-        1.0, -1.0, -2.0,
-    };
+//    const CGFloat blendRectangle[] = {
+//        1.0,  1.0, -2.0,
+//       -1.0,  1.0, -2.0,
+//       -1.0, -1.0, -2.0,
+//        1.0, -1.0, -2.0,
+//    };
     
 	const GLshort squareTextureCoords[] = {
         // Front face
