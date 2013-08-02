@@ -222,9 +222,9 @@
 
 - (void)createVBO {
     const GLfloat vertices[] = {
-        -1.0, -1.0, -1.0,
-        1.0, -1.0, -1.0,
-        1.0,  1.0, -1.0,
+        -1.0, -1.0, -5.0,
+        1.0, -1.0, -5.0,
+        1.0,  1.0, -5.0,
     };
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -256,15 +256,15 @@
     glMatrixMode(GL_MODELVIEW);
     
     glLoadIdentity();
-    glEnableClientState(GL_VERTEX_ARRAY);
-
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        
-    glTranslatef(0, 0, -8);
+    glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, NULL);
     
     glColor4f(1.0, 0, 0, 1.0);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 #pragma mark - DisplayLink

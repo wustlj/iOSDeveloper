@@ -103,6 +103,7 @@
 		04CE2D20179EB4E40017CF6D /* opengl_test_6_1 */ = {
 			isa = PBXGroup;
 			children = (
+				04F72E5317AB40A2003B579E /* README */,
 				04CE2D3F179EB5370017CF6D /* 1.png */,
 				04CE2D40179EB5370017CF6D /* Brick.png */,
 				04CE2D41179EB5370017CF6D /* GLESUtils.h */,
@@ -115,7 +116,6 @@
 				04CE2D33179EB4E40017CF6D /* ViewController.m */,
 				04CE2D35179EB4E40017CF6D /* ViewController.xib */,
 				04CE2D21179EB4E40017CF6D /* Supporting Files */,
-				04F72E5317AB40A2003B579E /* README */,
 			);
 			path = opengl_test_6_1;
 			sourceTree = "<group>";
