@@ -270,20 +270,23 @@
 #pragma mark - DisplayLink
 
 - (void)toggleDisplayLink {
-    if (_displayLink == nil) {
-        _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkCallBack:)];
-        [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    } else {
-        [_displayLink invalidate];
-        [_displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        _displayLink = nil;
-    }
-}
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
-- (void)displayLinkCallBack:(CADisplayLink*)displayLink {
-    _rotate +=1.0;
-//    _rotate += displayLink.duration * 90;
-    NSLog(@"%f", _rotate);
+    GLvoid *bufferData = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    
+    if (bufferData == NULL) {
+        glUnmapBufferOES(GL_ARRAY_BUFFER);
+        return;
+    }
+    
+    const GLfloat vertices[] = {
+        -1.0, -1.0, -5.0,
+         1.0, -1.0, -5.0,
+        -1.0,  1.0, -5.0,
+    };
+    memcpy(bufferData, vertices, sizeof(vertices));
+    
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
     
     [self setNeedsLayout];
 }

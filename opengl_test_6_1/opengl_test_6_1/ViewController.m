@@ -27,21 +27,15 @@
     
     [self.view addSubview:_glView];
     
-    UIButton *rotateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rotateBtn setFrame:CGRectMake(250, 20, 50, 50)];
-    [rotateBtn setTitle:@"rotate" forState:UIControlStateNormal];
+    UIButton *rotateBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [rotateBtn setFrame:CGRectMake(220, 0, 100, 50)];
+    [rotateBtn setTitle:@"change VBO" forState:UIControlStateNormal];
+    [rotateBtn.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     [rotateBtn addTarget:self action:@selector(rotate:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:rotateBtn];
 }
 
 - (void)rotate:(id)sender {
-    UIButton *btn = (UIButton *)sender;
-    if ([btn.titleLabel.text isEqualToString:@"rotate"]) {
-        [btn setTitle:@"stop" forState:UIControlStateNormal];
-    } else {
-        [btn setTitle:@"rotate" forState:UIControlStateNormal];
-    }
-    
     [_glView toggleDisplayLink];
 }
 
