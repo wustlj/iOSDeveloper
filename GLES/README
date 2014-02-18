@@ -1,0 +1,9 @@
+/**************************************************************************/
+wustkalou@gmail.com
+www.cnblogs.com/wustlj
+/**************************************************************************/
+
+This simple show cube with 512*512 texture on OpenGL ES 1.x.
+If you don't want blend texture with color , you can delete glEnableClientState(GL_COLOR_ARRAY);
+
+

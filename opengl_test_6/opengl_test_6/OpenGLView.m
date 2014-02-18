@@ -11,7 +11,7 @@
 #import "GLESUtils.h"
 
 #define Z_ANGLE 45.0f
-#define CURVE_FACE_NUM 11 
+#define CURVE_FACE_NUM 11
 
 #define degreesToRadian(x) (M_PI * (x) / 180.0)
 

@@ -55,7 +55,7 @@
 
 - (void)drawView:(UIView *)theView
 {
-/* 三角形
+///* 三角形
     glLoadIdentity();
     
     glClearColor(0.7, 0.7, 0.7, 1.0);
@@ -68,12 +68,18 @@
          1, -1, -1,
          0,  1, -1,
     };
-//    glColor4f(1.0, 0, 0, 1.0);
+    const GLfloat normals[] = {
+      0, 0, 1,
+    };
+    glColor4f(1.0, 0, 0, 1.0);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glNormalPointer(GL_FLOAT, 0, normals);
+    glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableClientState(GL_VERTEX_ARRAY);
-*/
+    glDisableClientState(GL_NORMAL_ARRAY);
+//*/
     
 /* 正方形
     glShadeModel(GL_FLAT);
@@ -101,7 +107,7 @@
     glDisableClientState(GL_COLOR_ARRAY);
 */
     
-///* 正四面体
+/* 正四面体
     const GLfloat vertices[] = {
          0    ,  1.0,  0  ,  //0
         -0.866, -0.5,  0.5,  //1
@@ -136,7 +142,7 @@
     glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLubyte), GL_UNSIGNED_BYTE, indices);// warning: is GL_UNSIGNED_BYTE not GL_UNSIGNED_INT
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
-//*/
+*/
 }
 
 -(void)setupView:(UIView*)view
@@ -171,7 +177,7 @@
 //    GLfloat lmodel_embient[] = {1.0, 1.0, 1.0, 1.0};
 //    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_embient);
     
-/* 设置光源
+///* 设置光源
     //开启光效
     glEnable(GL_LIGHTING);
 
@@ -200,7 +206,7 @@
     
     //光源角度
     glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45.0);
-*/
+//*/
 	glLoadIdentity();
 }
 
