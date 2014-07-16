@@ -143,10 +143,10 @@ NSString *const kFragmentShaderString = SHADER_STRING
     };
     
     const GLfloat texCoord[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
         0.0f, 1.0f,
         1.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
     };
     
     const GLubyte colors[] = {
