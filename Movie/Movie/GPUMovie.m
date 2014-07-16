@@ -8,10 +8,27 @@
 
 #import "GPUMovie.h"
 
-const GLfloat kYUVColorConversion601FullRange[] = {
+// Color Conversion Constants (YUV to RGB) including adjustment from 16-235/16-240 (video range)
+
+// BT.601, which is the standard for SDTV.
+const GLfloat kColorConversion601[] = {
+    1.164,  1.164, 1.164,
+    0.0, -0.392, 2.017,
+    1.596, -0.813,   0.0,
+};
+
+// BT.709, which is the standard for HDTV.
+const GLfloat kColorConversion709[] = {
     1.164,  1.164, 1.164,
     0.0, -0.213, 2.112,
     1.793, -0.533,   0.0,
+};
+
+// BT.601 full range (ref: http://www.equasys.de/colorconversion.html)
+const GLfloat kColorConversion601FullRange[] = {
+    1.0,    1.0,    1.0,
+    0.0,    -0.343, 1.765,
+    1.4,    -0.711, 0.0,
 };
 
 NSString *const kYUVVertexShaderString = SHADER_STRING
@@ -108,6 +125,10 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 - (void)processAsset {
     [self createReader];
     
+    if ([_assetReader startReading]) {
+        NSLog(@"%ld", (long)_assetReader.status);
+    }
+    
     if (_keepLooping) {
         while (_assetReader.status == AVAssetReaderStatusReading) {
             [self readNextVideoFrameFromOutput:_videoTrackOutput];
@@ -137,9 +158,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
             [_assetReader addOutput:_videoTrackOutput];
         }
         
-        if ([_assetReader startReading]) {
-            NSLog(@"%ld", (long)_assetReader.status);
-        }
+        
     }
 }
 
@@ -194,7 +213,6 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     [self convertYUVToRGBOutput];
     
-#warning TODO
     if (_completionBlock) {
         _completionBlock();
     }
@@ -271,7 +289,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     glBindTexture(GL_TEXTURE_2D, _chrominanceTexture);
     glUniform1i(_yuvConversionChrominanceTextureUniform, 5);
     
-    glUniformMatrix3fv(_yuvConversionMatrixUniform, 1, GL_FALSE, kYUVColorConversion601FullRange);
+    glUniformMatrix3fv(_yuvConversionMatrixUniform, 1, GL_FALSE, kColorConversion601FullRange);
     
     glVertexAttribPointer(_yuvConversionPositionAttribute, 2, GL_FLOAT, 0, 0, squarVertices);
     glVertexAttribPointer(_yuvConversionTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordies);
