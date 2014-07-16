@@ -65,14 +65,14 @@
     [_glView2 release];
         
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(0, 400, 100, 50)];
+    [btn setFrame:CGRectMake(0, 320, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setTitle:@"Begin" forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(startGPUMovie) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn2 setFrame:CGRectMake(0, 500, 100, 50)];
+    [btn2 setFrame:CGRectMake(0, 470, 120, 50)];
     [btn2 setBackgroundColor:[UIColor redColor]];
     [btn2 setTitle:@"Begin" forState:UIControlStateNormal];
     [btn2 addTarget:self action:@selector(startRead2) forControlEvents:UIControlEventTouchUpInside];

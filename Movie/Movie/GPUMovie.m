@@ -141,6 +141,8 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 }
 
 - (void)createReader {
+    [_assetReader release];
+    _assetReader = nil;
     if (!_assetReader) {
         NSError *error = nil;
         _assetReader = [[AVAssetReader alloc] initWithAsset:_asset error:&error];
