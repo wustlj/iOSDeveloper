@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0414686F1969352C009F9F99 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0414686E1969352C009F9F99 /* 1.png */; };
 		041FE5EF18B74F6B006E7C9E /* README in Resources */ = {isa = PBXBuildFile; fileRef = 041FE5EE18B74F6B006E7C9E /* README */; };
 		04B96C5C18B3190100FD30BD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B96C5B18B3190100FD30BD /* Foundation.framework */; };
 		04B96C5E18B3190100FD30BD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B96C5D18B3190100FD30BD /* CoreGraphics.framework */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0414686E1969352C009F9F99 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		041FE5EE18B74F6B006E7C9E /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		04B96C5818B3190100FD30BD /* GLES2.0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLES2.0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B96C5B18B3190100FD30BD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -138,6 +140,7 @@
 		04B96C6118B3190100FD30BD /* GLES2.0 */ = {
 			isa = PBXGroup;
 			children = (
+				0414686E1969352C009F9F99 /* 1.png */,
 				04CB7C2C18B60B4E000901AB /* 512.png */,
 				04B96C6A18B3190100FD30BD /* AppDelegate.h */,
 				04B96C6B18B3190100FD30BD /* AppDelegate.m */,
@@ -264,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04CB7C2D18B60B4E000901AB /* 512.png in Resources */,
+				0414686F1969352C009F9F99 /* 1.png in Resources */,
 				04B96C9E18B3485E00FD30BD /* vertex.vsh in Resources */,
 				04B96C9F18B3485E00FD30BD /* fragment.fsh in Resources */,
 				04B96C7418B3190100FD30BD /* Images.xcassets in Resources */,
