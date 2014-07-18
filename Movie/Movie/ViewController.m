@@ -24,8 +24,9 @@
     GPUView *_glView;
     GPUView *_glView2;
     
-    GPUMovie *_movie1;
-    GPUMovie *_movie2;
+    GPUMovie *_baseMovie;
+    GPUMovie *_overMovie;
+    GPUMovie *_maskMovie;
     GPUMovie *_movie3;
 }
 @end
@@ -82,45 +83,61 @@
 #pragma mark - Action
 
 - (void)startGPUMovie {
-    if (!_movie1) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480" ofType:@"mp4"]];
-        _movie1 = [[GPUMovie alloc] initWithURL:videoURL];
+    if (!_baseMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
+        _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
     }
     
-    if (!_movie2) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"PTstar" ofType:@"mp4"]];
-        _movie2 = [[GPUMovie alloc] initWithURL:videoURL];
-        _movie2.keepLooping = NO;
-        [_movie2 startProcessing];
+    if (!_overMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Yh1" ofType:@"mp4"]];
+        _overMovie = [[GPUMovie alloc] initWithURL:videoURL];
+        _overMovie.keepLooping = NO;
+        [_overMovie startProcessing];
     }
+    
+//    if (!_maskMovie) {
+//        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1_mask" ofType:@"mp4"]];
+//        _maskMovie = [[GPUMovie alloc] initWithURL:videoURL];
+//        _maskMovie.keepLooping = NO;
+//        [_maskMovie startProcessing];
+//    }
     
     __block typeof(self) oneself = self;
     
-    _movie1.completionBlock = ^ {
-        [oneself reloadView1];
+    _baseMovie.completionBlock = ^ {
+        [oneself reloadBaseTexture];
     };
     
-    _movie2.completionBlock = ^ {
-        [oneself reloadView2];
+    _overMovie.completionBlock = ^ {
+        [oneself reloadOverTexture];
     };
     
-    [_movie1 startProcessing];
+//    _maskMovie.completionBlock = ^ {
+//        [oneself reloadMaskTexture];
+//    };
+    
+    [_baseMovie startProcessing];
 }
 
-- (void)reloadView1 {
-    [_movie2 readNextVideoFrame];
+- (void)reloadBaseTexture {
+    [_overMovie readNextVideoFrame];
+//    [_maskMovie readNextVideoFrame];
     
-    _glView.outputTexture = _movie1.outputTexture;
+    _glView.outputTexture = _baseMovie.outputTexture;
     [_glView draw];
 }
 
-- (void)reloadView2 {
-    _glView.outputTexture2 = _movie2.outputTexture;
+- (void)reloadOverTexture {
+    _glView.outputTexture2 = _overMovie.outputTexture;
+}
+
+- (void)reloadMaskTexture {
+    _glView.maskTexture = _maskMovie.outputTexture;
 }
 
 - (void)startRead2 {
     if (!_movie3) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"end_meiyan_cn" ofType:@"mp4"]];
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"meiyan_monday" ofType:@"mp4"]];
         _movie3 = [[GPUMovie alloc] initWithURL:videoURL];
     }
     

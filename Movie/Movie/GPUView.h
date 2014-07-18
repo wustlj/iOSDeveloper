@@ -25,20 +25,26 @@
     GLuint _depthBuffer;
     GLuint _outputTexture;
     
-    GLuint _positionSlot;
-    GLuint _textureSlot;
-    GLuint _colorSlot;
     GLuint _modelViewSlot;
     GLuint _projectSlot;
+    
+    GLuint _positionSlot;
+    GLuint _colorSlot;
+
+    GLuint _textureSlot;
     GLuint _samplerSlot;
+    
     GLuint _samplerSlot2;
-    GLuint _colorSlot2;
+    GLuint _samplerSlot3;
 
     GPUProgram *program;
+    
+    GLfloat rotDegree;
 }
 
 @property (nonatomic, assign) GLuint outputTexture;
 @property (nonatomic, assign) GLuint outputTexture2;
+@property (nonatomic, assign) GLuint maskTexture;
 
 - (void)draw;
 

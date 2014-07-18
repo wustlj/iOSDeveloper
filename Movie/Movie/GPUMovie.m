@@ -110,15 +110,17 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     typeof(self) __block blockSelf = self;
     
     [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
-        NSError *error = nil;
-        AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
-        if (!tracksStatus == AVKeyValueStatusLoaded)
-        {
-            return;
-        }
-        blockSelf.asset = inputAsset;
-        [blockSelf processAsset];
-        blockSelf = nil;
+        runSynchronouslyOnVideoProcessingQueue(^{
+            NSError *error = nil;
+            AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
+            if (!tracksStatus == AVKeyValueStatusLoaded)
+            {
+                return;
+            }
+            blockSelf.asset = inputAsset;
+            [blockSelf processAsset];
+            blockSelf = nil;
+        });
     }];
 }
 
@@ -164,7 +166,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     }
 }
 
-- (BOOL)readNextVideoFrame {
+- (BOOL)readNextVideoFrame {    
     return [self readNextVideoFrameFromOutput:_videoTrackOutput];
 }
 
@@ -232,27 +234,29 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 #pragma mark - GPU
 
 - (void)setupYUVProgram {
-    [GPUContext useImageProcessingContext];
-    
-    _yuvConversionProgram = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kYUVVertexShaderString fragmentShaderString:kYUVVideoRangeConversionForLAFragmentShaderString] retain];
-    
-    [_yuvConversionProgram addAttribute:@"position"];
-    [_yuvConversionProgram addAttribute:@"inputTextureCoordinate"];
-    
-    if (![_yuvConversionProgram link]) {
-        NSLog(@"yuvConversionProgram link fail");
-    };
-    
-    _yuvConversionPositionAttribute = [_yuvConversionProgram attributeIndex:@"position"];
-    _yuvConversionTextureCoordinateAttribute = [_yuvConversionProgram attributeIndex:@"inputTextureCoordinate"];
-    _yuvConversionLuminanceTextureUniform = [_yuvConversionProgram uniformIndex:@"luminanceTexture"];
-    _yuvConversionChrominanceTextureUniform = [_yuvConversionProgram uniformIndex:@"chrominanceTexture"];
-    _yuvConversionMatrixUniform = [_yuvConversionProgram uniformIndex:@"colorConversionMatrix"];
-    
-    [GPUContext setActiveShaderProgram:_yuvConversionProgram];
-    
-    glEnableVertexAttribArray(_yuvConversionPositionAttribute);
-    glEnableVertexAttribArray(_yuvConversionTextureCoordinateAttribute);
+    runSynchronouslyOnVideoProcessingQueue(^{
+        [GPUContext useImageProcessingContext];
+        
+        _yuvConversionProgram = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kYUVVertexShaderString fragmentShaderString:kYUVVideoRangeConversionForLAFragmentShaderString] retain];
+        
+        [_yuvConversionProgram addAttribute:@"position"];
+        [_yuvConversionProgram addAttribute:@"inputTextureCoordinate"];
+        
+        if (![_yuvConversionProgram link]) {
+            NSLog(@"yuvConversionProgram link fail");
+        };
+        
+        _yuvConversionPositionAttribute = [_yuvConversionProgram attributeIndex:@"position"];
+        _yuvConversionTextureCoordinateAttribute = [_yuvConversionProgram attributeIndex:@"inputTextureCoordinate"];
+        _yuvConversionLuminanceTextureUniform = [_yuvConversionProgram uniformIndex:@"luminanceTexture"];
+        _yuvConversionChrominanceTextureUniform = [_yuvConversionProgram uniformIndex:@"chrominanceTexture"];
+        _yuvConversionMatrixUniform = [_yuvConversionProgram uniformIndex:@"colorConversionMatrix"];
+        
+        [GPUContext setActiveShaderProgram:_yuvConversionProgram];
+        
+        glEnableVertexAttribArray(_yuvConversionPositionAttribute);
+        glEnableVertexAttribArray(_yuvConversionTextureCoordinateAttribute);
+    });
 }
 
 - (void)convertYUVToRGBOutput {

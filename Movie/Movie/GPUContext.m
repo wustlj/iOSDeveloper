@@ -33,7 +33,7 @@ static void *openGLESContextQueueKey;
 - (id)init {
     self = [super init];
     if (self) {
-         _contextQueue = dispatch_queue_create("com.sunsetlakesoftware.GPUImage.openGLESContextQueue", NULL);
+         _contextQueue = dispatch_queue_create("com.YOUKU.GPUImage.openGLESContextQueue", NULL);
     }
     return self;
 }

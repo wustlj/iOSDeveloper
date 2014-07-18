@@ -21,18 +21,16 @@ NSString *const kVertexShaderString = SHADER_STRING
  attribute vec4 vPosition;
  attribute vec4 color;
  attribute vec2 textureCoord;
- attribute vec2 textureCoord2;
  
- uniform mat4 modelViewMat;
- uniform mat4 projectMat;
+ uniform mat4 modelViewMatrix;
+ uniform mat4 projectMatrix;
  
  varying vec4 colorVarying;
  varying vec2 textureCoordOut;
- varying vec2 textureCoordOut2;
  
  void main()
  {
-    gl_Position = vPosition;
+    gl_Position = projectMatrix * modelViewMatrix * vPosition;
     colorVarying = color;
     textureCoordOut = textureCoord;
  }
@@ -40,23 +38,44 @@ NSString *const kVertexShaderString = SHADER_STRING
 
 
 
-NSString *const kFragmentShaderString = SHADER_STRING
+NSString *const kThreeFragmentShaderString = SHADER_STRING
 (
  precision mediump float;
  
  varying vec4 colorVarying;
  varying vec2 textureCoordOut;
- varying vec2 textureCoordOut2;
  
  uniform sampler2D sampler;
  uniform sampler2D sampler2;
+ uniform sampler2D samplerMask;
  
  void main()
  {
      vec4 base = texture2D(sampler, textureCoordOut);
-     base.a = 1.0;
      vec4 overlay = texture2D(sampler2, textureCoordOut);
-     overlay.a = 1.0;
+     vec4 mask = texture2D(samplerMask, textureCoordOut);
+     
+     mediump float lum = mask.r * 0.299 + mask.g * 0.587 + mask.b * 0.114;
+     
+     gl_FragColor = mix(base, overlay, lum);
+ }
+);
+
+NSString *const kTwoFragmentShaderString = SHADER_STRING
+(
+ precision mediump float;
+ 
+ varying vec4 colorVarying;
+ varying vec2 textureCoordOut;
+ 
+ uniform sampler2D sampler;
+ uniform sampler2D sampler2;
+ uniform sampler2D samplerMask;
+ 
+ void main()
+ {
+     vec4 base = texture2D(sampler, textureCoordOut);
+     vec4 overlay = texture2D(sampler2, textureCoordOut);
      
      mediump float r;
      if (overlay.r * base.a + base.r * overlay.a >= overlay.a * base.a) {
@@ -64,27 +83,25 @@ NSString *const kFragmentShaderString = SHADER_STRING
      } else {
          r = overlay.r + base.r;
      }
-     
+
      mediump float g;
      if (overlay.g * base.a + base.g * overlay.a >= overlay.a * base.a) {
          g = overlay.a * base.a + overlay.g * (1.0 - base.a) + base.g * (1.0 - overlay.a);
      } else {
          g = overlay.g + base.g;
      }
-     
+
      mediump float b;
      if (overlay.b * base.a + base.b * overlay.a >= overlay.a * base.a) {
          b = overlay.a * base.a + overlay.b * (1.0 - base.a) + base.b * (1.0 - overlay.a);
      } else {
          b = overlay.b + base.b;
      }
-     
-     mediump float a = overlay.a + base.a - overlay.a * base.a;
-     
-     gl_FragColor = vec4(r,g,b,a);
 
+     mediump float a = overlay.a + base.a - overlay.a * base.a;
+     gl_FragColor = vec4(r,g,b,a);
  }
-);
+ );
 
 
 @implementation GPUView
@@ -100,7 +117,7 @@ NSString *const kFragmentShaderString = SHADER_STRING
         
         [GPUContext useImageProcessingContext];
         
-        program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kFragmentShaderString] retain];
+        program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kTwoFragmentShaderString] retain];
         
         [program link];
         
@@ -109,11 +126,12 @@ NSString *const kFragmentShaderString = SHADER_STRING
         _positionSlot = [program attributeSlot:@"vPosition"];
         _textureSlot = [program attributeSlot:@"textureCoord"];
         _colorSlot = [program attributeSlot:@"color"];
-        _modelViewSlot = [program uniformIndex:@"modelViewMat"];
-        _projectSlot = [program uniformIndex:@"projectMat"];
         _samplerSlot = [program uniformIndex:@"sampler"];
-        _colorSlot2 = [program attributeSlot:@"textureCoord2"];
         _samplerSlot2 = [program uniformIndex:@"sampler2"];
+        _samplerSlot3 = [program uniformIndex:@"samplerMask"];
+        
+        _modelViewSlot = [program uniformIndex:@"modelViewMatrix"];
+        _projectSlot = [program uniformIndex:@"projectMatrix"];
         
         [self createFBO];
     }
@@ -156,20 +174,35 @@ NSString *const kFragmentShaderString = SHADER_STRING
         255,   0, 255, 255,
     };
     
-//    GLfloat modelViewMat[16], projectMat[16];
-//    
-//    mat4f_LoadIdentity(projectMat);
-//    mat4f_LoadIdentity(modelViewMat);
-//
-//    mat4f_LoadOrtho(-1.0f, 1.0f, -1.5f, 1.5f, -5.0f, 5.0f, projectMat);
-//    mat4f_LoadRotation(modelViewMat, 0, 1, 0, 0);
-    
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
     glEnable(GL_CULL_FACE);
     
-    glClearColor(0.7, 0.7, 0.7, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    GLfloat modelViewMatrix[16], projectMatrix[16];
+    mat4f_LoadIdentity(projectMatrix);
+    mat4f_LoadIdentity(modelViewMatrix);
+    mat4f_LoadOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -5.0f, 5.0f, projectMatrix);
+
+//    // scale
+//    float s[3] = {
+//        0.8, 0.8, 0.8,
+//    };
+//    mat4f_LoadScale(s, modelViewMatrix);
+//    // Rotation
+//    mat4f_LoadRotation(modelViewMatrix, rotDegree, 1, 0, 0);
+//    rotDegree += 1.0;
+//    // Translation
+//    rotDegree += 0.005;
+//    float t[3] = {
+//        rotDegree, 0, 0,
+//    };
+//    mat4f_LoadTranslation(t, modelViewMatrix);
+    
+    glUniformMatrix4fv(_modelViewSlot, 1, 0, modelViewMatrix);
+    glUniformMatrix4fv(_projectSlot, 1, 0, projectMatrix);
     
     glVertexAttribPointer(_positionSlot, 2, GL_FLOAT, GL_FALSE, 0, vertex);
     glEnableVertexAttribArray(_positionSlot);
@@ -180,8 +213,6 @@ NSString *const kFragmentShaderString = SHADER_STRING
     glVertexAttribPointer(_colorSlot, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, colors);
     glEnableVertexAttribArray(_colorSlot);
     
-//    glUniformMatrix4fv(_modelViewSlot, 1, 0, modelViewMat);
-//    glUniformMatrix4fv(_projectSlot, 1, 0, projectMat);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, _outputTexture);
     glUniform1i(_samplerSlot, 1);
@@ -189,6 +220,10 @@ NSString *const kFragmentShaderString = SHADER_STRING
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, _outputTexture2);
     glUniform1i(_samplerSlot2, 2);
+    
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, _maskTexture);
+    glUniform1i(_samplerSlot3, 3);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
@@ -205,8 +240,6 @@ NSString *const kFragmentShaderString = SHADER_STRING
 }
 
 - (void)createFBO {
-//    [self initializeOutputTexture];
-    
     glGenRenderbuffers(1, &_renderBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _renderBuffer);
 
@@ -231,11 +264,6 @@ NSString *const kFragmentShaderString = SHADER_STRING
     if (_frameBuffer) {
         glDeleteFramebuffers(1, &_frameBuffer);
         _frameBuffer = 0;
-    }
-    
-    if (_outputTexture) {
-        glDeleteTextures(1, &_outputTexture);
-        _outputTexture = 0;
     }
     
     if (_renderBuffer) {
