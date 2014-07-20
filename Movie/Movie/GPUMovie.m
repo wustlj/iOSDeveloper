@@ -195,13 +195,13 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     size_t height = CVPixelBufferGetHeight(movieFrame);
     
     if (imageBufferHeight != height || imageBufferWidth != width) {
-        imageBufferHeight = height;
-        imageBufferWidth = width;
+        imageBufferHeight = (int)height;
+        imageBufferWidth = (int)width;
     }
     
     glActiveTexture(GL_TEXTURE4);
     CVOpenGLESTextureRef yPlaneTextureOut = NULL;
-    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, _textureCacheRef, movieFrame, NULL, GL_TEXTURE_2D, GL_LUMINANCE, width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, 0, &yPlaneTextureOut);
+    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, _textureCacheRef, movieFrame, NULL, GL_TEXTURE_2D, GL_LUMINANCE, imageBufferWidth, imageBufferHeight, GL_LUMINANCE, GL_UNSIGNED_BYTE, 0, &yPlaneTextureOut);
     _luminanceTexture = CVOpenGLESTextureGetName(yPlaneTextureOut);
     glBindTexture(GL_TEXTURE_2D, _luminanceTexture);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -209,7 +209,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     glActiveTexture(GL_TEXTURE5);
     CVOpenGLESTextureRef uvPlaneTextureOut = NULL;
-    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, _textureCacheRef, movieFrame, NULL, GL_TEXTURE_2D, GL_LUMINANCE_ALPHA, width/2, height/2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, 1, &uvPlaneTextureOut);
+    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, _textureCacheRef, movieFrame, NULL, GL_TEXTURE_2D, GL_LUMINANCE_ALPHA, imageBufferWidth/2, imageBufferHeight/2, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, 1, &uvPlaneTextureOut);
     _chrominanceTexture = CVOpenGLESTextureGetName(uvPlaneTextureOut);
     glBindTexture(GL_TEXTURE_2D, _chrominanceTexture);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -225,6 +225,8 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     CFRelease(uvPlaneTextureOut);
     
     CVPixelBufferUnlockBaseAddress(movieFrame, 0);
+    
+    CVOpenGLESTextureCacheFlush(_textureCacheRef, 0);
 }
 
 - (void)endProcessing {

@@ -23,6 +23,7 @@
 		04BE46E01976899C00541C8F /* trans_1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04BE46DF1976899C00541C8F /* trans_1.mp4 */; };
 		04BE4E9319777966009DD70C /* Yh1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04BE4E9219777966009DD70C /* Yh1.mp4 */; };
 		04BE4E9519777B7B009DD70C /* camera480_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04BE4E9419777B7B009DD70C /* camera480_2.mp4 */; };
+		04C7FD24197B934D0036C8E4 /* GPUFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C7FD23197B934D0036C8E4 /* GPUFramebuffer.m */; };
 		04CFEB231963FE6C00E306C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFEB221963FE6C00E306C8 /* Foundation.framework */; };
 		04CFEB251963FE6C00E306C8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFEB241963FE6C00E306C8 /* CoreGraphics.framework */; };
 		04CFEB271963FE6C00E306C8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFEB261963FE6C00E306C8 /* UIKit.framework */; };
@@ -75,6 +76,9 @@
 		04BE46DF1976899C00541C8F /* trans_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = trans_1.mp4; path = Movie/trans_1.mp4; sourceTree = "<group>"; };
 		04BE4E9219777966009DD70C /* Yh1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Yh1.mp4; path = Movie/Yh1.mp4; sourceTree = "<group>"; };
 		04BE4E9419777B7B009DD70C /* camera480_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = camera480_2.mp4; path = Movie/camera480_2.mp4; sourceTree = "<group>"; };
+		04C7FD21197B8E430036C8E4 /* GPUOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUOutput.h; sourceTree = "<group>"; };
+		04C7FD22197B934D0036C8E4 /* GPUFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUFramebuffer.h; sourceTree = "<group>"; };
+		04C7FD23197B934D0036C8E4 /* GPUFramebuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUFramebuffer.m; sourceTree = "<group>"; };
 		04CFEB1F1963FE6C00E306C8 /* Movie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04CFEB221963FE6C00E306C8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		04CFEB241963FE6C00E306C8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -185,9 +189,12 @@
 				04BE1601196695880008DEE3 /* GPUContext.m */,
 				04BE1603196695FA0008DEE3 /* GPUProgram.h */,
 				04BE1604196695FA0008DEE3 /* GPUProgram.m */,
+				04C7FD22197B934D0036C8E4 /* GPUFramebuffer.h */,
+				04C7FD23197B934D0036C8E4 /* GPUFramebuffer.m */,
 				04BA81581973E1020025EA46 /* matrix.c */,
 				04BA81591973E1020025EA46 /* matrix.h */,
 				04BE46DC1976207500541C8F /* Header.h */,
+				04C7FD21197B8E430036C8E4 /* GPUOutput.h */,
 				04CFEB3A1963FE6C00E306C8 /* Images.xcassets */,
 				04CFEB291963FE6C00E306C8 /* Supporting Files */,
 			);
@@ -337,6 +344,7 @@
 				04BA815A1973E1020025EA46 /* matrix.c in Sources */,
 				04CFEB391963FE6C00E306C8 /* ViewController.m in Sources */,
 				04BE1605196695FA0008DEE3 /* GPUProgram.m in Sources */,
+				04C7FD24197B934D0036C8E4 /* GPUFramebuffer.m in Sources */,
 				04CFEB331963FE6C00E306C8 /* AppDelegate.m in Sources */,
 				04CFEB2F1963FE6C00E306C8 /* main.m in Sources */,
 				04BA81571973E1020025EA46 /* GPUView.m in Sources */,

@@ -89,18 +89,18 @@
     }
     
     if (!_overMovie) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Yh1" ofType:@"mp4"]];
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1" ofType:@"mp4"]];
         _overMovie = [[GPUMovie alloc] initWithURL:videoURL];
         _overMovie.keepLooping = NO;
         [_overMovie startProcessing];
     }
     
-//    if (!_maskMovie) {
-//        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1_mask" ofType:@"mp4"]];
-//        _maskMovie = [[GPUMovie alloc] initWithURL:videoURL];
-//        _maskMovie.keepLooping = NO;
-//        [_maskMovie startProcessing];
-//    }
+    if (!_maskMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1_mask" ofType:@"mp4"]];
+        _maskMovie = [[GPUMovie alloc] initWithURL:videoURL];
+        _maskMovie.keepLooping = NO;
+        [_maskMovie startProcessing];
+    }
     
     __block typeof(self) oneself = self;
     
@@ -112,16 +112,16 @@
         [oneself reloadOverTexture];
     };
     
-//    _maskMovie.completionBlock = ^ {
-//        [oneself reloadMaskTexture];
-//    };
+    _maskMovie.completionBlock = ^ {
+        [oneself reloadMaskTexture];
+    };
     
     [_baseMovie startProcessing];
 }
 
 - (void)reloadBaseTexture {
     [_overMovie readNextVideoFrame];
-//    [_maskMovie readNextVideoFrame];
+    [_maskMovie readNextVideoFrame];
     
     _glView.outputTexture = _baseMovie.outputTexture;
     [_glView draw];

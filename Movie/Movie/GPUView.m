@@ -117,7 +117,7 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
         
         [GPUContext useImageProcessingContext];
         
-        program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kTwoFragmentShaderString] retain];
+        program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kThreeFragmentShaderString] retain];
         
         [program link];
         
@@ -176,7 +176,7 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
     
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
-    glEnable(GL_CULL_FACE);
+//    glEnable(GL_CULL_FACE);
     
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -191,9 +191,9 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 //        0.8, 0.8, 0.8,
 //    };
 //    mat4f_LoadScale(s, modelViewMatrix);
-//    // Rotation
-//    mat4f_LoadRotation(modelViewMatrix, rotDegree, 1, 0, 0);
-//    rotDegree += 1.0;
+    // Rotation
+    mat4f_LoadRotation(modelViewMatrix, rotDegree, 0, 1, 0);
+    rotDegree += 1.0;
 //    // Translation
 //    rotDegree += 0.005;
 //    float t[3] = {
