@@ -84,7 +84,9 @@
         NSAssert(NO, @"Error at CVPixelBufferCreate %d", err);
     }
     
-    err = CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, _textureCacheRef, _renderTarget,
+    CVOpenGLESTextureCacheRef textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
+    
+    err = CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, textureCacheRef, _renderTarget,
                                                         NULL, // texture attributes
                                                         GL_TEXTURE_2D,
                                                         GL_RGBA, // opengl format
@@ -108,6 +110,12 @@
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CVOpenGLESTextureGetName(_renderTexture), 0);
+}
+
+- (void)activateFramebuffer
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
+    glViewport(0, 0, (int)_size.width, (int)_size.height);
 }
 
 @end

@@ -18,19 +18,17 @@
 #import "GPUProgram.h"
 #import "GPUContext.h"
 
+#import "GPUFramebuffer.h"
+
 @interface GPUMovie : NSObject
 {
     GPUProgram *_yuvConversionProgram;
     GLuint _yuvConversionPositionAttribute, _yuvConversionTextureCoordinateAttribute;
     GLint _yuvConversionLuminanceTextureUniform, _yuvConversionChrominanceTextureUniform;
     GLint _yuvConversionMatrixUniform;
-    GLuint _yuvConversionFrameBuffer;
     GLuint _luminanceTexture;
     GLuint _chrominanceTexture;
-    GLuint _outputTexture;
     
-    CVPixelBufferRef _renderTarget;
-    CVOpenGLESTextureRef _renderTexture;
     CVOpenGLESTextureCacheRef _textureCacheRef;
     
     AVAssetReader *_assetReader;
@@ -39,6 +37,8 @@
     int imageBufferWidth, imageBufferHeight;
     
     BOOL _keepLooping;
+    
+    GPUFramebuffer *_yuvConversionFrameBuffer;
 }
 
 @property (nonatomic, retain) NSURL *url;

@@ -96,7 +96,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     Block_release(_completionBlock);
     
-    [self destroyYUVConversionFBO];
+    [_yuvConversionFrameBuffer release];
     
     [super dealloc];
 }
@@ -265,12 +265,10 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     [GPUContext setActiveShaderProgram:_yuvConversionProgram];
     
     if (!_yuvConversionFrameBuffer) {
-        [self destroyYUVConversionFBO];
-        [self createYUVConversionFBO];
+        _yuvConversionFrameBuffer = [[GPUFramebuffer alloc] initWithSize:CGSizeMake(imageBufferWidth, imageBufferHeight)];
     }
     
-    glBindFramebuffer(GL_FRAMEBUFFER, _yuvConversionFrameBuffer);
-    glViewport(0, 0, imageBufferWidth, imageBufferHeight);
+    [_yuvConversionFrameBuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
@@ -305,78 +303,8 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-- (void)createYUVConversionFBO {
-    glGenFramebuffers(1, &_yuvConversionFrameBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, _yuvConversionFrameBuffer);
-    
-    [self initializeOutputTexture];
-    
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    NSAssert(status == GL_FRAMEBUFFER_COMPLETE, @"Incomplete filter FBO: %d", status);
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-- (void)destroyYUVConversionFBO {
-    if (_yuvConversionFrameBuffer) {
-        glDeleteFramebuffers(1, &_yuvConversionFrameBuffer);
-        _yuvConversionFrameBuffer = 0;
-    }
-    
-    if (_renderTarget) {
-        CFRelease(_renderTarget);
-        _renderTarget = NULL;
-    }
-    
-    if (_renderTexture) {
-        CFRelease(_renderTexture);
-        _renderTexture = NULL;
-    }
-    
-    _outputTexture = 0;
-}
-
-- (void)initializeOutputTexture {
-    if (!_outputTexture) {
-        [GPUContext useImageProcessingContext];
-        
-        CFDictionaryRef empty; // empty value for attr value.
-        CFMutableDictionaryRef attrs;
-        empty = CFDictionaryCreate(kCFAllocatorDefault, NULL, NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks); // our empty IOSurface properties dictionary
-        attrs = CFDictionaryCreateMutable(kCFAllocatorDefault, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        CFDictionarySetValue(attrs, kCVPixelBufferIOSurfacePropertiesKey, empty);
-        
-        CVReturn err = CVPixelBufferCreate(kCFAllocatorDefault, imageBufferWidth, imageBufferHeight, kCVPixelFormatType_32BGRA, attrs, &_renderTarget);
-        if (err)
-        {
-            NSLog(@"FBO size: %d, %d", imageBufferWidth, imageBufferHeight);
-            NSAssert(NO, @"Error at CVPixelBufferCreate %d", err);
-        }
-        
-        err = CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault, _textureCacheRef, _renderTarget,
-                                                            NULL, // texture attributes
-                                                            GL_TEXTURE_2D,
-                                                            GL_RGBA, // opengl format
-                                                            imageBufferWidth,
-                                                            imageBufferHeight,
-                                                            GL_BGRA, // native iOS format
-                                                            GL_UNSIGNED_BYTE,
-                                                            0,
-                                                            &_renderTexture);
-        if (err)
-        {
-            NSAssert(NO, @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err);
-        }
-        
-        CFRelease(attrs);
-        CFRelease(empty);
-        
-        glBindTexture(CVOpenGLESTextureGetTarget(_renderTexture), CVOpenGLESTextureGetName(_renderTexture));
-        _outputTexture = CVOpenGLESTextureGetName(_renderTexture);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CVOpenGLESTextureGetName(_renderTexture), 0);
-    }
+- (GLuint)outputTexture {
+    return _yuvConversionFrameBuffer.texture;
 }
 
 @end

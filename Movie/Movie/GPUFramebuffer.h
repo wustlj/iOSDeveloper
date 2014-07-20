@@ -14,7 +14,6 @@
     GLuint _framebuffer;
     
     CVPixelBufferRef _renderTarget;
-    CVOpenGLESTextureCacheRef _textureCacheRef;
     CVOpenGLESTextureRef _renderTexture;
 }
 
@@ -22,5 +21,7 @@
 @property (nonatomic, readonly) GLuint texture;
 
 - (id)initWithSize:(CGSize)framebufferSize;
+
+- (void)activateFramebuffer;
 
 @end

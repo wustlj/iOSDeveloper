@@ -226,7 +226,7 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
     glUniform1i(_samplerSlot3, 3);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    
+        
     glBindRenderbuffer(GL_RENDERBUFFER, _renderBuffer);
     [[[GPUContext sharedImageProcessingContext] context] presentRenderbuffer:GL_RENDERBUFFER];
 }

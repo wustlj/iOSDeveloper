@@ -34,6 +34,11 @@ static void *openGLESContextQueueKey;
     self = [super init];
     if (self) {
          _contextQueue = dispatch_queue_create("com.YOUKU.GPUImage.openGLESContextQueue", NULL);
+        openGLESContextQueueKey = &openGLESContextQueueKey;
+#if (!defined(__IPHONE_6_0) || (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0))
+#else
+        dispatch_queue_set_specific(_contextQueue, openGLESContextQueueKey, (__bridge void *)self, NULL);
+#endif
     }
     return self;
 }
