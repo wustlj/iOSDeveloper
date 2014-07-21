@@ -18,6 +18,7 @@
 #import "GPUContext.h"
 
 #import "GPUMovie.h"
+#import "GPUFilter.h"
 
 @interface ViewController ()
 {
@@ -28,6 +29,8 @@
     GPUMovie *_overMovie;
     GPUMovie *_maskMovie;
     GPUMovie *_movie3;
+    
+    GPUFilter *_filter;
 }
 @end
 
@@ -81,6 +84,23 @@
 }
 
 #pragma mark - Action
+
+- (void)startWithTarget {
+    if (!_baseMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
+        _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
+    }
+    
+    if (!_filter) {
+        _filter = [[GPUFilter alloc] init];
+    }
+    
+//    [_baseMovie addTarget:_filter];
+//    [_filter addTarget:_glView];
+    [_baseMovie addTarget:_glView];
+    
+    [_baseMovie startProcessing];
+}
 
 - (void)startGPUMovie {
     if (!_baseMovie) {

@@ -72,6 +72,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     self = [super init];
     if (self) {
         self.url = url;
+        _targets = [[NSMutableArray alloc] init];
         
         [self commInit];
         
@@ -142,30 +143,6 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     }
 }
 
-- (void)createReader {
-    [_assetReader release];
-    _assetReader = nil;
-    if (!_assetReader) {
-        NSError *error = nil;
-        _assetReader = [[AVAssetReader alloc] initWithAsset:_asset error:&error];
-        if (error) {
-            NSLog(@"%@", [error description]);
-            return;
-        }
-        
-        NSArray *videoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
-        AVAssetTrack *track = [videoTracks objectAtIndex:0];
-        NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
-        _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:track outputSettings:outputSettings];
-        
-        if ([_assetReader canAddOutput:_videoTrackOutput]) {
-            [_assetReader addOutput:_videoTrackOutput];
-        }
-        
-        
-    }
-}
-
 - (BOOL)readNextVideoFrame {    
     return [self readNextVideoFrameFromOutput:_videoTrackOutput];
 }
@@ -217,9 +194,10 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     [self convertYUVToRGBOutput];
     
-    if (_completionBlock) {
-        _completionBlock();
-    }
+//    if (_completionBlock) {
+//        _completionBlock();
+//    }
+    [self informTargetsNewFrame];
     
     CFRelease(yPlaneTextureOut);
     CFRelease(uvPlaneTextureOut);
@@ -231,6 +209,30 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 - (void)endProcessing {
     NSLog(@"end processing");
+}
+
+- (void)createReader {
+    [_assetReader release];
+    _assetReader = nil;
+    if (!_assetReader) {
+        NSError *error = nil;
+        _assetReader = [[AVAssetReader alloc] initWithAsset:_asset error:&error];
+        if (error) {
+            NSLog(@"%@", [error description]);
+            return;
+        }
+        
+        NSArray *videoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
+        AVAssetTrack *track = [videoTracks objectAtIndex:0];
+        NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
+        _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:track outputSettings:outputSettings];
+        
+        if ([_assetReader canAddOutput:_videoTrackOutput]) {
+            [_assetReader addOutput:_videoTrackOutput];
+        }
+        
+        
+    }
 }
 
 #pragma mark - GPU
@@ -305,6 +307,22 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 - (GLuint)outputTexture {
     return _yuvConversionFrameBuffer.texture;
+}
+
+#pragma mark - 
+
+- (void)informTargetsNewFrame {
+    for (id<GPUInput> target in _targets) {
+        [target setInputSize:CGSizeMake(imageBufferWidth, imageBufferHeight)];
+        [target setInputFramebuffer:_yuvConversionFrameBuffer];
+        [target newFrameReadyAtTime:kCMTimeZero];
+    }
+}
+
+- (void)addTarget:(id<GPUInput>)target {
+    if (![_targets containsObject:target]) {
+        [_targets addObject:target];
+    }
 }
 
 @end

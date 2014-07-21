@@ -19,6 +19,7 @@
 #import "GPUContext.h"
 
 #import "GPUFramebuffer.h"
+#import "GPUInput.h"
 
 @interface GPUMovie : NSObject
 {
@@ -39,6 +40,7 @@
     BOOL _keepLooping;
     
     GPUFramebuffer *_yuvConversionFrameBuffer;
+    NSMutableArray *_targets;
 }
 
 @property (nonatomic, retain) NSURL *url;
@@ -52,5 +54,7 @@
 
 @property (nonatomic, copy) void (^completionBlock)(void);
 @property (nonatomic, readonly) GLuint outputTexture;
+
+- (void)addTarget:(id<GPUInput>)target;
 
 @end

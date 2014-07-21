@@ -36,6 +36,18 @@ NSString *const kVertexShaderString = SHADER_STRING
  }
 );
 
+NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
+(
+ varying highp vec2 textureCoordinate;
+ 
+ uniform sampler2D inputImageTexture;
+ 
+ void main()
+ {
+     gl_FragColor = texture2D(inputImageTexture, textureCoordinate);
+ }
+ );
+
 
 
 NSString *const kThreeFragmentShaderString = SHADER_STRING
@@ -117,7 +129,7 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
         
         [GPUContext useImageProcessingContext];
         
-        program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kThreeFragmentShaderString] retain];
+        program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kGPUImagePassthroughFragmentShaderString] retain];
         
         [program link];
         
@@ -126,14 +138,14 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
         _positionSlot = [program attributeSlot:@"vPosition"];
         _textureSlot = [program attributeSlot:@"textureCoord"];
         _colorSlot = [program attributeSlot:@"color"];
-        _samplerSlot = [program uniformIndex:@"sampler"];
+        _samplerSlot = [program uniformIndex:@"inputImageTexture"];
         _samplerSlot2 = [program uniformIndex:@"sampler2"];
         _samplerSlot3 = [program uniformIndex:@"samplerMask"];
         
         _modelViewSlot = [program uniformIndex:@"modelViewMatrix"];
         _projectSlot = [program uniformIndex:@"projectMatrix"];
         
-        [self createFBO];
+//        [self createFBO];
     }
     return self;
 }
@@ -149,6 +161,24 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 //    [self createFBO];
 //    [self draw];
 }
+
+#pragma mark - GPUInput
+
+- (void)newFrameReadyAtTime:(CMTime)frameTime {
+    [self draw];
+}
+
+- (void)setInputSize:(CGSize)newSize {
+    if (!CGSizeEqualToSize(_size, newSize)) {
+        _size = newSize;
+    }
+}
+
+- (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer {
+    _inputFramebuffer = newInputFramebuffer;
+}
+
+#pragma mark -
 
 - (void)draw {
     [GPUContext setActiveShaderProgram:program];
@@ -173,9 +203,10 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
         0,     0,   0,   0,
         255,   0, 255, 255,
     };
-    
-    glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
-    glViewport(0, 0, self.frame.size.width, self.frame.size.height);
+
+    [self setDisplayFramebuffer];
+//    glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
+//    glViewport(0, 0, self.frame.size.width, self.frame.size.height);
 //    glEnable(GL_CULL_FACE);
     
     glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -192,8 +223,8 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 //    };
 //    mat4f_LoadScale(s, modelViewMatrix);
     // Rotation
-    mat4f_LoadRotation(modelViewMatrix, rotDegree, 0, 1, 0);
-    rotDegree += 1.0;
+//    mat4f_LoadRotation(modelViewMatrix, rotDegree, 0, 1, 0);
+//    rotDegree += 1.0;
 //    // Translation
 //    rotDegree += 0.005;
 //    float t[3] = {
@@ -214,16 +245,20 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
     glEnableVertexAttribArray(_colorSlot);
     
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, _outputTexture);
+    glBindTexture(GL_TEXTURE_2D, _inputFramebuffer.texture);
     glUniform1i(_samplerSlot, 1);
     
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, _outputTexture2);
-    glUniform1i(_samplerSlot2, 2);
-    
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, _maskTexture);
-    glUniform1i(_samplerSlot3, 3);
+//    glActiveTexture(GL_TEXTURE1);
+//    glBindTexture(GL_TEXTURE_2D, _outputTexture);
+//    glUniform1i(_samplerSlot, 1);
+//    
+//    glActiveTexture(GL_TEXTURE2);
+//    glBindTexture(GL_TEXTURE_2D, _outputTexture2);
+//    glUniform1i(_samplerSlot2, 2);
+//    
+//    glActiveTexture(GL_TEXTURE3);
+//    glBindTexture(GL_TEXTURE_2D, _maskTexture);
+//    glUniform1i(_samplerSlot3, 3);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
@@ -231,12 +266,23 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
     [[[GPUContext sharedImageProcessingContext] context] presentRenderbuffer:GL_RENDERBUFFER];
 }
 
+#pragma mark - FBO
+
 - (void)setupLayer {
     _eaglLayer = (CAEAGLLayer *)self.layer;
     _eaglLayer.opaque = YES;
     _eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking,
                                      kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+}
+
+- (void)setDisplayFramebuffer {
+    if (!_frameBuffer) {
+        [self createFBO];
+    }
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
+    glViewport(0, 0, self.frame.size.width, self.frame.size.height);
 }
 
 - (void)createFBO {

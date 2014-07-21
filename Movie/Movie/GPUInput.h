@@ -7,12 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreMedia/CoreMedia.h>
 
 @class GPUFramebuffer;
 
 @protocol GPUInput <NSObject>
 
-- (void)setInputFramebuffer:(GPUImageFramebuffer *)newInputFramebuffer;
+- (void)newFrameReadyAtTime:(CMTime)frameTime;
+- (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer;
 - (void)setInputSize:(CGSize)newSize;
 
 @end

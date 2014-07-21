@@ -15,8 +15,10 @@
 
 #import "GPUContext.h"
 #import "GPUProgram.h"
+#import "GPUInput.h"
+#import "GPUFramebuffer.h"
 
-@interface GPUView : UIView
+@interface GPUView : UIView <GPUInput>
 {
     CAEAGLLayer *_eaglLayer;
     
@@ -40,6 +42,9 @@
     GPUProgram *program;
     
     GLfloat rotDegree;
+    
+    CGSize _size;
+    GPUFramebuffer *_inputFramebuffer;
 }
 
 @property (nonatomic, assign) GLuint outputTexture;
