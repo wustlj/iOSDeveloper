@@ -19,6 +19,7 @@
 
 #import "GPUMovie.h"
 #import "GPUFilter.h"
+#import "GPUTwoInputFilter.h"
 
 @interface ViewController ()
 {
@@ -72,7 +73,7 @@
     [btn setFrame:CGRectMake(0, 320, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setTitle:@"Begin" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(startGPUMovie) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(startTwoFilter) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -85,7 +86,7 @@
 
 #pragma mark - Action
 
-- (void)startWithTarget {
+- (void)startFilter {
     if (!_baseMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
         _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
@@ -95,11 +96,49 @@
         _filter = [[GPUFilter alloc] init];
     }
     
-//    [_baseMovie addTarget:_filter];
-//    [_filter addTarget:_glView];
-    [_baseMovie addTarget:_glView];
+    [_baseMovie addTarget:_filter];
+    [_filter addTarget:_glView];
+    
+    
+//    [_baseMovie addTarget:_glView];
     
     [_baseMovie startProcessing];
+}
+
+- (void)startTwoFilter {
+    if (!_baseMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
+        _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
+    }
+    
+    if (!_overMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"PTstar" ofType:@"mp4"]];
+        _overMovie = [[GPUMovie alloc] initWithURL:videoURL];
+        _overMovie.textureIndex = 1;
+        _overMovie.keepLooping = NO;
+        [_overMovie startProcessing];
+    }
+    
+    __block typeof(self) oneself = self;
+    
+    _baseMovie.completionBlock = ^ {
+        [oneself loadSecondTexture];
+    };
+    
+    
+    if (!_filter) {
+        _filter = [[GPUTwoInputFilter alloc] init];
+    }
+    
+    [_baseMovie addTarget:_filter];
+    [_overMovie addTarget:_filter];
+    [_filter addTarget:_glView];
+    
+    [_baseMovie startProcessing];
+}
+
+- (void)loadSecondTexture {
+    [_overMovie readNextVideoFrame];
 }
 
 - (void)startGPUMovie {
@@ -111,6 +150,7 @@
     if (!_overMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1" ofType:@"mp4"]];
         _overMovie = [[GPUMovie alloc] initWithURL:videoURL];
+        _overMovie.textureIndex = 1;
         _overMovie.keepLooping = NO;
         [_overMovie startProcessing];
     }
@@ -152,7 +192,7 @@
 }
 
 - (void)reloadMaskTexture {
-    _glView.maskTexture = _maskMovie.outputTexture;
+//    _glView.maskTexture = _maskMovie.outputTexture;
 }
 
 - (void)startRead2 {

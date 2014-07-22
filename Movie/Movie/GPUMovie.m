@@ -85,6 +85,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 - (void)commInit {
     _keepLooping = YES;
+    _textureIndex = 0;
 }
 
 - (void)dealloc {
@@ -194,9 +195,10 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     [self convertYUVToRGBOutput];
     
-//    if (_completionBlock) {
-//        _completionBlock();
-//    }
+    if (_completionBlock) {
+        _completionBlock();
+    }
+    
     [self informTargetsNewFrame];
     
     CFRelease(yPlaneTextureOut);
@@ -313,9 +315,9 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 - (void)informTargetsNewFrame {
     for (id<GPUInput> target in _targets) {
-        [target setInputSize:CGSizeMake(imageBufferWidth, imageBufferHeight)];
-        [target setInputFramebuffer:_yuvConversionFrameBuffer];
-        [target newFrameReadyAtTime:kCMTimeZero];
+        [target setInputSize:CGSizeMake(imageBufferWidth, imageBufferHeight) atIndex:_textureIndex];
+        [target setInputFramebuffer:_yuvConversionFrameBuffer atIndex:_textureIndex];
+        [target newFrameReadyAtTime:kCMTimeZero atIndex:_textureIndex];
     }
 }
 

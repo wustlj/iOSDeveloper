@@ -11,19 +11,13 @@
 NSString *const kFilterVertexShaderString = SHADER_STRING
 (
  attribute vec4 vPosition;
- attribute vec4 color;
  attribute vec2 textureCoord;
  
- uniform mat4 modelViewMatrix;
- uniform mat4 projectMatrix;
- 
- varying vec4 colorVarying;
  varying vec2 textureCoordOut;
  
  void main()
  {
-     gl_Position = projectMatrix * modelViewMatrix * vPosition;
-     colorVarying = color;
+     gl_Position = vPosition;
      textureCoordOut = textureCoord;
  }
  );
@@ -32,16 +26,13 @@ NSString *const kFilterTwoFragmentShaderString = SHADER_STRING
 (
  precision mediump float;
  
- varying vec4 colorVarying;
  varying vec2 textureCoordOut;
  
  uniform sampler2D sampler;
- uniform sampler2D sampler2;
- uniform sampler2D samplerMask;
  
  void main()
  {
-     vec4 base = texture2D(sampler, textureCoordOut);
+//     vec4 base = texture2D(sampler, textureCoordOut);
 //     vec4 overlay = texture2D(sampler2, textureCoordOut);
 //     
 //     mediump float r;
@@ -68,20 +59,20 @@ NSString *const kFilterTwoFragmentShaderString = SHADER_STRING
 //     mediump float a = overlay.a + base.a - overlay.a * base.a;
 //     gl_FragColor = vec4(r,g,b,a);
 
-     base.r = 1.0;
-     gl_FragColor = base;
+//     base.r = 1.0;
+     gl_FragColor = texture2D(sampler, textureCoordOut);
  }
  );
 
 @implementation GPUFilter
 
-- (id)init {
+- (id)initWithVertexShaderFromString:(NSString *)vertexShader fragmentShaderFromString:(NSString *)fragmentShader {
     self = [super init];
     if (self) {
         _targets = [[NSMutableArray alloc] init];
         
         runSynchronouslyOnVideoProcessingQueue(^{
-            _filterProgram = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kFilterVertexShaderString fragmentShaderString:kFilterTwoFragmentShaderString] retain];
+            _filterProgram = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:vertexShader fragmentShaderString:fragmentShader] retain];
             
             [_filterProgram link];
             
@@ -90,8 +81,25 @@ NSString *const kFilterTwoFragmentShaderString = SHADER_STRING
             _samplerSlot = [_filterProgram uniformIndex:@"sampler"];
             
             [GPUContext setActiveShaderProgram:_filterProgram];
+            
         });
     }
+    return self;
+}
+
+- (id)initWithFragmentShaderFromString:(NSString *)fragmentShader {
+    if (!(self = [self initWithVertexShaderFromString:kFilterVertexShaderString fragmentShaderFromString:fragmentShader])) {
+        return nil;
+    }
+    return self;
+}
+
+- (id)init {
+    if (!(self = [self initWithFragmentShaderFromString:kFilterTwoFragmentShaderString]))
+    {
+		return nil;
+    }
+    
     return self;
 }
 
@@ -117,17 +125,17 @@ NSString *const kFilterTwoFragmentShaderString = SHADER_STRING
 
 #pragma mark - GPUInput
 
-- (void)newFrameReadyAtTime:(CMTime)frameTime {
+- (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     [self draw];
     
     [self informTargetsNewFrame];
 }
 
-- (void)setInputFramebuffer:(id)newInputFramebuffer {
+- (void)setInputFramebuffer:(id)newInputFramebuffer atIndex:(NSInteger)textureIndex {
     _firstFramebuffer = newInputFramebuffer;
 }
 
-- (void)setInputSize:(CGSize)newSize {
+- (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex {
     _size = newSize;
 }
 
@@ -148,6 +156,9 @@ NSString *const kFilterTwoFragmentShaderString = SHADER_STRING
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);
     glUniform1i(_samplerSlot, 2);
+    
+    glEnableVertexAttribArray(_positionAttribute);
+    glEnableVertexAttribArray(_textureCoordinateAttribute);
     
     glVertexAttribPointer(_positionAttribute, 2, GL_FLOAT, 0, 0, vertices);
     glVertexAttribPointer(_textureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
@@ -175,9 +186,9 @@ NSString *const kFilterTwoFragmentShaderString = SHADER_STRING
 
 - (void)informTargetsNewFrame {
     for (id<GPUInput> target in _targets) {
-        [target setInputSize:_size];
-        [target setInputFramebuffer:_framebuffer];
-        [target newFrameReadyAtTime:kCMTimeZero];
+        [target setInputSize:_size atIndex:0];
+        [target setInputFramebuffer:_framebuffer atIndex:0];
+        [target newFrameReadyAtTime:kCMTimeZero atIndex:0];
     }
 }
 

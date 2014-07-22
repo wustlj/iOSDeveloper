@@ -13,8 +13,8 @@
 
 @protocol GPUInput <NSObject>
 
-- (void)newFrameReadyAtTime:(CMTime)frameTime;
-- (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer;
-- (void)setInputSize:(CGSize)newSize;
+- (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex;
+- (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex;
+- (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex;
 
 @end

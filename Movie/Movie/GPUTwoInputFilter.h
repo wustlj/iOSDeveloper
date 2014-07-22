@@ -10,6 +10,10 @@
 
 @interface GPUTwoInputFilter : GPUFilter
 {
-    GPUFramebuffer *_twoFramebuffer;
+    GLuint _secondTextureCoordinateAttribute;
+    GLuint _secondSamplerSlot;
+    GPUFramebuffer *_secondFramebuffer;
+    BOOL _hadReceivedFirstFrame;
+    BOOL _hadReceivedSecondFrame;
 }
 @end

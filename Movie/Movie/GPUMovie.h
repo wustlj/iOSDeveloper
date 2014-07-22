@@ -49,6 +49,7 @@
 - (id)initWithURL:(NSURL *)url;
 
 @property (nonatomic, assign) BOOL keepLooping;
+@property (nonatomic, assign) NSInteger textureIndex;
 - (void)startProcessing;
 - (BOOL)readNextVideoFrame;
 

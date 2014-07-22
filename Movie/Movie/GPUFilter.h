@@ -26,8 +26,12 @@
     NSMutableArray *_targets;
 }
 
+- (id)initWithVertexShaderFromString:(NSString *)vertexShader fragmentShaderFromString:(NSString *)fragmentShader;
+- (id)initWithFragmentShaderFromString:(NSString *)fragmentShader;
 
 - (void)addTarget:(id<GPUInput>)target;
 - (CGSize)outputFrameSize;
+
+- (void)informTargetsNewFrame;
 
 @end
