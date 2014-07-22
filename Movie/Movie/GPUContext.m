@@ -8,6 +8,17 @@
 
 #import "GPUContext.h"
 
+GPURect
+GPURectMake(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top)
+{
+    GPURect rect;
+    rect.left = left;
+    rect.right = right;
+    rect.bottom = bottom;
+    rect.top = top;
+    return rect;
+}
+
 void runSynchronouslyOnVideoProcessingQueue(void (^block)(void))
 {
     dispatch_queue_t videoProcessingQueue = [GPUContext sharedContextQueue];

@@ -60,7 +60,7 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
         return nil;
     }
     
-    _hadReceivedthreeFrame = NO;
+    _hadReceivedThreeFrame = NO;
     _threeFramebuffer = nil;
     
     runSynchronouslyOnVideoProcessingQueue(^{
@@ -83,8 +83,8 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
 #pragma mark - GPUInput
 
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
-    if (_hadReceivedFirstFrame && _hadReceivedSecondFrame && _hadReceivedthreeFrame) {
-        _hadReceivedthreeFrame = NO;
+    if (_hadReceivedFirstFrame && _hadReceivedSecondFrame && _hadReceivedThreeFrame) {
+        _hadReceivedThreeFrame = NO;
         _hadReceivedFirstFrame = NO;
         _hadReceivedSecondFrame = NO;
         [self draw];
@@ -102,7 +102,7 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
         _hadReceivedSecondFrame = YES;
     } else {
         _threeFramebuffer = newInputFramebuffer;
-        _hadReceivedthreeFrame = YES;
+        _hadReceivedThreeFrame = YES;
     }
 }
 

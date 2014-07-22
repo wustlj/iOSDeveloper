@@ -104,6 +104,8 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     if (_hadReceivedFirstFrame && _hadReceivedSecondFrame) {
+        _hadReceivedFirstFrame = NO;
+        _hadReceivedSecondFrame = NO;
         [self draw];
         
         [self informTargetsNewFrame];

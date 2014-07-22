@@ -14,6 +14,17 @@
 
 #import "GPUProgram.h"
 
+struct GPURect {
+    GLfloat left;
+    GLfloat right;
+    GLfloat bottom;
+    GLfloat top;
+};
+typedef struct GPURect GPURect;
+
+GPURect
+GPURectMake(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top);
+
 void runSynchronouslyOnVideoProcessingQueue(void (^block)(void));
 
 @interface GPUContext : NSObject
