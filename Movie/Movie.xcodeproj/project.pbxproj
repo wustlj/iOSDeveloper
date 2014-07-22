@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		043D568C197E40A400E7C3AC /* GPUThreeInputFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 043D568B197E40A400E7C3AC /* GPUThreeInputFilter.m */; };
 		04BA81571973E1020025EA46 /* GPUView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA81561973E1020025EA46 /* GPUView.m */; };
 		04BA815A1973E1020025EA46 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 04BA81581973E1020025EA46 /* matrix.c */; };
 		04BACA7A1975194C00C03A59 /* mao2.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 04BACA791975194C00C03A59 /* mao2.MOV */; };
@@ -56,6 +57,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		043D568A197E40A400E7C3AC /* GPUThreeInputFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUThreeInputFilter.h; sourceTree = "<group>"; };
+		043D568B197E40A400E7C3AC /* GPUThreeInputFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUThreeInputFilter.m; sourceTree = "<group>"; };
 		04BA81551973E1020025EA46 /* GPUView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUView.h; sourceTree = "<group>"; };
 		04BA81561973E1020025EA46 /* GPUView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUView.m; sourceTree = "<group>"; };
 		04BA81581973E1020025EA46 /* matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = matrix.c; sourceTree = "<group>"; };
@@ -205,6 +208,8 @@
 				04C7FD27197BB7E10036C8E4 /* GPUFilter.m */,
 				04C7FD29197BC6370036C8E4 /* GPUTwoInputFilter.h */,
 				04C7FD2A197BC6370036C8E4 /* GPUTwoInputFilter.m */,
+				043D568A197E40A400E7C3AC /* GPUThreeInputFilter.h */,
+				043D568B197E40A400E7C3AC /* GPUThreeInputFilter.m */,
 				04CFEB3A1963FE6C00E306C8 /* Images.xcassets */,
 				04CFEB291963FE6C00E306C8 /* Supporting Files */,
 			);
@@ -355,6 +360,7 @@
 				04BA815A1973E1020025EA46 /* matrix.c in Sources */,
 				04CFEB391963FE6C00E306C8 /* ViewController.m in Sources */,
 				04C7FD28197BB7E10036C8E4 /* GPUFilter.m in Sources */,
+				043D568C197E40A400E7C3AC /* GPUThreeInputFilter.m in Sources */,
 				04BE1605196695FA0008DEE3 /* GPUProgram.m in Sources */,
 				04C7FD24197B934D0036C8E4 /* GPUFramebuffer.m in Sources */,
 				04CFEB331963FE6C00E306C8 /* AppDelegate.m in Sources */,
