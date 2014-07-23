@@ -24,7 +24,7 @@ NSString *const kFilterVertexShaderString = SHADER_STRING
 
 NSString *const kFilterFragmentShaderString = SHADER_STRING
 (
- precision mediump float;
+ precision highp float;
  
  varying vec2 textureCoordOut;
  

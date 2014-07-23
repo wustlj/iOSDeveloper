@@ -73,8 +73,15 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
     return self;
 }
 
+- (id)initWithFragmentShaderFromString:(NSString *)fragmentShader {
+    if (!(self = [self initWithVertexShaderFromString:kGPUImageThreeInputTextureVertexShaderString fragmentShaderFromString:fragmentShader])) {
+        return nil;
+    }
+    return self;
+}
+
 - (id)init {
-    if (!(self = [self initWithVertexShaderFromString:kGPUImageThreeInputTextureVertexShaderString fragmentShaderFromString:kThreeFragmentShaderString])) {
+    if (!(self = [self initWithFragmentShaderFromString:kThreeFragmentShaderString])) {
         return nil;
     }
     return self;

@@ -23,6 +23,7 @@
 #import "GPUThreeInputFilter.h"
 #import "GPULineFilter.h"
 #import "GPUPartFilter.h"
+#import "GPUGridFilter.h"
 
 @interface ViewController ()
 {
@@ -62,6 +63,8 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    [GPUContext sharedImageProcessingContext];
+    
     self.view.backgroundColor = [UIColor darkGrayColor];
     
     _glView = [[GPUView alloc] initWithFrame:CGRectMake(0, 0, 320, 320)];
@@ -76,7 +79,7 @@
     [btn setFrame:CGRectMake(0, 320, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setTitle:@"Begin" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(startPartFilter) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(startGridFilter) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -88,6 +91,22 @@
 }
 
 #pragma mark - Action
+
+- (void)startGridFilter {
+    if (!_baseMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
+        _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
+    }
+    
+    if (!_filter) {
+        _filter = [[GPUGridFilter alloc] init];
+    }
+    
+    [_baseMovie addTarget:_filter];
+    [_filter addTarget:_glView];
+    
+    [_baseMovie startProcessing];
+}
 
 - (void)startPartFilter {
     if (!_baseMovie) {
