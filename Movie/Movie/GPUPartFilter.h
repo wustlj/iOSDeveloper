@@ -1,5 +1,5 @@
 //
-//  GPULineFilter.h
+//  GPUPartFilter.h
 //  Movie
 //
 //  Created by lijian on 14-7-22.
@@ -8,8 +8,6 @@
 
 #import "GPUFilter.h"
 
-@interface GPULineFilter : GPUFilter
-{
-    GLuint _stepUniformSlot;
-}
+@interface GPUPartFilter : GPUFilter
+
 @end

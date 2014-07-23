@@ -42,6 +42,7 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
     self = [super init];
     if (self) {
         _targets = [[NSMutableArray alloc] init];
+        _currentFrameIndex = 0;
         
         runSynchronouslyOnVideoProcessingQueue(^{
             _filterProgram = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:vertexShader fragmentShaderString:fragmentShader] retain];
@@ -99,6 +100,8 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
 
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     [self draw];
+    
+    _currentFrameIndex++;
     
     [self informTargetsNewFrame];
 }

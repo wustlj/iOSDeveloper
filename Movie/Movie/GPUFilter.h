@@ -13,6 +13,9 @@
 #import "GPUContext.h"
 #import "GPUProgram.h"
 
+extern NSString *const kFilterVertexShaderString;
+extern NSString *const kFilterFragmentShaderString;
+
 @interface GPUFilter : NSObject <GPUInput>
 {
     GPUFramebuffer *_framebuffer;
@@ -21,6 +24,7 @@
     GLuint _samplerSlot;
     
     CGSize _size;
+    int _currentFrameIndex;
     
     GPUFramebuffer *_firstFramebuffer;
     NSMutableArray *_targets;

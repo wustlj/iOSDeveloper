@@ -22,6 +22,7 @@
 #import "GPUTwoInputFilter.h"
 #import "GPUThreeInputFilter.h"
 #import "GPULineFilter.h"
+#import "GPUPartFilter.h"
 
 @interface ViewController ()
 {
@@ -75,7 +76,7 @@
     [btn setFrame:CGRectMake(0, 320, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setTitle:@"Begin" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(startLineFilter) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(startPartFilter) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -87,6 +88,22 @@
 }
 
 #pragma mark - Action
+
+- (void)startPartFilter {
+    if (!_baseMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
+        _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
+    }
+    
+    if (!_filter) {
+        _filter = [[GPUPartFilter alloc] init];
+    }
+    
+    [_baseMovie addTarget:_filter];
+    [_filter addTarget:_glView];
+    
+    [_baseMovie startProcessing];
+}
 
 - (void)startLineFilter {
     if (!_baseMovie) {
