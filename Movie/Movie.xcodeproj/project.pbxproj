@@ -26,6 +26,8 @@
 		04BE46E01976899C00541C8F /* trans_1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04BE46DF1976899C00541C8F /* trans_1.mp4 */; };
 		04BE4E9319777966009DD70C /* Yh1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04BE4E9219777966009DD70C /* Yh1.mp4 */; };
 		04BE4E9519777B7B009DD70C /* camera480_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04BE4E9419777B7B009DD70C /* camera480_2.mp4 */; };
+		04C14F111980AE9700B9640F /* GPUTransformFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C14F101980AE9700B9640F /* GPUTransformFilter.m */; };
+		04C14F141980CD4500B9640F /* camera480_3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04C14F131980CD4500B9640F /* camera480_3.mp4 */; };
 		04C7FD24197B934D0036C8E4 /* GPUFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C7FD23197B934D0036C8E4 /* GPUFramebuffer.m */; };
 		04C7FD28197BB7E10036C8E4 /* GPUFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C7FD27197BB7E10036C8E4 /* GPUFilter.m */; };
 		04C7FD2B197BC6370036C8E4 /* GPUTwoInputFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C7FD2A197BC6370036C8E4 /* GPUTwoInputFilter.m */; };
@@ -88,6 +90,9 @@
 		04BE46DF1976899C00541C8F /* trans_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = trans_1.mp4; path = Movie/trans_1.mp4; sourceTree = "<group>"; };
 		04BE4E9219777966009DD70C /* Yh1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Yh1.mp4; path = Movie/Yh1.mp4; sourceTree = "<group>"; };
 		04BE4E9419777B7B009DD70C /* camera480_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = camera480_2.mp4; path = Movie/camera480_2.mp4; sourceTree = "<group>"; };
+		04C14F0F1980AE9700B9640F /* GPUTransformFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUTransformFilter.h; sourceTree = "<group>"; };
+		04C14F101980AE9700B9640F /* GPUTransformFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUTransformFilter.m; sourceTree = "<group>"; };
+		04C14F131980CD4500B9640F /* camera480_3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = camera480_3.mp4; path = Movie/camera480_3.mp4; sourceTree = "<group>"; };
 		04C7FD22197B934D0036C8E4 /* GPUFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUFramebuffer.h; sourceTree = "<group>"; };
 		04C7FD23197B934D0036C8E4 /* GPUFramebuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUFramebuffer.m; sourceTree = "<group>"; };
 		04C7FD25197BB5860036C8E4 /* GPUInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUInput.h; sourceTree = "<group>"; };
@@ -155,6 +160,7 @@
 				04BACA871975567900C03A59 /* PTstar.mp4 */,
 				04BE46DD19765E5900541C8F /* camera480.mp4 */,
 				04BE4E9419777B7B009DD70C /* camera480_2.mp4 */,
+				04C14F131980CD4500B9640F /* camera480_3.mp4 */,
 				04BE46DF1976899C00541C8F /* trans_1.mp4 */,
 				04BACA7D19751B3D00C03A59 /* trans_1_mask.mp4 */,
 				04BACA7F197521A400C03A59 /* meiyan_monday.mp4 */,
@@ -225,6 +231,8 @@
 				041CA25E197E6AD40097B949 /* GPUPartFilter.m */,
 				04D18881197FA57800495FEC /* GPUGridFilter.h */,
 				04D18882197FA57800495FEC /* GPUGridFilter.m */,
+				04C14F0F1980AE9700B9640F /* GPUTransformFilter.h */,
+				04C14F101980AE9700B9640F /* GPUTransformFilter.m */,
 				04CFEB3A1963FE6C00E306C8 /* Images.xcassets */,
 				04CFEB291963FE6C00E306C8 /* Supporting Files */,
 			);
@@ -341,6 +349,7 @@
 				04BACA7C19751A6C00C03A59 /* meiyan_saturday.mp4 in Resources */,
 				04BE4E9319777966009DD70C /* Yh1.mp4 in Resources */,
 				04BACA7E19751B3D00C03A59 /* trans_1_mask.mp4 in Resources */,
+				04C14F141980CD4500B9640F /* camera480_3.mp4 in Resources */,
 				04BACA881975567900C03A59 /* PTstar.mp4 in Resources */,
 				04BACA80197521A400C03A59 /* meiyan_monday.mp4 in Resources */,
 				04BE46DE19765E5900541C8F /* camera480.mp4 in Resources */,
@@ -382,6 +391,7 @@
 				04C7FD24197B934D0036C8E4 /* GPUFramebuffer.m in Sources */,
 				04CFEB331963FE6C00E306C8 /* AppDelegate.m in Sources */,
 				04CFEB2F1963FE6C00E306C8 /* main.m in Sources */,
+				04C14F111980AE9700B9640F /* GPUTransformFilter.m in Sources */,
 				041CA25C197E557A0097B949 /* GPULineFilter.m in Sources */,
 				04BA81571973E1020025EA46 /* GPUView.m in Sources */,
 			);

@@ -69,7 +69,7 @@
     [_framebuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
+    glClear(GL_COLOR_BUFFER_BIT);
     
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);

@@ -24,6 +24,7 @@
 #import "GPULineFilter.h"
 #import "GPUPartFilter.h"
 #import "GPUGridFilter.h"
+#import "GPUTransformFilter.h"
 
 @interface ViewController ()
 {
@@ -79,7 +80,7 @@
     [btn setFrame:CGRectMake(0, 320, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setTitle:@"Begin" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(startGridFilter) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(startPartFilter) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -88,9 +89,39 @@
     [btn2 setTitle:@"Begin" forState:UIControlStateNormal];
     [btn2 addTarget:self action:@selector(startRead2) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn2];
+    
+    UISlider *silder = [[UISlider alloc] initWithFrame:CGRectMake(0, 400, 320, 20)];
+    silder.minimumValue = 0;
+    silder.maximumValue = 360;
+    [silder addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:silder];
+    [silder release];
+}
+
+- (void)valueChanged:(id)sender {
+    UISlider *silder = (UISlider *)sender;
+    GPUTransformFilter *filter = (GPUTransformFilter *)_filter;
+    
+    [filter setTransform3D:CATransform3DMakeRotation(degreesToRadian([silder value]), 0, 1, 0)];
 }
 
 #pragma mark - Action
+
+- (void)startTransformFilter {
+    if (!_baseMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_3" ofType:@"mp4"]];
+        _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
+    }
+    
+    if (!_filter) {
+        _filter = [[GPUTransformFilter alloc] init];
+    }
+    
+    [_baseMovie addTarget:_filter];
+    [_filter addTarget:_glView];
+    
+    [_baseMovie startProcessing];
+}
 
 - (void)startGridFilter {
     if (!_baseMovie) {

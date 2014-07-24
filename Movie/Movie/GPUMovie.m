@@ -275,7 +275,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     [_yuvConversionFrameBuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
+    glClear(GL_COLOR_BUFFER_BIT);
     
     static const GLfloat squarVertices[] = {
         -1.0f, -1.0f,
