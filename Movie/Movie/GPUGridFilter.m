@@ -8,6 +8,7 @@
 
 #import "GPUGridFilter.h"
 
+#define GRID_TRANSFORM
 #define SPACE 0.2
 
 NSString *const kGridVertexShaderString = SHADER_STRING
@@ -158,6 +159,7 @@ NSString *const kGridVertexShaderString = SHADER_STRING
     for (int i = 0; i < _horizontalNum; i++) {
         for (int j = 0; j < _verticalNum; j++) {
             int index = i * _horizontalNum * 4 * 2 + j * 4 * 2;
+#ifdef GRID_TRANSFORM
             float mid = 0;
             int squar = j*4 + i;
             if (squar == 10) {
@@ -188,8 +190,9 @@ NSString *const kGridVertexShaderString = SHADER_STRING
             else {
                 glUniform1f(_angleSlot, 0.0);
             }
-            
-
+#else 
+          glUniform1f(_angleSlot, 0.0);
+#endif
             
             [self renderToTextureWithVertices:(_vertices + index)  textureCoordinates:(_texCoords + index)];
         }
