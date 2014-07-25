@@ -40,6 +40,17 @@
 #pragma mark - Draw
 
 - (void)draw {
+    [GPUContext setActiveShaderProgram:_filterProgram];
+    
+    if (!_framebuffer) {
+        _framebuffer = [[GPUFramebuffer alloc] initWithSize:_size];
+    }
+    
+    [_framebuffer activateFramebuffer];
+    
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     if (_currentFrameIndex <= FRAME_NUM_PER_PART * 1) {
         [self drawPart:1];
     } else if (_currentFrameIndex <= FRAME_NUM_PER_PART * 2) {
@@ -60,17 +71,6 @@
 }
 
 - (void)renderToTextureWithVertices:(const GLfloat *)vertices textureCoordinates:(const GLfloat *)textureCoordinates {
-    [GPUContext setActiveShaderProgram:_filterProgram];
-    
-    if (!_framebuffer) {
-        _framebuffer = [[GPUFramebuffer alloc] initWithSize:_size];
-    }
-    
-    [_framebuffer activateFramebuffer];
-    
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);
     glUniform1i(_samplerSlot, 2);

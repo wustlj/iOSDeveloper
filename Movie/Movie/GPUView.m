@@ -115,19 +115,33 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
 - (void)draw {
     [GPUContext setActiveShaderProgram:program];
     
-    const GLfloat vertex[] = {
+    const GLfloat squarVertices[] = {
         -1.0f, -1.0f,
         1.0f, -1.0f,
         -1.0f,  1.0f,
         1.0f,  1.0f,
     };
     
-    const GLfloat texCoord[] = {
+    const GLfloat textureCoordies[] = {
         0.0f, 1.0f,
         1.0f, 1.0f,
         0.0f, 0.0f,
         1.0f, 0.0f,
     };
+
+//    static const GLfloat squarVertices[] = {
+//        -1.0f, -1.0f,
+//        1.0f, -1.0f,
+//        -1.0f,  1.0f,
+//        1.0f,  1.0f,
+//    };
+//    
+//    static const GLfloat textureCoordies[] = {
+//        0.0f, 0.0f,
+//        1.0f, 0.0f,
+//        0.0f, 1.0f,
+//        1.0f, 1.0f,
+//    };
     
     const GLubyte colors[] = {
         255, 255,   0, 255,
@@ -164,10 +178,10 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
 //    glUniformMatrix4fv(_modelViewSlot, 1, 0, modelViewMatrix);
 //    glUniformMatrix4fv(_projectSlot, 1, 0, projectMatrix);
     
-    glVertexAttribPointer(_positionSlot, 2, GL_FLOAT, GL_FALSE, 0, vertex);
+    glVertexAttribPointer(_positionSlot, 2, GL_FLOAT, GL_FALSE, 0, squarVertices);
     glEnableVertexAttribArray(_positionSlot);
     
-    glVertexAttribPointer(_textureSlot, 2, GL_FLOAT, GL_FALSE, 0, texCoord);
+    glVertexAttribPointer(_textureSlot, 2, GL_FLOAT, GL_FALSE, 0, textureCoordies);
     glEnableVertexAttribArray(_textureSlot);
     
     glVertexAttribPointer(_colorSlot, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, colors);

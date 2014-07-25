@@ -80,7 +80,7 @@
     [btn setFrame:CGRectMake(0, 320, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setTitle:@"Begin" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(startPartFilter) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(startGridFilter) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -109,7 +109,7 @@
 
 - (void)startTransformFilter {
     if (!_baseMovie) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_3" ofType:@"mp4"]];
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
         _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
     }
     

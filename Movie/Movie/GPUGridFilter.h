@@ -12,6 +12,9 @@
 {
     GLfloat *_vertices;
     GLfloat *_texCoords;
+    
+    GLuint _angleSlot;
+    GLuint _midSlot;
 }
 
 @property (nonatomic, assign) NSInteger horizontalNum;

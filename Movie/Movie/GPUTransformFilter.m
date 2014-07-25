@@ -61,6 +61,13 @@ NSString *const kTransformVertexShaderString = SHADER_STRING
     return self;
 }
 
+- (void)dealloc {
+    free(modelViewMatrix);
+    free(projectMatrix);
+    
+    [super dealloc];
+}
+
 #pragma mark - Draw
 
 - (void)draw {

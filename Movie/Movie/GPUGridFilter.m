@@ -10,6 +10,42 @@
 
 #define SPACE 0.2
 
+NSString *const kGridVertexShaderString = SHADER_STRING
+(
+ attribute vec4 vPosition;
+ attribute vec2 textureCoord;
+ 
+ uniform highp float angle;
+ uniform highp float mid;
+ 
+ varying vec2 textureCoordOut;
+ 
+ void main()
+ {
+     vec2 v_pos;
+     v_pos.x = vPosition.x;
+     v_pos.y = vPosition.z;
+     
+     if (angle > 0.0) {
+         float alpha;
+         alpha = radians(angle);
+         
+         mat2 m_Matrix;
+         m_Matrix[0][0] = cos(alpha);
+         m_Matrix[0][1] = -sin(alpha);
+         m_Matrix[1][0] = sin(alpha);
+         m_Matrix[1][1] = cos(alpha);
+         
+         v_pos.x = v_pos.x - mid;
+         v_pos = m_Matrix * v_pos;
+         v_pos.x =  v_pos.x + mid;
+     }
+     
+     gl_Position = vec4(v_pos.x, vPosition.y, v_pos.y, 1.0);
+     textureCoordOut = textureCoord;
+ }
+ );
+
 @implementation GPUGridFilter
 
 - (id)initWithVertexShaderFromString:(NSString *)vertexShader fragmentShaderFromString:(NSString *)fragmentShader {
@@ -23,12 +59,17 @@
     _intervalLength = 0.02;
     
     [self initVerticesAndTexutreCoords];
+    
+    runSynchronouslyOnVideoProcessingQueue(^{
+        _angleSlot = [_filterProgram uniformIndex:@"angle"];
+        _midSlot = [_filterProgram uniformIndex:@"mid"];
+    });
 
     return self;
 }
 
 - (id)initWithFragmentShaderFromString:(NSString *)fragmentShader {
-    if (!(self = [self initWithVertexShaderFromString:kFilterVertexShaderString fragmentShaderFromString:fragmentShader])) {
+    if (!(self = [self initWithVertexShaderFromString:kGridVertexShaderString fragmentShaderFromString:fragmentShader])) {
         return nil;
     }
     return self;
@@ -103,15 +144,6 @@
 #pragma mark - 
 
 - (void)draw {
-    for (int i = 0; i < _horizontalNum; i++) {
-        for (int j = 0; j < _verticalNum; j++) {
-            int index = i * _horizontalNum * 4 * 2 + j * 4 * 2;
-            [self renderToTextureWithVertices:(_vertices + index)  textureCoordinates:(_texCoords + index)];
-        }
-    }
-}
-
-- (void)renderToTextureWithVertices:(const GLfloat *)vertices textureCoordinates:(const GLfloat *)textureCoordinates {
     [GPUContext setActiveShaderProgram:_filterProgram];
     
     if (!_framebuffer) {
@@ -121,8 +153,50 @@
     [_framebuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    for (int i = 0; i < _horizontalNum; i++) {
+        for (int j = 0; j < _verticalNum; j++) {
+            int index = i * _horizontalNum * 4 * 2 + j * 4 * 2;
+            float mid = 0;
+            int squar = j*4 + i;
+            if (squar == 10) {
+                glUniform1f(_angleSlot, 1.4 * _currentFrameIndex);
+                mid = (_vertices[index] + _vertices[index + 2]) / 2.0;
+                glUniform1f(_midSlot, mid);
+            }
+            else if (squar == 6) {
+                glUniform1f(_angleSlot, 1.3 * _currentFrameIndex);
+                mid = (_vertices[index] + _vertices[index + 2]) / 2.0;
+                glUniform1f(_midSlot, mid);
+            }
+            else if (squar == 13) {
+                glUniform1f(_angleSlot, 1.2 * _currentFrameIndex);
+                mid = (_vertices[index] + _vertices[index + 2]) / 2.0;
+                glUniform1f(_midSlot, mid);
+            }
+            else if (squar == 8) {
+                glUniform1f(_angleSlot, 1.1 * _currentFrameIndex);
+                mid = (_vertices[index] + _vertices[index + 2]) / 2.0;
+                glUniform1f(_midSlot, mid);
+            }
+            else if (squar == 5) {
+                glUniform1f(_angleSlot, 1.0 * _currentFrameIndex);
+                mid = (_vertices[index] + _vertices[index + 2]) / 2.0;
+                glUniform1f(_midSlot, mid);
+            }
+            else {
+                glUniform1f(_angleSlot, 0.0);
+            }
+            
+
+            
+            [self renderToTextureWithVertices:(_vertices + index)  textureCoordinates:(_texCoords + index)];
+        }
+    }
+}
+
+- (void)renderToTextureWithVertices:(const GLfloat *)vertices textureCoordinates:(const GLfloat *)textureCoordinates {
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);
     glUniform1i(_samplerSlot, 2);
