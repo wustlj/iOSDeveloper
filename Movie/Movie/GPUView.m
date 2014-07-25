@@ -19,19 +19,13 @@
 NSString *const kVertexShaderString = SHADER_STRING
 (
  attribute vec4 vPosition;
- attribute vec4 color;
  attribute vec2 textureCoord;
  
- uniform mat4 modelViewMatrix;
- uniform mat4 projectMatrix;
- 
- varying vec4 colorVarying;
  varying vec2 textureCoordOut;
  
  void main()
  {
     gl_Position = vPosition;
-    colorVarying = color;
     textureCoordOut = textureCoord;
  }
 );
@@ -67,16 +61,11 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
         
         [GPUContext setActiveShaderProgram:program];
         
-        _positionSlot = [program attributeSlot:@"vPosition"];
-        _textureSlot = [program attributeSlot:@"textureCoord"];
-        _colorSlot = [program attributeSlot:@"color"];
-        _samplerSlot = [program uniformIndex:@"inputImageTexture"];
-        _samplerSlot2 = [program uniformIndex:@"sampler2"];
-        _samplerSlot3 = [program uniformIndex:@"samplerMask"];
-        
-        _modelViewSlot = [program uniformIndex:@"modelViewMatrix"];
-        _projectSlot = [program uniformIndex:@"projectMatrix"];
-        
+        runSynchronouslyOnVideoProcessingQueue(^{
+            _positionSlot = [program attributeSlot:@"vPosition"];
+            _textureSlot = [program attributeSlot:@"textureCoord"];
+            _samplerSlot = [program uniformIndex:@"inputImageTexture"];
+        });
 //        [self createFBO];
     }
     return self;
@@ -142,13 +131,6 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
 //        0.0f, 1.0f,
 //        1.0f, 1.0f,
 //    };
-    
-    const GLubyte colors[] = {
-        255, 255,   0, 255,
-        0,   255, 255, 255,
-        0,     0,   0,   0,
-        255,   0, 255, 255,
-    };
 
     [self setDisplayFramebuffer];
     
@@ -159,33 +141,12 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
     mat4f_LoadIdentity(projectMatrix);
     mat4f_LoadIdentity(modelViewMatrix);
     mat4f_LoadOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -5.0f, 5.0f, projectMatrix);
-
-//    // scale
-//    float s[3] = {
-//        0.8, 0.8, 0.8,
-//    };
-//    mat4f_LoadScale(s, modelViewMatrix);
-    // Rotation
-//    mat4f_LoadRotation(modelViewMatrix, rotDegree, 0, 1, 0);
-//    rotDegree += 1.0;
-//    // Translation
-//    rotDegree += 0.005;
-//    float t[3] = {
-//        rotDegree, 0, 0,
-//    };
-//    mat4f_LoadTranslation(t, modelViewMatrix);
-//    
-//    glUniformMatrix4fv(_modelViewSlot, 1, 0, modelViewMatrix);
-//    glUniformMatrix4fv(_projectSlot, 1, 0, projectMatrix);
     
     glVertexAttribPointer(_positionSlot, 2, GL_FLOAT, GL_FALSE, 0, squarVertices);
     glEnableVertexAttribArray(_positionSlot);
     
     glVertexAttribPointer(_textureSlot, 2, GL_FLOAT, GL_FALSE, 0, textureCoordies);
     glEnableVertexAttribArray(_textureSlot);
-    
-    glVertexAttribPointer(_colorSlot, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, colors);
-    glEnableVertexAttribArray(_colorSlot);
     
     glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, [_inputFramebuffer texture]);

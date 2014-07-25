@@ -27,22 +27,12 @@
     GLuint _depthBuffer;
     GLuint _outputTexture;
     
-    GLuint _modelViewSlot;
-    GLuint _projectSlot;
-    
     GLuint _positionSlot;
-    GLuint _colorSlot;
-
     GLuint _textureSlot;
     GLuint _samplerSlot;
     
-    GLuint _samplerSlot2;
-    GLuint _samplerSlot3;
-
     GPUProgram *program;
-    
-    GLfloat rotDegree;
-    
+        
     CGSize _size;
     GPUFramebuffer *_inputFramebuffer;
 }
