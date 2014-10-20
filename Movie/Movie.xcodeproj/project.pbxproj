@@ -49,6 +49,8 @@
 		04CFEB5A1963FFC400E306C8 /* end_meiyan_cn.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04CFEB591963FFC400E306C8 /* end_meiyan_cn.mp4 */; };
 		04CFEB5C196415E600E306C8 /* 1.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 04CFEB5B196415E600E306C8 /* 1.MOV */; };
 		04D18883197FA57800495FEC /* GPUGridFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D18882197FA57800495FEC /* GPUGridFilter.m */; };
+		B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */; };
+		B5C2FD6419F506910003DE6A /* GPUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6319F506910003DE6A /* GPUImage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +126,10 @@
 		04CFEB5B196415E600E306C8 /* 1.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = 1.MOV; path = Movie/1.MOV; sourceTree = "<group>"; };
 		04D18881197FA57800495FEC /* GPUGridFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUGridFilter.h; sourceTree = "<group>"; };
 		04D18882197FA57800495FEC /* GPUGridFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUGridFilter.m; sourceTree = "<group>"; };
+		B5C2FD5F19F505AD0003DE6A /* GPUMovieWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUMovieWriter.h; sourceTree = "<group>"; };
+		B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUMovieWriter.m; sourceTree = "<group>"; };
+		B5C2FD6219F506910003DE6A /* GPUImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImage.h; sourceTree = "<group>"; };
+		B5C2FD6319F506910003DE6A /* GPUImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +213,10 @@
 				04CFEB381963FE6C00E306C8 /* ViewController.m */,
 				04BE46D919761C9E00541C8F /* GPUMovie.h */,
 				04BE46DA19761C9E00541C8F /* GPUMovie.m */,
+				B5C2FD5F19F505AD0003DE6A /* GPUMovieWriter.h */,
+				B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */,
+				B5C2FD6219F506910003DE6A /* GPUImage.h */,
+				B5C2FD6319F506910003DE6A /* GPUImage.m */,
 				04BA81551973E1020025EA46 /* GPUView.h */,
 				04BA81561973E1020025EA46 /* GPUView.m */,
 				04BE1600196695880008DEE3 /* GPUContext.h */,
@@ -388,9 +398,11 @@
 				043D568C197E40A400E7C3AC /* GPUThreeInputFilter.m in Sources */,
 				04BE1605196695FA0008DEE3 /* GPUProgram.m in Sources */,
 				04D18883197FA57800495FEC /* GPUGridFilter.m in Sources */,
+				B5C2FD6419F506910003DE6A /* GPUImage.m in Sources */,
 				04C7FD24197B934D0036C8E4 /* GPUFramebuffer.m in Sources */,
 				04CFEB331963FE6C00E306C8 /* AppDelegate.m in Sources */,
 				04CFEB2F1963FE6C00E306C8 /* main.m in Sources */,
+				B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */,
 				04C14F111980AE9700B9640F /* GPUTransformFilter.m in Sources */,
 				041CA25C197E557A0097B949 /* GPULineFilter.m in Sources */,
 				04BA81571973E1020025EA46 /* GPUView.m in Sources */,
