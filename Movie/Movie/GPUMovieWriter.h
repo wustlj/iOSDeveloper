@@ -10,13 +10,27 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-@interface GPUMovieWriter : NSObject
+#import "GPUContext.h"
+#import "GPUProgram.h"
+#import "GPUInput.h"
+#import "GPUFramebuffer.h"
+
+@interface GPUMovieWriter : NSObject <GPUInput>
 {
     AVAssetWriter *_assetWriter;
     AVAssetWriterInput *_audioInput;
     AVAssetWriterInput *_videoInput;
+    AVAssetWriterInputPixelBufferAdaptor *_assetWriterInputPixelBufferAdaptor;
+    GPUProgram *_program;
+    
+    GLuint _positionSlot;
+    GLuint _textureSlot;
+    GLuint _samplerSlot;
 }
 
 - (id)initWithURL:(NSURL *)movieURL size:(CGSize)movieSize;
+
+- (BOOL)startWriting;
+- (void)cancelWriting;
 
 @end

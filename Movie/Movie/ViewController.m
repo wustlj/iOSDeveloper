@@ -26,6 +26,8 @@
 #import "GPUGridFilter.h"
 #import "GPUTransformFilter.h"
 
+#import "GPUMovieWriter.h"
+
 @interface ViewController ()
 {
     GPUView *_glView;
@@ -37,6 +39,7 @@
     GPUMovie *_movie3;
     
     GPUFilter *_filter;
+    GPUMovieWriter *_movieWriter;
 }
 @end
 
@@ -80,7 +83,7 @@
     [btn setFrame:CGRectMake(0, 320, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setTitle:@"Begin" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(startGridFilter) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(startWriter) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -106,6 +109,27 @@
 }
 
 #pragma mark - Action
+
+- (void)startWriter {
+    if (!_baseMovie) {
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
+        _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
+    }
+    
+    if (!_movieWriter) {
+        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"1.MOV"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        }
+        _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:CGSizeMake(480, 480)];
+    }
+    
+    [_baseMovie addTarget:_movieWriter];
+    
+    [_movieWriter startWriting];
+    
+    [_baseMovie startProcessing];
+}
 
 - (void)startTransformFilter {
     if (!_baseMovie) {

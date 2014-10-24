@@ -156,7 +156,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
         CMTimeShow(movieTime);
 #endif
         CVImageBufferRef movieFrame = CMSampleBufferGetImageBuffer(bufferRef);
-        [self processMovieFrame:movieFrame];
+        [self processMovieFrame:movieFrame withSampleTime:movieTime];
         CMSampleBufferInvalidate(bufferRef);
         CFRelease(bufferRef);
     } else {
@@ -167,7 +167,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     return YES;
 }
 
-- (void)processMovieFrame:(CVPixelBufferRef)movieFrame {
+- (void)processMovieFrame:(CVPixelBufferRef)movieFrame withSampleTime:(CMTime)sampleTime {
     CVPixelBufferLockBaseAddress(movieFrame, 0);
     size_t width = CVPixelBufferGetWidth(movieFrame);
     size_t height = CVPixelBufferGetHeight(movieFrame);
@@ -199,7 +199,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
         _completionBlock();
     }
     
-    [self informTargetsNewFrame];
+    [self informTargetsNewFrame:sampleTime];
     
     CFRelease(yPlaneTextureOut);
     CFRelease(uvPlaneTextureOut);
@@ -211,6 +211,12 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 - (void)endProcessing {
     NSLog(@"end processing");
+    
+    for (id<GPUInput> target in _targets) {
+        if ([target respondsToSelector:@selector(endProcessing)]) {
+            [target endProcessing];
+        }
+    }
 }
 
 - (void)createReader {
@@ -313,11 +319,11 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 #pragma mark - 
 
-- (void)informTargetsNewFrame {
+- (void)informTargetsNewFrame:(CMTime)time {
     for (id<GPUInput> target in _targets) {
         [target setInputSize:CGSizeMake(imageBufferWidth, imageBufferHeight) atIndex:_textureIndex];
         [target setInputFramebuffer:_yuvConversionFrameBuffer atIndex:_textureIndex];
-        [target newFrameReadyAtTime:kCMTimeZero atIndex:_textureIndex];
+        [target newFrameReadyAtTime:time atIndex:_textureIndex];
     }
 }
 

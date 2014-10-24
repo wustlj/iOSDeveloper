@@ -10,10 +10,6 @@
 
 #import "matrix.h"
 
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define SHADER_STRING(text) @ STRINGIZE2(text)
-
 #define VERTEX_WIDTH 0.5f
 
 NSString *const kVertexShaderString = SHADER_STRING
