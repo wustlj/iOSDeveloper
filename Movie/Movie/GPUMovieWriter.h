@@ -33,6 +33,8 @@ typedef enum {
     GLuint _samplerSlot;
 }
 
+@property(nonatomic, assign) CGAffineTransform transform;
+
 - (id)initWithURL:(NSURL *)movieURL size:(CGSize)movieSize;
 
 - (BOOL)startWriting;

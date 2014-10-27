@@ -40,6 +40,9 @@
     
     GPUFilter *_filter;
     GPUMovieWriter *_movieWriter;
+    
+    CGAffineTransform preferredTransform;
+    CGSize size;
 }
 @end
 
@@ -108,11 +111,25 @@
     [filter setTransform3D:CATransform3DMakeRotation(degreesToRadian([silder value]), 0, 1, 0)];
 }
 
+#pragma mark - Transform
+
+- (void)initTransform:(NSURL *)url
+{
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    AVAssetTrack *assetTrack = nil;
+    if ([[asset tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
+		assetTrack = [asset tracksWithMediaType:AVMediaTypeVideo][0];
+	}
+    preferredTransform = assetTrack.preferredTransform;
+    size = assetTrack.naturalSize;
+}
+
 #pragma mark - Action
 
 - (void)startWriter {
     if (!_baseMovie) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1080*1920" ofType:@"MOV"]];
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1920*1080" ofType:@"MOV"]];
+        [self initTransform:videoURL];
         _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
     }
     
@@ -121,7 +138,8 @@
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
             [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
         }
-        _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:CGSizeMake(1080, 1920)];
+        _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:size];
+        _movieWriter.transform = preferredTransform;
     }
     
     [_baseMovie addTarget:_movieWriter];

@@ -268,7 +268,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 //        1.0f, 1.0f,
 //    };
     
-    const GLfloat *textureCoordies = [self textureCoordiesWithOrientation:kRotateLeft];
+    const GLfloat *textureCoordies = [self textureCoordiesWithOrientation:kRotateNone];
     
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -307,8 +307,17 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     switch (orientation) {
         case kRotateNone: return noRotationTextureCoordies;
         case kRotateLeft: return rotationLeftTextureCoordies;
+#warning TODO:Other Rotate Orientation
     }
     return noRotationTextureCoordies;
+}
+
+- (CGAffineTransform)transform {
+    return _videoInput.transform;
+}
+
+- (void)setTransform:(CGAffineTransform)transform {
+    _videoInput.transform = transform;
 }
 
 #pragma mark - FBO
