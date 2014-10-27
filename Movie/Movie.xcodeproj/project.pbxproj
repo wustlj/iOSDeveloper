@@ -49,6 +49,8 @@
 		04CFEB5A1963FFC400E306C8 /* end_meiyan_cn.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04CFEB591963FFC400E306C8 /* end_meiyan_cn.mp4 */; };
 		04CFEB5C196415E600E306C8 /* 1.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 04CFEB5B196415E600E306C8 /* 1.MOV */; };
 		04D18883197FA57800495FEC /* GPUGridFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D18882197FA57800495FEC /* GPUGridFilter.m */; };
+		B5B7857419FE3F4100A9D6AB /* system1080*1920.MOV in Resources */ = {isa = PBXBuildFile; fileRef = B5B7857319FE3F4100A9D6AB /* system1080*1920.MOV */; };
+		B5B7857619FE414100A9D6AB /* system1920*1080.MOV in Resources */ = {isa = PBXBuildFile; fileRef = B5B7857519FE414100A9D6AB /* system1920*1080.MOV */; };
 		B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */; };
 		B5C2FD6419F506910003DE6A /* GPUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6319F506910003DE6A /* GPUImage.m */; };
 /* End PBXBuildFile section */
@@ -126,6 +128,8 @@
 		04CFEB5B196415E600E306C8 /* 1.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = 1.MOV; path = Movie/1.MOV; sourceTree = "<group>"; };
 		04D18881197FA57800495FEC /* GPUGridFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUGridFilter.h; sourceTree = "<group>"; };
 		04D18882197FA57800495FEC /* GPUGridFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUGridFilter.m; sourceTree = "<group>"; };
+		B5B7857319FE3F4100A9D6AB /* system1080*1920.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "system1080*1920.MOV"; path = "Movie/system1080*1920.MOV"; sourceTree = "<group>"; };
+		B5B7857519FE414100A9D6AB /* system1920*1080.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "system1920*1080.MOV"; path = "Movie/system1920*1080.MOV"; sourceTree = "<group>"; };
 		B5C2FD5F19F505AD0003DE6A /* GPUMovieWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUMovieWriter.h; sourceTree = "<group>"; };
 		B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUMovieWriter.m; sourceTree = "<group>"; };
 		B5C2FD6219F506910003DE6A /* GPUImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImage.h; sourceTree = "<group>"; };
@@ -174,6 +178,8 @@
 				04BACA811975226500C03A59 /* end_meiyan_en.mp4 */,
 				04CFEB591963FFC400E306C8 /* end_meiyan_cn.mp4 */,
 				04BE4E9219777966009DD70C /* Yh1.mp4 */,
+				B5B7857319FE3F4100A9D6AB /* system1080*1920.MOV */,
+				B5B7857519FE414100A9D6AB /* system1920*1080.MOV */,
 				04CFEB281963FE6C00E306C8 /* Movie */,
 				04CFEB471963FE6C00E306C8 /* MovieTests */,
 				04CFEB211963FE6C00E306C8 /* Frameworks */,
@@ -357,6 +363,7 @@
 				04CFEB3B1963FE6C00E306C8 /* Images.xcassets in Resources */,
 				04BE4E9519777B7B009DD70C /* camera480_2.mp4 in Resources */,
 				04BACA7C19751A6C00C03A59 /* meiyan_saturday.mp4 in Resources */,
+				B5B7857619FE414100A9D6AB /* system1920*1080.MOV in Resources */,
 				04BE4E9319777966009DD70C /* Yh1.mp4 in Resources */,
 				04BACA7E19751B3D00C03A59 /* trans_1_mask.mp4 in Resources */,
 				04C14F141980CD4500B9640F /* camera480_3.mp4 in Resources */,
@@ -364,6 +371,7 @@
 				04BACA80197521A400C03A59 /* meiyan_monday.mp4 in Resources */,
 				04BE46DE19765E5900541C8F /* camera480.mp4 in Resources */,
 				04CFEB5A1963FFC400E306C8 /* end_meiyan_cn.mp4 in Resources */,
+				B5B7857419FE3F4100A9D6AB /* system1080*1920.MOV in Resources */,
 				04CFEB5C196415E600E306C8 /* 1.MOV in Resources */,
 				04CFEB2D1963FE6C00E306C8 /* InfoPlist.strings in Resources */,
 				04BACA821975226500C03A59 /* end_meiyan_en.mp4 in Resources */,

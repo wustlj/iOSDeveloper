@@ -202,8 +202,8 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 
 - (void)endProcessing
 {
-    [_videoInput markAsFinished];
-    [_audioInput markAsFinished];
+//    [_videoInput markAsFinished];
+//    [_audioInput markAsFinished];
     
     [_assetWriter finishWritingWithCompletionHandler:^{
         NSLog(@"write finished");
@@ -226,12 +226,49 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
         1.0f,  1.0f,
     };
     
-    const GLfloat textureCoordies[] = {
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-    };
+//    const GLfloat textureCoordies[] = {
+//        0.0f, 1.0f,
+//        1.0f, 1.0f,
+//        0.0f, 0.0f,
+//        1.0f, 0.0f,
+//    };
+    
+//    const GLfloat textureCoordies[] = {
+//        0.0f, 0.0f,
+//        1.0f, 0.0f,
+//        0.0f, 1.0f,
+//        1.0f, 1.0f,
+//    };
+
+//    const GLfloat textureCoordies[] = {
+//        1.0f, 0.0f,
+//        0.0f, 0.0f,
+//        1.0f, 1.0f,
+//        0.0f, 1.0f,
+//    };
+    
+//    const GLfloat textureCoordies[] = {
+//        0.0f, 1.0f,
+//        0.0f, 0.0f,
+//        1.0f, 1.0f,
+//        1.0f, 0.0f,
+//    };
+    
+//    const GLfloat textureCoordies[] = {
+//        1.0f, 1.0f,
+//        0.0f, 1.0f,
+//        1.0f, 0.0f,
+//        0.0f, 0.0f,
+//    };
+    
+//    const GLfloat textureCoordies[] = {
+//        0.0f, 0.0f,
+//        1.0f, 0.0f,
+//        0.0f, 1.0f,
+//        1.0f, 1.0f,
+//    };
+    
+    const GLfloat *textureCoordies = [self textureCoordiesWithOrientation:kRotateLeft];
     
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -249,6 +286,29 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     glFinish();
+}
+
+- (const GLfloat *)textureCoordiesWithOrientation:(WriterOrientation)orientation
+{
+    static const GLfloat noRotationTextureCoordies[] = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+    };
+    
+    static const GLfloat rotationLeftTextureCoordies[] = {
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+    };
+    
+    switch (orientation) {
+        case kRotateNone: return noRotationTextureCoordies;
+        case kRotateLeft: return rotationLeftTextureCoordies;
+    }
+    return noRotationTextureCoordies;
 }
 
 #pragma mark - FBO
@@ -275,7 +335,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     
     CVOpenGLESTextureCacheRef textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
 
-    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCacheRef, _renderTarget, NULL, GL_TEXTURE_2D, GL_RGBA, (int)_movieSize.width, (int)_movieSize.height, GL_BGRA, GL_UNSIGNED_BYTE, 0, &_renderTexture);
+    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCacheRef, _renderTarget, NULL, GL_TEXTURE_2D, GL_RGBA, (int)_movieSize.width, (int)_movieSize.height, GL_RGBA, GL_UNSIGNED_BYTE, 0, &_renderTexture);
     glBindTexture(CVOpenGLESTextureGetTarget(_renderTexture), CVOpenGLESTextureGetName(_renderTexture));
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

@@ -112,7 +112,7 @@
 
 - (void)startWriter {
     if (!_baseMovie) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1080*1920" ofType:@"MOV"]];
         _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
     }
     
@@ -121,7 +121,7 @@
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
             [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
         }
-        _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:CGSizeMake(480, 480)];
+        _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:CGSizeMake(1080, 1920)];
     }
     
     [_baseMovie addTarget:_movieWriter];

@@ -15,6 +15,11 @@
 #import "GPUInput.h"
 #import "GPUFramebuffer.h"
 
+typedef enum {
+    kRotateNone,
+    kRotateLeft
+}WriterOrientation;
+
 @interface GPUMovieWriter : NSObject <GPUInput>
 {
     AVAssetWriter *_assetWriter;
