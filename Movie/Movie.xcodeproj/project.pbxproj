@@ -49,6 +49,10 @@
 		04CFEB5A1963FFC400E306C8 /* end_meiyan_cn.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04CFEB591963FFC400E306C8 /* end_meiyan_cn.mp4 */; };
 		04CFEB5C196415E600E306C8 /* 1.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 04CFEB5B196415E600E306C8 /* 1.MOV */; };
 		04D18883197FA57800495FEC /* GPUGridFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D18882197FA57800495FEC /* GPUGridFilter.m */; };
+		B5B500F01A00988D00802333 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B500EF1A00988D00802333 /* RootViewController.m */; };
+		B5B500F31A009B7F00802333 /* WriterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B500F21A009B7F00802333 /* WriterViewController.m */; };
+		B5B500F71A00C20A00802333 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B500F61A00C20A00802333 /* BaseViewController.m */; };
+		B5B500FA1A00C37E00802333 /* TransformViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5B500F91A00C37E00802333 /* TransformViewController.m */; };
 		B5B7857419FE3F4100A9D6AB /* system1080*1920.MOV in Resources */ = {isa = PBXBuildFile; fileRef = B5B7857319FE3F4100A9D6AB /* system1080*1920.MOV */; };
 		B5B7857619FE414100A9D6AB /* system1920*1080.MOV in Resources */ = {isa = PBXBuildFile; fileRef = B5B7857519FE414100A9D6AB /* system1920*1080.MOV */; };
 		B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */; };
@@ -128,6 +132,15 @@
 		04CFEB5B196415E600E306C8 /* 1.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = 1.MOV; path = Movie/1.MOV; sourceTree = "<group>"; };
 		04D18881197FA57800495FEC /* GPUGridFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUGridFilter.h; sourceTree = "<group>"; };
 		04D18882197FA57800495FEC /* GPUGridFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUGridFilter.m; sourceTree = "<group>"; };
+		B5B500EE1A00988D00802333 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		B5B500EF1A00988D00802333 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		B5B500F11A009B7F00802333 /* WriterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WriterViewController.h; sourceTree = "<group>"; };
+		B5B500F21A009B7F00802333 /* WriterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriterViewController.m; sourceTree = "<group>"; };
+		B5B500F41A00C00800802333 /* GPUHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUHeader.h; sourceTree = "<group>"; };
+		B5B500F51A00C20A00802333 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		B5B500F61A00C20A00802333 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
+		B5B500F81A00C37E00802333 /* TransformViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformViewController.h; sourceTree = "<group>"; };
+		B5B500F91A00C37E00802333 /* TransformViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformViewController.m; sourceTree = "<group>"; };
 		B5B7857319FE3F4100A9D6AB /* system1080*1920.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "system1080*1920.MOV"; path = "Movie/system1080*1920.MOV"; sourceTree = "<group>"; };
 		B5B7857519FE414100A9D6AB /* system1920*1080.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "system1920*1080.MOV"; path = "Movie/system1920*1080.MOV"; sourceTree = "<group>"; };
 		B5C2FD5F19F505AD0003DE6A /* GPUMovieWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUMovieWriter.h; sourceTree = "<group>"; };
@@ -215,8 +228,17 @@
 				04CFEB311963FE6C00E306C8 /* AppDelegate.h */,
 				04CFEB321963FE6C00E306C8 /* AppDelegate.m */,
 				04CFEB341963FE6C00E306C8 /* Main.storyboard */,
+				B5B500EE1A00988D00802333 /* RootViewController.h */,
+				B5B500EF1A00988D00802333 /* RootViewController.m */,
+				B5B500F51A00C20A00802333 /* BaseViewController.h */,
+				B5B500F61A00C20A00802333 /* BaseViewController.m */,
+				B5B500F11A009B7F00802333 /* WriterViewController.h */,
+				B5B500F21A009B7F00802333 /* WriterViewController.m */,
+				B5B500F81A00C37E00802333 /* TransformViewController.h */,
+				B5B500F91A00C37E00802333 /* TransformViewController.m */,
 				04CFEB371963FE6C00E306C8 /* ViewController.h */,
 				04CFEB381963FE6C00E306C8 /* ViewController.m */,
+				B5B500F41A00C00800802333 /* GPUHeader.h */,
 				04BE46D919761C9E00541C8F /* GPUMovie.h */,
 				04BE46DA19761C9E00541C8F /* GPUMovie.m */,
 				B5C2FD5F19F505AD0003DE6A /* GPUMovieWriter.h */,
@@ -397,6 +419,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04C7FD2B197BC6370036C8E4 /* GPUTwoInputFilter.m in Sources */,
+				B5B500F01A00988D00802333 /* RootViewController.m in Sources */,
 				04BE1602196695880008DEE3 /* GPUContext.m in Sources */,
 				04BE46DB19761C9E00541C8F /* GPUMovie.m in Sources */,
 				041CA25F197E6AD40097B949 /* GPUPartFilter.m in Sources */,
@@ -412,7 +435,10 @@
 				04CFEB2F1963FE6C00E306C8 /* main.m in Sources */,
 				B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */,
 				04C14F111980AE9700B9640F /* GPUTransformFilter.m in Sources */,
+				B5B500F31A009B7F00802333 /* WriterViewController.m in Sources */,
 				041CA25C197E557A0097B949 /* GPULineFilter.m in Sources */,
+				B5B500FA1A00C37E00802333 /* TransformViewController.m in Sources */,
+				B5B500F71A00C20A00802333 /* BaseViewController.m in Sources */,
 				04BA81571973E1020025EA46 /* GPUView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
