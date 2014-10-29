@@ -41,7 +41,7 @@
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setFrame:CGRectMake(0, 64, 120, 50)];
     [btn setBackgroundColor:[UIColor redColor]];
-    [btn setTitle:@"StartWriter" forState:UIControlStateNormal];
+    [btn setTitle:@"Start" forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(startAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
 }
@@ -52,7 +52,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)startWriter
+- (void)startAction
 {
     if (!_baseMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1920*1080" ofType:@"MOV"]];
