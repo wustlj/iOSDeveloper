@@ -86,12 +86,6 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
     [super dealloc];
 }
 
-- (void)addTarget:(id<GPUInput>)target {
-    if (![_targets containsObject:target]) {
-        [_targets addObject:target];
-    }
-}
-
 - (CGSize)outputFrameSize {
     return _size;
 }
@@ -164,6 +158,12 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
         [target setInputSize:_size atIndex:0];
         [target setInputFramebuffer:_framebuffer atIndex:0];
         [target newFrameReadyAtTime:kCMTimeZero atIndex:0];
+    }
+}
+
+- (void)addTarget:(id<GPUInput>)target {
+    if (![_targets containsObject:target]) {
+        [_targets addObject:target];
     }
 }
 

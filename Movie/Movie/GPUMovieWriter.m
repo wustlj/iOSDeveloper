@@ -87,6 +87,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 
 - (void)dealloc
 {
+    Block_release(_finishBlock);
     [_movieURL release];
     [_assetWriter release];
     [_audioInput release];
@@ -202,11 +203,15 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 
 - (void)endProcessing
 {
-//    [_videoInput markAsFinished];
-//    [_audioInput markAsFinished];
+    [_videoInput markAsFinished];
+    [_audioInput markAsFinished];
     
     [_assetWriter finishWritingWithCompletionHandler:^{
         NSLog(@"write finished");
+        
+        if (_finishBlock) {
+            _finishBlock();
+        }
     }];
 }
 

@@ -67,6 +67,12 @@
         }
         _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:size];
         _movieWriter.transform = preferredTransform;
+        
+        __block typeof(self) oneself = self;
+        
+        _movieWriter.finishBlock = ^{
+            [oneself finishedBlock];
+        };
     }
     
     [_baseMovie addTarget:_movieWriter];
@@ -85,6 +91,15 @@
 	}
     preferredTransform = assetTrack.preferredTransform;
     size = assetTrack.naturalSize;
+}
+
+- (void)finishedBlock
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Write Finished" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+        [alertView release];
+    });
 }
 
 /*

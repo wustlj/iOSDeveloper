@@ -100,6 +100,8 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     [_yuvConversionFrameBuffer release];
     
+    [self removeAllTargets];
+    
     [super dealloc];
 }
 
@@ -331,6 +333,10 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     if (![_targets containsObject:target]) {
         [_targets addObject:target];
     }
+}
+
+- (void)removeAllTargets {
+    [_targets removeAllObjects];
 }
 
 @end

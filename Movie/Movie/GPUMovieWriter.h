@@ -20,6 +20,8 @@ typedef enum {
     kRotateLeft
 }WriterOrientation;
 
+typedef void(^FinishedWriterBlock)(void);
+
 @interface GPUMovieWriter : NSObject <GPUInput>
 {
     AVAssetWriter *_assetWriter;
@@ -33,7 +35,8 @@ typedef enum {
     GLuint _samplerSlot;
 }
 
-@property(nonatomic, assign) CGAffineTransform transform;
+@property (nonatomic, assign) CGAffineTransform transform;
+@property (nonatomic, copy) FinishedWriterBlock finishBlock;
 
 - (id)initWithURL:(NSURL *)movieURL size:(CGSize)movieSize;
 
