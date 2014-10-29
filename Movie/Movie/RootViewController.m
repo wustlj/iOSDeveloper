@@ -41,7 +41,11 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    _dataArray = [[NSArray arrayWithObjects:@"WriterViewController", @"ViewController", @"TransformViewController", nil] retain];
+    _dataArray = [[NSArray arrayWithObjects:
+                   @"WriterViewController",
+                   @"TransformViewController",
+                   @"GridViewController",
+                   @"ViewController", nil] retain];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
 }
 

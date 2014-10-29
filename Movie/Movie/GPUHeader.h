@@ -15,5 +15,6 @@
 
 #import "GPUFilter.h"
 #import "GPUTransformFilter.h"
+#import "GPUGridFilter.h"
 
 #endif
