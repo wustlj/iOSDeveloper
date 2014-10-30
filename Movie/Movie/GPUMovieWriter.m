@@ -30,7 +30,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
  
  void main()
  {
-     gl_FragColor = texture2D(inputImageTexture, textureCoordOut).bgra;
+     gl_FragColor = texture2D(inputImageTexture, textureCoordOut);
  }
  );
 
@@ -109,6 +109,8 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
         NSLog(@"Error:%@", [error description]);
     }
     
+    _assetWriter.movieFragmentInterval = CMTimeMakeWithSeconds(1.0, 1000);
+    
     AVAudioSession *sharedAudioSession = [AVAudioSession sharedInstance];
     double preferredHardwareSampleRate;
     
@@ -135,7 +137,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
                                     AVEncoderBitRateKey: [ NSNumber numberWithInt:64000]
                                     };
     _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioSettings] retain];
-    [_assetWriter addInput:_audioInput];
+//    [_assetWriter addInput:_audioInput];
     
     NSDictionary *videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
                                     AVVideoWidthKey: [NSNumber numberWithInt:_movieSize.width],
@@ -143,6 +145,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
                                     };
     
     _videoInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings] retain];
+    _videoInput.expectsMediaDataInRealTime = YES;
     
     NSDictionary *sourcePixelBufferAttributesDictionary = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:kCVPixelFormatType_32BGRA], kCVPixelBufferPixelFormatTypeKey,
                                                            [NSNumber numberWithInt:_movieSize.width], kCVPixelBufferWidthKey,
@@ -153,9 +156,9 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     [_assetWriter addInput:_videoInput];
 }
 
-- (BOOL)startWriting
+- (void)startWriting
 {
-    return [_assetWriter startWriting];
+    [_assetWriter startWriting];
 }
 
 - (void)cancelWriting
@@ -171,7 +174,6 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 //        if (_assetWriter.status != AVAssetWriterStatusWriting) {
 //            [_assetWriter startWriting];
 //        }
-        
         [_assetWriter startSessionAtSourceTime:frameTime];
         startTime = frameTime;
     }
@@ -181,14 +183,26 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     CVPixelBufferRef pixel_buffer = NULL;
     pixel_buffer = _renderTarget;
     CVPixelBufferLockBaseAddress(pixel_buffer, 0);
-    if (_videoInput.readyForMoreMediaData && _assetWriter.status == AVAssetWriterStatusWriting) {
-        BOOL result = [_assetWriterInputPixelBufferAdaptor appendPixelBuffer:pixel_buffer withPresentationTime:frameTime];
-        if (!result) {
-            NSLog(@"appendPixelBuffer failed");
-            CMTimeShow(frameTime);
+    
+    void(^write)() = ^{
+//        while (!_videoInput.readyForMoreMediaData) {
+//            NSDate *maxDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
+//            NSLog(@"video waiting...");
+//            [[NSRunLoop currentRunLoop] runUntilDate:maxDate];
+//        }
+        
+        if (!_videoInput.readyForMoreMediaData) {
+            NSLog(@"drop frame at time:%@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, frameTime)));
+        } else if(![_assetWriterInputPixelBufferAdaptor appendPixelBuffer:pixel_buffer withPresentationTime:frameTime]) {
+            NSLog(@"append video failed at time:%@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, frameTime)));
+            if (_assetWriter.status == AVAssetWriterStatusFailed) {
+                NSLog(@"%@", _assetWriter.error);
+            }
         }
-    }
-    CVPixelBufferUnlockBaseAddress(pixel_buffer, 0);
+        CVPixelBufferUnlockBaseAddress(pixel_buffer, 0);
+    };
+    
+    write();
 }
 
 - (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex;
@@ -198,13 +212,13 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 
 - (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex;
 {
-    
+    _movieSize = newSize;  
 }
 
 - (void)endProcessing
 {
     [_videoInput markAsFinished];
-    [_audioInput markAsFinished];
+//    [_audioInput markAsFinished];
     
     [_assetWriter finishWritingWithCompletionHandler:^{
         NSLog(@"write finished");
@@ -230,48 +244,6 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
         -1.0f,  1.0f,
         1.0f,  1.0f,
     };
-    
-//    const GLfloat textureCoordies[] = {
-//        0.0f, 1.0f,
-//        1.0f, 1.0f,
-//        0.0f, 0.0f,
-//        1.0f, 0.0f,
-//    };
-    
-//    const GLfloat textureCoordies[] = {
-//        0.0f, 0.0f,
-//        1.0f, 0.0f,
-//        0.0f, 1.0f,
-//        1.0f, 1.0f,
-//    };
-
-//    const GLfloat textureCoordies[] = {
-//        1.0f, 0.0f,
-//        0.0f, 0.0f,
-//        1.0f, 1.0f,
-//        0.0f, 1.0f,
-//    };
-    
-//    const GLfloat textureCoordies[] = {
-//        0.0f, 1.0f,
-//        0.0f, 0.0f,
-//        1.0f, 1.0f,
-//        1.0f, 0.0f,
-//    };
-    
-//    const GLfloat textureCoordies[] = {
-//        1.0f, 1.0f,
-//        0.0f, 1.0f,
-//        1.0f, 0.0f,
-//        0.0f, 0.0f,
-//    };
-    
-//    const GLfloat textureCoordies[] = {
-//        0.0f, 0.0f,
-//        1.0f, 0.0f,
-//        0.0f, 1.0f,
-//        1.0f, 1.0f,
-//    };
     
     const GLfloat *textureCoordies = [self textureCoordiesWithOrientation:kRotateNone];
     
@@ -349,7 +321,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     
     CVOpenGLESTextureCacheRef textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
 
-    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCacheRef, _renderTarget, NULL, GL_TEXTURE_2D, GL_RGBA, (int)_movieSize.width, (int)_movieSize.height, GL_RGBA, GL_UNSIGNED_BYTE, 0, &_renderTexture);
+    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCacheRef, _renderTarget, NULL, GL_TEXTURE_2D, GL_RGBA, (int)_movieSize.width, (int)_movieSize.height, GL_BGRA, GL_UNSIGNED_BYTE, 0, &_renderTexture);
     glBindTexture(CVOpenGLESTextureGetTarget(_renderTexture), CVOpenGLESTextureGetName(_renderTexture));
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

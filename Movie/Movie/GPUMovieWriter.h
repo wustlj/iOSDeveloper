@@ -40,7 +40,7 @@ typedef void(^FinishedWriterBlock)(void);
 
 - (id)initWithURL:(NSURL *)movieURL size:(CGSize)movieSize;
 
-- (BOOL)startWriting;
+- (void)startWriting;
 - (void)cancelWriting;
 
 @end

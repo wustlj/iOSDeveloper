@@ -55,7 +55,7 @@
 - (void)startAction
 {
     if (!_baseMovie) {
-        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1920*1080" ofType:@"MOV"]];
+        NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1080*1920" ofType:@"MOV"]];
         [self initTransform:videoURL];
         _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
     }
