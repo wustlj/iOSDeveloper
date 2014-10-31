@@ -17,6 +17,8 @@
 - (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex;
 - (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex;
 
+- (void)newAudioBuffer:(CMSampleBufferRef)bufferRef;
+
 @optional
 - (void)endProcessing;
 

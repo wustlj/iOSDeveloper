@@ -101,6 +101,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     [_yuvConversionFrameBuffer release];
     
     [self removeAllTargets];
+    [_targets release];
     
     [super dealloc];
 }
@@ -144,6 +145,23 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
             [_assetReader cancelReading];
         }
     }
+}
+
+- (BOOL)readNextAudioFrameFromOutput:(AVAssetReaderOutput *)readerAudioTrackOutput {
+    if (_assetReader.status == AVAssetReaderStatusReading) {
+        CMSampleBufferRef bufferRef = [readerAudioTrackOutput copyNextSampleBuffer];
+        if (bufferRef) {
+            [self processAudioBuffer:bufferRef];
+            CFRelease(bufferRef);
+        } else {
+#warning TODO when Audio process end
+        }
+    }
+    return YES;
+}
+
+- (void)processAudioBuffer:(CMSampleBufferRef)audioBuffer {
+    
 }
 
 - (BOOL)readNextVideoFrame {    

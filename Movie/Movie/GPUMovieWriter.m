@@ -37,7 +37,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 @interface GPUMovieWriter ()
 {
     GLuint _frameBuffer;
-    CVPixelBufferRef _renderTarget;
+    CVPixelBufferRef _pixelBuffer;
     CVOpenGLESTextureRef _renderTexture;
     GPUFramebuffer *_inputFrameBuffer;
     
@@ -147,6 +147,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     _videoInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings] retain];
     _videoInput.expectsMediaDataInRealTime = YES;
     
+    // kCVPixelBufferPixelFormatTypeKey must kCVPixelFormatType_32BGRA, or CVPixelBufferPoolCreatePixelBuffer will fail with kCVReturnInvalidPixelFormat
     NSDictionary *sourcePixelBufferAttributesDictionary = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:kCVPixelFormatType_32BGRA], kCVPixelBufferPixelFormatTypeKey,
                                                            [NSNumber numberWithInt:_movieSize.width], kCVPixelBufferWidthKey,
                                                            [NSNumber numberWithInt:_movieSize.height], kCVPixelBufferHeightKey,
@@ -168,6 +169,11 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 
 #pragma mark - GPUInput
 
+- (void)newAudioBuffer:(CMSampleBufferRef)bufferRef
+{
+    
+}
+
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex
 {
     if (CMTIME_IS_INVALID(startTime)) {
@@ -181,7 +187,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     [self draw];
     
     CVPixelBufferRef pixel_buffer = NULL;
-    pixel_buffer = _renderTarget;
+    pixel_buffer = _pixelBuffer;
     CVPixelBufferLockBaseAddress(pixel_buffer, 0);
     
     void(^write)() = ^{
@@ -314,14 +320,14 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     glGenFramebuffers(1, &_frameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
     
-    CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, [_assetWriterInputPixelBufferAdaptor pixelBufferPool], &_renderTarget);
-    CVBufferSetAttachment(_renderTarget, kCVImageBufferColorPrimariesKey, kCVImageBufferColorPrimaries_ITU_R_709_2, kCVAttachmentMode_ShouldPropagate);
-    CVBufferSetAttachment(_renderTarget, kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_601_4, kCVAttachmentMode_ShouldPropagate);
-    CVBufferSetAttachment(_renderTarget, kCVImageBufferTransferFunctionKey, kCVImageBufferTransferFunction_ITU_R_709_2, kCVAttachmentMode_ShouldPropagate);
+    CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, [_assetWriterInputPixelBufferAdaptor pixelBufferPool], &_pixelBuffer);
+    CVBufferSetAttachment(_pixelBuffer, kCVImageBufferColorPrimariesKey, kCVImageBufferColorPrimaries_ITU_R_709_2, kCVAttachmentMode_ShouldPropagate);
+    CVBufferSetAttachment(_pixelBuffer, kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_601_4, kCVAttachmentMode_ShouldPropagate);
+    CVBufferSetAttachment(_pixelBuffer, kCVImageBufferTransferFunctionKey, kCVImageBufferTransferFunction_ITU_R_709_2, kCVAttachmentMode_ShouldPropagate);
     
     CVOpenGLESTextureCacheRef textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
 
-    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCacheRef, _renderTarget, NULL, GL_TEXTURE_2D, GL_RGBA, (int)_movieSize.width, (int)_movieSize.height, GL_BGRA, GL_UNSIGNED_BYTE, 0, &_renderTexture);
+    CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCacheRef, _pixelBuffer, NULL, GL_TEXTURE_2D, GL_RGBA, (int)_movieSize.width, (int)_movieSize.height, GL_BGRA, GL_UNSIGNED_BYTE, 0, &_renderTexture);
     glBindTexture(CVOpenGLESTextureGetTarget(_renderTexture), CVOpenGLESTextureGetName(_renderTexture));
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -339,8 +345,8 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
         _frameBuffer = 0;
     }
     
-    if (_renderTarget) {
-        CVPixelBufferRelease(_renderTarget);
+    if (_pixelBuffer) {
+        CVPixelBufferRelease(_pixelBuffer);
     }
     
     if (_renderTexture) {

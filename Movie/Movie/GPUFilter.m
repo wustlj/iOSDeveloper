@@ -92,6 +92,10 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
 
 #pragma mark - GPUInput
 
+- (void)newAudioBuffer:(CMSampleBufferRef)bufferRef {
+    [self informTargetsNewAudio:bufferRef];
+}
+
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     [self draw];
     
@@ -164,6 +168,12 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
 - (void)addTarget:(id<GPUInput>)target {
     if (![_targets containsObject:target]) {
         [_targets addObject:target];
+    }
+}
+
+- (void)informTargetsNewAudio:(CMSampleBufferRef)bufferRef {
+    for (id<GPUInput> target in _targets) {
+        [target newAudioBuffer:bufferRef];
     }
 }
 
