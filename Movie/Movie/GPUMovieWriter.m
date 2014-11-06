@@ -136,7 +136,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
                                     AVChannelLayoutKey: [NSData dataWithBytes:&acl length:sizeof(acl)],
                                     AVEncoderBitRateKey: [ NSNumber numberWithInt:64000]
                                     };
-    _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioSettings] retain];
+    _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:nil] retain];
     [_assetWriter addInput:_audioInput];
     
     NSDictionary *videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
