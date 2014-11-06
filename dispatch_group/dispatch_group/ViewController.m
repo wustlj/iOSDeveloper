@@ -5,12 +5,15 @@
 //  Created by lijian on 14/11/5.
 //  Copyright (c) 2014年 youku. All rights reserved.
 //
+// This project is MRC, because I want to know the AVAsset lifetime in dispatch_group_async()
 
 #import "ViewController.h"
 
 #import <AVFoundation/AVFoundation.h>
 
 #import "Test.h"
+
+static NSString * const kTracksKey = @"tracks";
 
 @interface ViewController ()
 {
@@ -36,30 +39,27 @@
  */
     dispatch_group_enter(group);
     asset1 = [[AVAsset assetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1080*1920_2" ofType:@"MOV"]]] retain];
-    NSError *error = nil;
-    AVKeyValueStatus status =  [asset1 statusOfValueForKey:@"tracks" error:&error];
-    NSLog(@"1 status:%ld, %@", status, error);
-    [asset1 loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
+    AVKeyValueStatus status =  [asset1 statusOfValueForKey:kTracksKey error:nil];
+    NSLog(@"1 status:%ld", status);
+    [asset1 loadValuesAsynchronouslyForKeys:@[kTracksKey] completionHandler:^{
         NSLog(@"1 tracks loaded");
         dispatch_group_leave(group);
     }];
     
     dispatch_group_enter(group);
     asset2 = [[AVAsset assetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1080*1920" ofType:@"MOV"]]] retain];
-    NSError *error2 = nil;
-    AVKeyValueStatus status2 =  [asset2 statusOfValueForKey:@"tracks" error:&error2];
-    NSLog(@"2 status:%ld, %@", status2, error2);
-    [asset2 loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
+    AVKeyValueStatus status2 =  [asset2 statusOfValueForKey:kTracksKey error:nil];
+    NSLog(@"2 status:%ld", status2);
+    [asset2 loadValuesAsynchronouslyForKeys:@[kTracksKey] completionHandler:^{
         NSLog(@"2 tracks loaded");
         dispatch_group_leave(group);
     }];
     
     dispatch_group_enter(group);
     asset3 = [[AVAsset assetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1920*1080" ofType:@"MOV"]]] retain];
-    NSError *error3 = nil;
-    AVKeyValueStatus status3 =  [asset3 statusOfValueForKey:@"tracks" error:&error3];
-    NSLog(@"3 status:%ld, %@", status3, error3);
-    [asset3 loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
+    AVKeyValueStatus status3 =  [asset3 statusOfValueForKey:kTracksKey error:nil];
+    NSLog(@"3 status:%ld", status3);
+    [asset3 loadValuesAsynchronouslyForKeys:@[kTracksKey] completionHandler:^{
         NSLog(@"3 tracks loaded");
         dispatch_group_leave(group);
     }];
@@ -75,7 +75,7 @@
     });
     
 /*
- * When you want using dispatch_async, you should using semaphore to block loadValuesAsynchronouslyForKeys
+ * When you want using dispatch_async, you should using semaphore to block loadValuesAsynchronouslyForKeys:completionHandler:
  */
     
     semaphore = dispatch_semaphore_create(0);
