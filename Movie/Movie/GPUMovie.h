@@ -34,6 +34,7 @@
     
     AVAssetReader *_assetReader;
     AVAssetReaderTrackOutput *_videoTrackOutput;
+    AVAssetReaderTrackOutput *_audioTrackOutput;
     
     int imageBufferWidth, imageBufferHeight;
     

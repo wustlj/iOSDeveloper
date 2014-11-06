@@ -21,19 +21,6 @@
         // Custom initialization
         preferredTransform = CGAffineTransformIdentity;
         size = CGSizeMake(480, 480);
-        
-        NSLog(@"%@", NSStringFromClass([self class]));
-        NSLog(@"%@", NSStringFromClass([super class]));
-        
-        
-        BOOL res1 = [(id)[NSObject class] isKindOfClass:[NSObject class]];
-        BOOL res2 = [(id)[WriterViewController class] isKindOfClass:[WriterViewController class]];
-        BOOL res3 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];
-        BOOL res4 = [(id)[WriterViewController class] isMemberOfClass:[WriterViewController class]];
-
-        
-        NSLog(@"%d,%d", res1, res2);
-        NSLog(@"%d,%d", res3, res4);
     }
     return self;
 }

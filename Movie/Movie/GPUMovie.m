@@ -93,6 +93,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     [_asset release];
     [_assetReader release];
     [_videoTrackOutput release];
+    [_audioTrackOutput release];
     
     [_yuvConversionProgram release];
     
@@ -139,6 +140,9 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     if (_keepLooping) {
         while (_assetReader.status == AVAssetReaderStatusReading) {
             [self readNextVideoFrameFromOutput:_videoTrackOutput];
+            if (_audioTrackOutput) {
+                [self readNextAudioFrameFromOutput:_audioTrackOutput];
+            }
         }
         
         if (_assetReader.status == AVAssetReaderStatusCompleted) {
@@ -161,7 +165,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 }
 
 - (void)processAudioBuffer:(CMSampleBufferRef)audioBuffer {
-    
+    [self informTargetsNewAudio:audioBuffer];
 }
 
 - (BOOL)readNextVideoFrame {    
@@ -251,15 +255,23 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
         }
         
         NSArray *videoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
-        AVAssetTrack *track = [videoTracks objectAtIndex:0];
+        AVAssetTrack *vTrack = [videoTracks objectAtIndex:0];
         NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
-        _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:track outputSettings:outputSettings];
+        _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:vTrack outputSettings:outputSettings];
         
         if ([_assetReader canAddOutput:_videoTrackOutput]) {
             [_assetReader addOutput:_videoTrackOutput];
         }
         
-        
+        NSArray *audioTracks = [_asset tracksWithMediaType:AVMediaTypeAudio];
+        if (audioTracks && [audioTracks count]) {
+            AVAssetTrack *aTrack = [audioTracks objectAtIndex:0];
+            _audioTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:aTrack outputSettings:nil];
+            
+            if ([_assetReader canAddOutput:_audioTrackOutput]) {
+                [_assetReader addOutput:_audioTrackOutput];
+            }
+        }
     }
 }
 
@@ -344,6 +356,12 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
         [target setInputSize:CGSizeMake(imageBufferWidth, imageBufferHeight) atIndex:_textureIndex];
         [target setInputFramebuffer:_yuvConversionFrameBuffer atIndex:_textureIndex];
         [target newFrameReadyAtTime:time atIndex:_textureIndex];
+    }
+}
+
+- (void)informTargetsNewAudio:(CMSampleBufferRef)sampleBuffer {
+    for (id<GPUInput> target in _targets) {
+        [target newAudioBuffer:sampleBuffer];
     }
 }
 

@@ -137,7 +137,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
                                     AVEncoderBitRateKey: [ NSNumber numberWithInt:64000]
                                     };
     _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioSettings] retain];
-//    [_assetWriter addInput:_audioInput];
+    [_assetWriter addInput:_audioInput];
     
     NSDictionary *videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
                                     AVVideoWidthKey: [NSNumber numberWithInt:_movieSize.width],
@@ -171,7 +171,15 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 
 - (void)newAudioBuffer:(CMSampleBufferRef)bufferRef
 {
+    void (^write)() = ^{
+        if (!_audioInput.readyForMoreMediaData) {
+            NSLog(@"drop audio");
+        } else if (![_audioInput appendSampleBuffer:bufferRef]) {
+            NSLog(@"append audio failed");
+        }
+    };
     
+    write();
 }
 
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex
@@ -224,7 +232,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 - (void)endProcessing
 {
     [_videoInput markAsFinished];
-//    [_audioInput markAsFinished];
+    [_audioInput markAsFinished];
     
     [_assetWriter finishWritingWithCompletionHandler:^{
         NSLog(@"write finished");
