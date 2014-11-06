@@ -12,9 +12,12 @@
 #import "GPUMovie.h"
 #import "GPUMovieWriter.h"
 #import "GPUView.h"
+#import "GPUImage.h"
 
 #import "GPUFilter.h"
 #import "GPUTransformFilter.h"
 #import "GPUGridFilter.h"
+
+#import "GPUTwoInputFilter.h"
 
 #endif

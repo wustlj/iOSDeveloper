@@ -25,10 +25,32 @@
     return self;
 }
 
+- (id)initOnlyTextureWithSize:(CGSize)framebufferSize {
+    self = [super init];
+    if (self) {
+        _size = framebufferSize;
+        
+        [self generateTexture];
+    }
+    return self;
+}
+
 - (void)dealloc {
     [self destroyFramebuffer];
     
     [super dealloc];
+}
+
+- (void)generateTexture;
+{
+    glActiveTexture(GL_TEXTURE1);
+    glGenTextures(1, &_outputTexture);
+    glBindTexture(GL_TEXTURE_2D, _outputTexture);
+    // This is necessary for non-power-of-two textures
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    // TODO: Handle mipmaps
 }
 
 - (void)generateFramebuffer {

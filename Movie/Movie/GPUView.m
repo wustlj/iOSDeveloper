@@ -95,6 +95,11 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
     _inputFramebuffer = newInputFramebuffer;
 }
 
+- (void)newAudioBuffer:(CMSampleBufferRef)bufferRef
+{
+    
+}
+
 #pragma mark -
 
 - (void)draw {

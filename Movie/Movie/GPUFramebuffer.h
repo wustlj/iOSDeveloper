@@ -21,6 +21,7 @@
 @property (nonatomic, readonly) GLuint texture;
 
 - (id)initWithSize:(CGSize)framebufferSize;
+- (id)initOnlyTextureWithSize:(CGSize)framebufferSize;
 
 - (void)activateFramebuffer;
 

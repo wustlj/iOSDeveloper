@@ -8,8 +8,22 @@
 
 #import <Foundation/Foundation.h>
 
+#import "GPUContext.h"
+#import "GPUProgram.h"
+#import "GPUInput.h"
+#import "GPUFramebuffer.h"
+
 @interface GPUImage : NSObject
+{
+    GPUFramebuffer *_outputFramebuffer;
+    CGSize _size;
+    NSMutableArray *_targets;
+}
 
 - (id)initWithImage:(UIImage *)image;
+
+- (void)addTarget:(id<GPUInput>)target;
+
+- (void)processImage;
 
 @end
