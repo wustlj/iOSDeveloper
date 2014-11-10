@@ -238,7 +238,7 @@
     if (!_overMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"PTstar" ofType:@"mp4"]];
         _overMovie = [[GPUMovie alloc] initWithURL:videoURL];
-        _overMovie.textureIndex = 1;
+//        _overMovie.textureIndex = 1;
         _overMovie.keepLooping = NO;
         [_overMovie startProcessing];
     }
@@ -274,7 +274,7 @@
     if (!_overMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1" ofType:@"mp4"]];
         _overMovie = [[GPUMovie alloc] initWithURL:videoURL];
-        _overMovie.textureIndex = 1;
+//        _overMovie.textureIndex = 1;
         _overMovie.keepLooping = NO;
         [_overMovie startProcessing];
     }
@@ -282,7 +282,7 @@
     if (!_maskMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1_mask" ofType:@"mp4"]];
         _maskMovie = [[GPUMovie alloc] initWithURL:videoURL];
-        _maskMovie.textureIndex = 2;
+//        _maskMovie.textureIndex = 2;
         _maskMovie.keepLooping = NO;
         [_maskMovie startProcessing];
     }
@@ -320,7 +320,7 @@
     if (!_overMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"trans_1" ofType:@"mp4"]];
         _overMovie = [[GPUMovie alloc] initWithURL:videoURL];
-        _overMovie.textureIndex = 1;
+//        _overMovie.textureIndex = 1;
         _overMovie.keepLooping = NO;
         [_overMovie startProcessing];
     }

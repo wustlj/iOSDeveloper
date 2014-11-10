@@ -72,7 +72,6 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     self = [super init];
     if (self) {
         self.url = url;
-        _targets = [[NSMutableArray alloc] init];
         
         [self commInit];
         
@@ -85,7 +84,6 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 - (void)commInit {
     _keepLooping = YES;
-    _textureIndex = 0;
 }
 
 - (void)dealloc {
@@ -99,11 +97,8 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     Block_release(_completionBlock);
     
-    [_yuvConversionFrameBuffer release];
-    
-    [self removeAllTargets];
-    [_targets release];
-    
+    [_outputFramebuffer release];
+        
     [super dealloc];
 }
 
@@ -158,6 +153,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
             [self processAudioBuffer:bufferRef];
             CFRelease(bufferRef);
         } else {
+            NSLog(@"read audio finished");
 #warning TODO when Audio process end
         }
     }
@@ -173,22 +169,26 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 }
 
 - (BOOL)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput {
-    CMSampleBufferRef bufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
-    if (bufferRef) {
+    if (_assetReader.status == AVAssetReaderStatusReading) {
+        CMSampleBufferRef bufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
+        if (bufferRef) {
 #ifdef DEBUG
-        CMTime movieTime =  CMSampleBufferGetPresentationTimeStamp(bufferRef);
-        CMTimeShow(movieTime);
+            CMTime movieTime =  CMSampleBufferGetPresentationTimeStamp(bufferRef);
+            CMTimeShow(movieTime);
 #endif
-        CVImageBufferRef movieFrame = CMSampleBufferGetImageBuffer(bufferRef);
-        [self processMovieFrame:movieFrame withSampleTime:movieTime];
-        CMSampleBufferInvalidate(bufferRef);
-        CFRelease(bufferRef);
-    } else {
-        if (_assetReader.status == AVAssetReaderStatusCompleted) {
-            [self endProcessing];
+            CVImageBufferRef movieFrame = CMSampleBufferGetImageBuffer(bufferRef);
+            [self processMovieFrame:movieFrame withSampleTime:movieTime];
+            CMSampleBufferInvalidate(bufferRef);
+            CFRelease(bufferRef);
+            
+            return YES;
+        } else {
+            if (_assetReader.status == AVAssetReaderStatusCompleted) {
+                [self endProcessing];
+            }
         }
     }
-    return YES;
+    return NO;
 }
 
 - (void)processMovieFrame:(CVPixelBufferRef)movieFrame withSampleTime:(CMTime)sampleTime {
@@ -199,6 +199,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     if (imageBufferHeight != height || imageBufferWidth != width) {
         imageBufferHeight = (int)height;
         imageBufferWidth = (int)width;
+        _textureSize = CGSizeMake(imageBufferWidth, imageBufferHeight);
     }
     
     glActiveTexture(GL_TEXTURE4);
@@ -223,7 +224,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
         _completionBlock();
     }
     
-    [self informTargetsNewFrame:sampleTime];
+    [self notifyTargetsNewOutputTexture:sampleTime];
     
     CFRelease(yPlaneTextureOut);
     CFRelease(uvPlaneTextureOut);
@@ -306,11 +307,11 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 - (void)convertYUVToRGBOutput {
     [GPUContext setActiveShaderProgram:_yuvConversionProgram];
     
-    if (!_yuvConversionFrameBuffer) {
-        _yuvConversionFrameBuffer = [[GPUFramebuffer alloc] initWithSize:CGSizeMake(imageBufferWidth, imageBufferHeight)];
+    if (!_outputFramebuffer) {
+        _outputFramebuffer = [[GPUFramebuffer alloc] initWithSize:CGSizeMake(imageBufferWidth, imageBufferHeight)];
     }
     
-    [_yuvConversionFrameBuffer activateFramebuffer];
+    [_outputFramebuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -346,33 +347,15 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 }
 
 - (GLuint)outputTexture {
-    return _yuvConversionFrameBuffer.texture;
+    return _outputFramebuffer.texture;
 }
 
-#pragma mark - 
-
-- (void)informTargetsNewFrame:(CMTime)time {
-    for (id<GPUInput> target in _targets) {
-        [target setInputSize:CGSizeMake(imageBufferWidth, imageBufferHeight) atIndex:_textureIndex];
-        [target setInputFramebuffer:_yuvConversionFrameBuffer atIndex:_textureIndex];
-        [target newFrameReadyAtTime:time atIndex:_textureIndex];
-    }
-}
+#pragma mark -
 
 - (void)informTargetsNewAudio:(CMSampleBufferRef)sampleBuffer {
     for (id<GPUInput> target in _targets) {
         [target newAudioBuffer:sampleBuffer];
     }
-}
-
-- (void)addTarget:(id<GPUInput>)target {
-    if (![_targets containsObject:target]) {
-        [_targets addObject:target];
-    }
-}
-
-- (void)removeAllTargets {
-    [_targets removeAllObjects];
 }
 
 @end

@@ -100,6 +100,11 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
     
 }
 
+- (NSInteger)nextAvailableTextureIndex
+{
+    return 0;
+}
+
 #pragma mark -
 
 - (void)draw {

@@ -112,6 +112,10 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
     _size = newSize;
 }
 
+- (NSInteger)nextAvailableTextureIndex {
+    return 0;
+}
+
 #pragma mark - GPU
 
 - (void)renderToTextureWithVertices:(const GLfloat *)vertices textureCoordinates:(const GLfloat *)textureCoordinates {

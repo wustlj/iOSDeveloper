@@ -21,7 +21,9 @@
 #import "GPUFramebuffer.h"
 #import "GPUInput.h"
 
-@interface GPUMovie : NSObject
+#import "GPUOutput.h"
+
+@interface GPUMovie : GPUOutput
 {
     GPUProgram *_yuvConversionProgram;
     GLuint _yuvConversionPositionAttribute, _yuvConversionTextureCoordinateAttribute;
@@ -39,9 +41,6 @@
     int imageBufferWidth, imageBufferHeight;
     
     BOOL _keepLooping;
-    
-    GPUFramebuffer *_yuvConversionFrameBuffer;
-    NSMutableArray *_targets;
 }
 
 @property (nonatomic, retain) NSURL *url;
@@ -50,13 +49,10 @@
 - (id)initWithURL:(NSURL *)url;
 
 @property (nonatomic, assign) BOOL keepLooping;
-@property (nonatomic, assign) NSInteger textureIndex;
 - (void)startProcessing;
 - (BOOL)readNextVideoFrame;
 
 @property (nonatomic, copy) void (^completionBlock)(void);
 @property (nonatomic, readonly) GLuint outputTexture;
-
-- (void)addTarget:(id<GPUInput>)target;
 
 @end

@@ -138,7 +138,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
                                     };
 #warning TODO audioSettings is not used
     _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:nil] retain];
-    [_assetWriter addInput:_audioInput];
+//    [_assetWriter addInput:_audioInput];
     
     NSDictionary *videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
                                     AVVideoWidthKey: [NSNumber numberWithInt:_movieSize.width],
@@ -230,10 +230,14 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
     _movieSize = newSize;  
 }
 
+- (NSInteger)nextAvailableTextureIndex {
+    return 0;
+}
+
 - (void)endProcessing
 {
     [_videoInput markAsFinished];
-    [_audioInput markAsFinished];
+//    [_audioInput markAsFinished];
     
     [_assetWriter finishWritingWithCompletionHandler:^{
         NSLog(@"write finished");

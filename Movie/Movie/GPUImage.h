@@ -13,17 +13,12 @@
 #import "GPUInput.h"
 #import "GPUFramebuffer.h"
 
-@interface GPUImage : NSObject
-{
-    GPUFramebuffer *_outputFramebuffer;
-    CGSize _size;
-    NSMutableArray *_targets;
-}
+#import "GPUOutput.h"
+
+@interface GPUImage : GPUOutput
 
 - (id)initWithImage:(UIImage *)image;
 - (id)initWithCGImage:(CGImageRef)imageRef;
-
-- (void)addTarget:(id<GPUInput>)target;
 
 - (void)processImage;
 

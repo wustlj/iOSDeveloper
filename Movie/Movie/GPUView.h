@@ -9,14 +9,8 @@
 #import <UIKit/UIKit.h>
 
 #import <QuartzCore/QuartzCore.h>
-#import <OpenGLES/EAGL.h>
-#import <OpenGLES/ES1/gl.h>
-#import <OpenGLES/ES2/gl.h>
 
-#import "GPUContext.h"
-#import "GPUProgram.h"
-#import "GPUInput.h"
-#import "GPUFramebuffer.h"
+#import "GPUOutput.h"
 
 @interface GPUView : UIView <GPUInput>
 {
