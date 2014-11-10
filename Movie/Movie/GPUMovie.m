@@ -140,9 +140,9 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     if (_keepLooping) {
         while (_assetReader.status == AVAssetReaderStatusReading) {
             [self readNextVideoFrameFromOutput:_videoTrackOutput];
-//            if (_audioTrackOutput) {
-//                [self readNextAudioFrameFromOutput:_audioTrackOutput];
-//            }
+            if (_audioTrackOutput) {
+                [self readNextAudioFrameFromOutput:_audioTrackOutput];
+            }
         }
         
         if (_assetReader.status == AVAssetReaderStatusCompleted) {

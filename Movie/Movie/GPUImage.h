@@ -21,6 +21,7 @@
 }
 
 - (id)initWithImage:(UIImage *)image;
+- (id)initWithCGImage:(CGImageRef)imageRef;
 
 - (void)addTarget:(id<GPUInput>)target;
 

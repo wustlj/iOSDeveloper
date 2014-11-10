@@ -136,6 +136,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
                                     AVChannelLayoutKey: [NSData dataWithBytes:&acl length:sizeof(acl)],
                                     AVEncoderBitRateKey: [ NSNumber numberWithInt:64000]
                                     };
+#warning TODO audioSettings is not used
     _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:nil] retain];
     [_assetWriter addInput:_audioInput];
     

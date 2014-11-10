@@ -14,6 +14,13 @@
 
 @implementation ImageViewController
 
+- (void)dealloc {
+    [_glView release];
+    [_baseImage release];
+    
+    [super dealloc];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
