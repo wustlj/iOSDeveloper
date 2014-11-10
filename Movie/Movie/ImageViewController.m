@@ -35,17 +35,14 @@
 
 - (void)startAction
 {
-//    if (!_baseImage) {
-//        UIImage *image = [UIImage imageNamed:@"WID-small.jpg"];
-//        _baseImage = [[GPUImage alloc] initWithImage:image];
-//    }
-//    
-//    [_baseImage addTarget:_glView];
-//    
-//    [_baseImage processImage];
+    if (!_baseImage) {
+        UIImage *image = [UIImage imageNamed:@"WID-small.jpg"];
+        _baseImage = [[GPUImage alloc] initWithImage:image];
+    }
     
-    [_glView setupOutputTexture];
-    [_glView draw];
+    [_baseImage addTarget:_glView];
+    
+    [_baseImage processImage];
 }
 
 @end

@@ -24,7 +24,7 @@
         GLfloat widthOfImage = CGImageGetWidth(imageRef);
         GLfloat heightOfImage = CGImageGetHeight(imageRef);
         _size = CGSizeMake(widthOfImage, heightOfImage);
-        
+
         GLubyte *imageData = NULL;
         CFDataRef dataFromImageDataProvider = NULL;
         
@@ -33,7 +33,7 @@
         
         runSynchronouslyOnVideoProcessingQueue(^{
             [GPUContext useImageProcessingContext];
-            _outputFramebuffer = [[GPUFramebuffer alloc] initWithSize:_size];
+            _outputFramebuffer = [[GPUFramebuffer alloc] initOnlyTextureWithSize:_size];
             glBindTexture(GL_TEXTURE_2D, _outputFramebuffer.texture);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int)widthOfImage, (int)heightOfImage, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
             glBindTexture(GL_TEXTURE_2D, 0);
@@ -61,12 +61,14 @@
 
 - (void)processImage
 {
-    for (id<GPUInput>target in _targets) {
-        [target setInputFramebuffer:_outputFramebuffer atIndex:0];
-        [target setInputSize:_size atIndex:0];
-        [target newFrameReadyAtTime:kCMTimeIndefinite atIndex:0];
-        [target newAudioBuffer:NULL];
-    }
+    runSynchronouslyOnVideoProcessingQueue(^{
+        for (id<GPUInput>target in _targets) {
+            [target setInputFramebuffer:_outputFramebuffer atIndex:0];
+            [target setInputSize:_size atIndex:0];
+            [target newFrameReadyAtTime:kCMTimeIndefinite atIndex:0];
+            [target newAudioBuffer:NULL];
+        }
+    });
 }
 
 @end
