@@ -66,6 +66,12 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
  }
  );
 
+@interface GPUMovie ()
+{
+    BOOL _audioFinished;
+}
+@end
+
 @implementation GPUMovie
 
 - (id)initWithURL:(NSURL *)url {
@@ -135,13 +141,49 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     if (_keepLooping) {
         while (_assetReader.status == AVAssetReaderStatusReading) {
             [self readNextVideoFrameFromOutput:_videoTrackOutput];
-            if (_audioTrackOutput) {
+            if (_audioTrackOutput && !_audioFinished) {
                 [self readNextAudioFrameFromOutput:_audioTrackOutput];
             }
         }
         
         if (_assetReader.status == AVAssetReaderStatusCompleted) {
             [_assetReader cancelReading];
+        }
+    }
+}
+
+- (void)createReader {
+    [_assetReader release];
+    _assetReader = nil;
+    if (!_assetReader) {
+        NSError *error = nil;
+        _assetReader = [[AVAssetReader alloc] initWithAsset:_asset error:&error];
+        if (error) {
+            NSLog(@"%@", [error description]);
+            return;
+        }
+        
+        NSArray *videoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
+        AVAssetTrack *vTrack = [videoTracks objectAtIndex:0];
+        NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
+        _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:vTrack outputSettings:outputSettings];
+        
+        if ([_assetReader canAddOutput:_videoTrackOutput]) {
+            [_assetReader addOutput:_videoTrackOutput];
+        }
+        
+        _audioFinished = YES;
+        NSArray *audioTracks = [_asset tracksWithMediaType:AVMediaTypeAudio];
+        if (audioTracks && [audioTracks count]) {
+            AVAssetTrack *aTrack = [audioTracks objectAtIndex:0];
+            //When I test on ios Device, found must set audioSettings, or copy copyNextSampleBuffer will block.
+            NSDictionary *audioSettings = @{(id)AVFormatIDKey: @(kAudioFormatLinearPCM)};
+            _audioTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:aTrack outputSettings:audioSettings];
+            
+            if ([_assetReader canAddOutput:_audioTrackOutput]) {
+                [_assetReader addOutput:_audioTrackOutput];
+                _audioFinished = NO;
+            }
         }
     }
 }
@@ -153,8 +195,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
             [self processAudioBuffer:bufferRef];
             CFRelease(bufferRef);
         } else {
-            NSLog(@"read audio finished");
-#warning TODO when Audio process end
+            _audioFinished = YES;
         }
     }
     return YES;
@@ -235,43 +276,11 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 }
 
 - (void)endProcessing {
-    NSLog(@"end processing");
+    NSLog(@"movie end processing");
     
     for (id<GPUInput> target in _targets) {
         if ([target respondsToSelector:@selector(endProcessing)]) {
             [target endProcessing];
-        }
-    }
-}
-
-- (void)createReader {
-    [_assetReader release];
-    _assetReader = nil;
-    if (!_assetReader) {
-        NSError *error = nil;
-        _assetReader = [[AVAssetReader alloc] initWithAsset:_asset error:&error];
-        if (error) {
-            NSLog(@"%@", [error description]);
-            return;
-        }
-        
-        NSArray *videoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
-        AVAssetTrack *vTrack = [videoTracks objectAtIndex:0];
-        NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
-        _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:vTrack outputSettings:outputSettings];
-        
-        if ([_assetReader canAddOutput:_videoTrackOutput]) {
-            [_assetReader addOutput:_videoTrackOutput];
-        }
-        
-        NSArray *audioTracks = [_asset tracksWithMediaType:AVMediaTypeAudio];
-        if (audioTracks && [audioTracks count]) {
-            AVAssetTrack *aTrack = [audioTracks objectAtIndex:0];
-            _audioTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:aTrack outputSettings:nil];
-            
-            if ([_assetReader canAddOutput:_audioTrackOutput]) {
-                [_assetReader addOutput:_audioTrackOutput];
-            }
         }
     }
 }

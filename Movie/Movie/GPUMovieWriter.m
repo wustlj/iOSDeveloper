@@ -74,11 +74,11 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
         
         [GPUContext setActiveShaderProgram:_program];
 
-//        runSynchronouslyOnVideoProcessingQueue(^{
+        runSynchronouslyOnVideoProcessingQueue(^{
             _positionSlot = [_program attributeSlot:@"vPosition"];
             _textureSlot = [_program attributeSlot:@"textureCoord"];
             _samplerSlot = [_program uniformIndex:@"inputImageTexture"];
-//        });
+        });
         
         [self initWriter];
     }
@@ -136,9 +136,8 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
                                     AVChannelLayoutKey: [NSData dataWithBytes:&acl length:sizeof(acl)],
                                     AVEncoderBitRateKey: [ NSNumber numberWithInt:64000]
                                     };
-#warning TODO audioSettings is not used
-    _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:nil] retain];
-//    [_assetWriter addInput:_audioInput];
+    _audioInput = [[AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioSettings] retain];
+    [_assetWriter addInput:_audioInput];
     
     NSDictionary *videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
                                     AVVideoWidthKey: [NSNumber numberWithInt:_movieSize.width],
@@ -237,7 +236,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 - (void)endProcessing
 {
     [_videoInput markAsFinished];
-//    [_audioInput markAsFinished];
+    [_audioInput markAsFinished];
     
     [_assetWriter finishWritingWithCompletionHandler:^{
         NSLog(@"write finished");
