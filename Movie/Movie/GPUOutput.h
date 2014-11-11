@@ -22,9 +22,12 @@
     NSMutableArray *_targetIndexs;
 }
 
+@property (readonly) GPUFramebuffer *outputFramebuffer;
+
 - (void)addTarget:(id<GPUInput>)target;
 - (void)removeTarget:(id<GPUInput>)target;
 
 - (void)notifyTargetsNewOutputTexture:(CMTime)time;
+- (void)notifyTargetsNewOutputTexture:(CMTime)time withFramebuffer:(GPUFramebuffer *)framebuffer;
 
 @end

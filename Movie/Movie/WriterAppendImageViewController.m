@@ -1,18 +1,18 @@
 //
-//  WriterViewController.m
+//  WriterAppendImageViewController.m
 //  Movie
 //
-//  Created by lijian on 14-10-29.
+//  Created by lijian on 14/11/11.
 //  Copyright (c) 2014年 lijian. All rights reserved.
 //
 
-#import "WriterViewController.h"
+#import "WriterAppendImageViewController.h"
 
-@interface WriterViewController ()
+@interface WriterAppendImageViewController ()
 
 @end
 
-@implementation WriterViewController
+@implementation WriterAppendImageViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,10 +46,21 @@
 
 - (void)startAction
 {
+    __block typeof(self) weakself = self;
+    
+    if (!_appendImage) {
+        UIImage *image = [UIImage imageNamed:@"WID-small.jpg"];
+        _appendImage = [[GPUImage alloc] initWithImage:image];
+    }
+
+    
     if (!_baseMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"system1080*1920" ofType:@"MOV"]];
         [self initTransform:videoURL];
         _baseMovie = [[GPUMovie alloc] initWithURL:videoURL];
+        _baseMovie.completionBlock = ^{
+            [weakself movieFinishedBlock];
+        };
     }
     
     if (!_movieWriter) {
@@ -60,10 +71,8 @@
         _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:size];
         _movieWriter.transform = preferredTransform;
         
-        __block typeof(self) oneself = self;
-        
         _movieWriter.finishBlock = ^{
-            [oneself finishedBlock];
+            [weakself finishedBlock];
         };
     }
     
@@ -79,10 +88,17 @@
     AVAsset *asset = [AVAsset assetWithURL:url];
     AVAssetTrack *assetTrack = nil;
     if ([[asset tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
-		assetTrack = [asset tracksWithMediaType:AVMediaTypeVideo][0];
-	}
+        assetTrack = [asset tracksWithMediaType:AVMediaTypeVideo][0];
+    }
     preferredTransform = assetTrack.preferredTransform;
     size = assetTrack.naturalSize;
+}
+
+- (void)movieFinishedBlock
+{
+    for (int i = 0; i < 30; i++) {
+        [_baseMovie appendFramebuffer:_appendImage.outputFramebuffer];
+    }
 }
 
 - (void)finishedBlock
@@ -91,7 +107,6 @@
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Write Finished" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
         [alertView release];
-    });
+    });    
 }
-
 @end

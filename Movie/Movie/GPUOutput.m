@@ -47,12 +47,16 @@
 }
 
 - (void)notifyTargetsNewOutputTexture:(CMTime)time {
+    [self notifyTargetsNewOutputTexture:time withFramebuffer:_outputFramebuffer];
+}
+
+- (void)notifyTargetsNewOutputTexture:(CMTime)time withFramebuffer:(GPUFramebuffer *)framebuffer {
     for (id<GPUInput> target in _targets) {
         NSInteger indexOfObject = [_targets indexOfObject:target];
         NSInteger textureIndex = [[_targetIndexs objectAtIndex:indexOfObject] integerValue];
-
+        
         [target setInputSize:_textureSize atIndex:textureIndex];
-        [target setInputFramebuffer:_outputFramebuffer atIndex:textureIndex];
+        [target setInputFramebuffer:framebuffer atIndex:textureIndex];
         [target newFrameReadyAtTime:time atIndex:textureIndex];
     }
 }

@@ -69,6 +69,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 @interface GPUMovie ()
 {
     BOOL _audioFinished;
+    CMTime _lastFrameTime;
 }
 @end
 
@@ -78,6 +79,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     self = [super init];
     if (self) {
         self.url = url;
+        _lastFrameTime = kCMTimeZero;
         
         [self setupYUVProgram];
         
@@ -96,6 +98,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     [_yuvConversionProgram release];
     
     Block_release(_completionBlock);
+    Block_release(_currentFrameCompletionBlock);
     
     [_outputFramebuffer release];
         
@@ -253,10 +256,11 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     [self convertYUVToRGBOutput];
     
-    if (_completionBlock) {
-        _completionBlock();
+    if (_currentFrameCompletionBlock) {
+        _currentFrameCompletionBlock();
     }
     
+    _lastFrameTime = sampleTime;
     [self notifyTargetsNewOutputTexture:sampleTime];
     
     CFRelease(yPlaneTextureOut);
@@ -269,6 +273,10 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 
 - (void)endProcessing {
     NSLog(@"movie end processing");
+    
+    if (_completionBlock) {
+        _completionBlock();
+    }
     
     for (id<GPUInput> target in _targets) {
         if ([target respondsToSelector:@selector(endProcessing)]) {
@@ -357,6 +365,13 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     for (id<GPUInput> target in _targets) {
         [target newAudioBuffer:sampleBuffer];
     }
+}
+
+- (void)appendFramebuffer:(GPUFramebuffer *)framebuffer {
+    CMTime appendTime = _lastFrameTime;
+    appendTime.value += 20;
+    _lastFrameTime = appendTime;
+    [self notifyTargetsNewOutputTexture:appendTime withFramebuffer:framebuffer];
 }
 
 @end

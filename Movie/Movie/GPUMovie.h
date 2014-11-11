@@ -50,7 +50,10 @@
 - (void)startProcessing;
 - (BOOL)readNextVideoFrame;
 
-@property (nonatomic, copy) void (^completionBlock)(void);
+@property (nonatomic, copy) void (^completionBlock)(void);              // 视频所有桢处理完成
+@property (nonatomic, copy) void (^currentFrameCompletionBlock)(void);  // 当前桢处理完成
 @property (nonatomic, readonly) GLuint outputTexture;
+
+- (void)appendFramebuffer:(GPUFramebuffer *)framebuffer;
 
 @end
