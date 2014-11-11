@@ -85,17 +85,17 @@ NSString *const kLineFilterFragmentShaderString = SHADER_STRING
 - (void)renderToTextureWithVertices:(const GLfloat *)vertices textureCoordinates:(const GLfloat *)textureCoordinates {
     [GPUContext setActiveShaderProgram:_filterProgram];
     
-    if (!_framebuffer) {
-        _framebuffer = [[GPUFramebuffer alloc] initWithSize:_size];
+    if (!_outputFramebuffer) {
+        _outputFramebuffer = [[GPUFramebuffer alloc] initWithSize:_textureSize];
     }
     
-    [_framebuffer activateFramebuffer];
+    [_outputFramebuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);
+    glBindTexture(GL_TEXTURE_2D, [_firstInputFramebuffer texture]);
     glUniform1i(_samplerSlot, 2);
     
     glUniform1i(_stepUniformSlot, 0);

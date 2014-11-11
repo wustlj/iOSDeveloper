@@ -12,7 +12,7 @@
 {
     GLuint _threeTextureCoordinateAttribute;
     GLuint _threeSamplerSlot;
-    GPUFramebuffer *_threeFramebuffer;
+    GPUFramebuffer *_threeInputFramebuffer;
     BOOL _hadReceivedThreeFrame;
 }
 @end

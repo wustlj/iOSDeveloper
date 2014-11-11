@@ -79,17 +79,11 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     if (self) {
         self.url = url;
         
-        [self commInit];
-        
         [self setupYUVProgram];
         
         _textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
     }
     return self;
-}
-
-- (void)commInit {
-    _keepLooping = YES;
 }
 
 - (void)dealloc {
@@ -138,17 +132,15 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
         NSLog(@"%ld", (long)_assetReader.status);
     }
     
-    if (_keepLooping) {
-        while (_assetReader.status == AVAssetReaderStatusReading) {
-            [self readNextVideoFrameFromOutput:_videoTrackOutput];
-            if (_audioTrackOutput && !_audioFinished) {
-                [self readNextAudioFrameFromOutput:_audioTrackOutput];
-            }
+    while (_assetReader.status == AVAssetReaderStatusReading) {
+        [self readNextVideoFrameFromOutput:_videoTrackOutput];
+        if (_audioTrackOutput && !_audioFinished) {
+            [self readNextAudioFrameFromOutput:_audioTrackOutput];
         }
-        
-        if (_assetReader.status == AVAssetReaderStatusCompleted) {
-            [_assetReader cancelReading];
-        }
+    }
+    
+    if (_assetReader.status == AVAssetReaderStatusCompleted) {
+        [_assetReader cancelReading];
     }
 }
 

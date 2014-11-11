@@ -41,7 +41,6 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
 - (id)initWithVertexShaderFromString:(NSString *)vertexShader fragmentShaderFromString:(NSString *)fragmentShader {
     self = [super init];
     if (self) {
-        _targets = [[NSMutableArray alloc] init];
         _currentFrameIndex = 0;
         
         runSynchronouslyOnVideoProcessingQueue(^{
@@ -78,16 +77,10 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
 
 - (void)dealloc {
     [_filterProgram release];
-    [_targets removeAllObjects];
-    [_targets release];
     
-    _firstFramebuffer = nil;
+    [_outputFramebuffer release];
     
     [super dealloc];
-}
-
-- (CGSize)outputFrameSize {
-    return _size;
 }
 
 #pragma mark - GPUInput
@@ -101,15 +94,15 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
     
     _currentFrameIndex++;
     
-    [self informTargetsNewFrame];
+    [self notifyTargetsNewOutputTexture:frameTime];
 }
 
 - (void)setInputFramebuffer:(id)newInputFramebuffer atIndex:(NSInteger)textureIndex {
-    _firstFramebuffer = newInputFramebuffer;
+    _firstInputFramebuffer = newInputFramebuffer;
 }
 
 - (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex {
-    _size = newSize;
+    _textureSize = newSize;
 }
 
 - (NSInteger)nextAvailableTextureIndex {
@@ -121,17 +114,17 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
 - (void)renderToTextureWithVertices:(const GLfloat *)vertices textureCoordinates:(const GLfloat *)textureCoordinates {
     [GPUContext setActiveShaderProgram:_filterProgram];
     
-    if (!_framebuffer) {
-        _framebuffer = [[GPUFramebuffer alloc] initWithSize:_size];
+    if (!_outputFramebuffer) {
+        _outputFramebuffer = [[GPUFramebuffer alloc] initWithSize:_textureSize];
     }
     
-    [_framebuffer activateFramebuffer];
+    [_outputFramebuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);
+    glBindTexture(GL_TEXTURE_2D, [_firstInputFramebuffer texture]);
     glUniform1i(_samplerSlot, 2);
     
     glEnableVertexAttribArray(_positionAttribute);
@@ -159,20 +152,6 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
     };
     
     [self renderToTextureWithVertices:squarVertices textureCoordinates:textureCoordies];
-}
-
-- (void)informTargetsNewFrame {
-    for (id<GPUInput> target in _targets) {
-        [target setInputSize:_size atIndex:0];
-        [target setInputFramebuffer:_framebuffer atIndex:0];
-        [target newFrameReadyAtTime:kCMTimeZero atIndex:0];
-    }
-}
-
-- (void)addTarget:(id<GPUInput>)target {
-    if (![_targets containsObject:target]) {
-        [_targets addObject:target];
-    }
 }
 
 - (void)informTargetsNewAudio:(CMSampleBufferRef)bufferRef {

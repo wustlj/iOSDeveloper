@@ -39,8 +39,6 @@
     AVAssetReaderTrackOutput *_audioTrackOutput;
     
     int imageBufferWidth, imageBufferHeight;
-    
-    BOOL _keepLooping;
 }
 
 @property (nonatomic, retain) NSURL *url;

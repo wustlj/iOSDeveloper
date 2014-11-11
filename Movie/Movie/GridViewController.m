@@ -46,7 +46,6 @@
     
     _glView = [[GPUView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn.frame), 320, 320)];
     [self.view addSubview:_glView];
-    [_glView release];
 }
 
 - (void)didReceiveMemoryWarning

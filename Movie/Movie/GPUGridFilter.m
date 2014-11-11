@@ -147,11 +147,11 @@ NSString *const kGridVertexShaderString = SHADER_STRING
 - (void)draw {
     [GPUContext setActiveShaderProgram:_filterProgram];
     
-    if (!_framebuffer) {
-        _framebuffer = [[GPUFramebuffer alloc] initWithSize:_size];
+    if (!_outputFramebuffer) {
+        _outputFramebuffer = [[GPUFramebuffer alloc] initWithSize:_textureSize];
     }
     
-    [_framebuffer activateFramebuffer];
+    [_outputFramebuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -201,7 +201,7 @@ NSString *const kGridVertexShaderString = SHADER_STRING
 
 - (void)renderToTextureWithVertices:(const GLfloat *)vertices textureCoordinates:(const GLfloat *)textureCoordinates {
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);
+    glBindTexture(GL_TEXTURE_2D, [_firstInputFramebuffer texture]);
     glUniform1i(_samplerSlot, 2);
     
     glEnableVertexAttribArray(_positionAttribute);

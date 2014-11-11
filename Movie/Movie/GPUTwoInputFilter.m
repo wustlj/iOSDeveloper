@@ -74,8 +74,8 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
     }
     _hadReceivedFirstFrame = NO;
     _hadReceivedSecondFrame = NO;
-    _firstFramebuffer = nil;
-    _secondFramebuffer = nil;
+    _firstInputFramebuffer = nil;
+    _secondInputFramebuffer = nil;
     
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUContext useImageProcessingContext];
@@ -95,7 +95,7 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 }
 
 - (void)dealloc {
-    
+    _secondInputFramebuffer = nil;
     
     [super dealloc];
 }
@@ -108,22 +108,30 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
         _hadReceivedSecondFrame = NO;
         [self draw];
         
-        [self informTargetsNewFrame];
+        [self notifyTargetsNewOutputTexture:frameTime];
     }
 }
 
 - (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex {
     if (0 == textureIndex) {
-        _firstFramebuffer = newInputFramebuffer;
+        _firstInputFramebuffer = newInputFramebuffer;
         _hadReceivedFirstFrame = YES;
     } else {
-        _secondFramebuffer = newInputFramebuffer;
+        _secondInputFramebuffer = newInputFramebuffer;
         _hadReceivedSecondFrame = YES;
     }
 }
 
 - (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex {
-    _size = newSize;
+    _textureSize = newSize;
+}
+
+- (NSInteger)nextAvailableTextureIndex {
+    if (_hadReceivedFirstFrame) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 #pragma mark - 
@@ -145,21 +153,21 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
     
     [GPUContext setActiveShaderProgram:_filterProgram];
     
-    if (!_framebuffer) {
-        _framebuffer = [[GPUFramebuffer alloc] initWithSize:_size];
+    if (!_outputFramebuffer) {
+        _outputFramebuffer = [[GPUFramebuffer alloc] initWithSize:_textureSize];
     }
     
-    [_framebuffer activateFramebuffer];
+    [_outputFramebuffer activateFramebuffer];
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, [_firstFramebuffer texture]);
+    glBindTexture(GL_TEXTURE_2D, [_firstInputFramebuffer texture]);
     glUniform1i(_samplerSlot, 2);
     
     glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, [_secondFramebuffer texture]);
+    glBindTexture(GL_TEXTURE_2D, [_secondInputFramebuffer texture]);
     glUniform1i(_secondSamplerSlot, 3);
     
     glEnableVertexAttribArray(_positionAttribute);
