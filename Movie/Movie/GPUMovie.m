@@ -70,6 +70,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 {
     BOOL _audioFinished;
     CMTime _lastFrameTime;
+    dispatch_semaphore_t _semaphore;
 }
 @end
 
@@ -78,8 +79,11 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 - (id)initWithURL:(NSURL *)url {
     self = [super init];
     if (self) {
-        self.url = url;
+        _isMask = NO;
         _lastFrameTime = kCMTimeZero;
+        _semaphore = dispatch_semaphore_create(0);
+        
+        self.url = url;
         
         [self setupYUVProgram];
         
@@ -114,7 +118,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     typeof(self) __block blockSelf = self;
     
     [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
-        runSynchronouslyOnVideoProcessingQueue(^{
+        if (_isMask) {
             NSError *error = nil;
             AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
             if (!tracksStatus == AVKeyValueStatusLoaded)
@@ -124,8 +128,25 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
             blockSelf.asset = inputAsset;
             [blockSelf processAsset];
             blockSelf = nil;
-        });
+            dispatch_semaphore_signal(_semaphore);
+        } else {
+            runSynchronouslyOnVideoProcessingQueue(^{
+                NSError *error = nil;
+                AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
+                if (!tracksStatus == AVKeyValueStatusLoaded)
+                {
+                    return;
+                }
+                blockSelf.asset = inputAsset;
+                [blockSelf processAsset];
+                blockSelf = nil;
+            });
+        }
     }];
+    
+    if (_isMask) {
+        dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+    }
 }
 
 - (void)processAsset {
@@ -133,6 +154,10 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     if ([_assetReader startReading]) {
         NSLog(@"%ld", (long)_assetReader.status);
+    }
+    
+    if (_isMask) {
+        return;
     }
     
     while (_assetReader.status == AVAssetReaderStatusReading) {

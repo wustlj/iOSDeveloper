@@ -31,9 +31,15 @@
 - (void)addTarget:(id<GPUInput>)target {
     if (![_targets containsObject:target]) {
         NSInteger index = [target nextAvailableTextureIndex];
+        [self setInputFramebufferForTarget:target atIndex:index];
         [_targets addObject:target];
         [_targetIndexs addObject:[NSNumber numberWithInteger:index]];
     }
+}
+
+- (void)setInputFramebufferForTarget:(id<GPUInput>)target atIndex:(NSInteger)inputTextureIndex;
+{
+    [target setInputFramebuffer:_outputFramebuffer atIndex:inputTextureIndex];
 }
 
 - (void)removeTarget:(id<GPUInput>)target {

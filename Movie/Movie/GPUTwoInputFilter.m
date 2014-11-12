@@ -128,9 +128,9 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 
 - (NSInteger)nextAvailableTextureIndex {
     if (_hadReceivedFirstFrame) {
-        return 0;
-    } else {
         return 1;
+    } else {
+        return 0;
     }
 }
 

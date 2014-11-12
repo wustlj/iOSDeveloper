@@ -47,6 +47,7 @@
                    @"TransformViewController",
                    @"GridViewController",
                    @"ImageViewController",
+                   @"TwoInputViewController",
                    @"ViewController", nil] retain];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
 }

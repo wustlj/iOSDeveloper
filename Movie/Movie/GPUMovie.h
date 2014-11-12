@@ -43,10 +43,10 @@
 
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) AVAsset *asset;
+@property (nonatomic, assign) BOOL isMask;
 
 - (id)initWithURL:(NSURL *)url;
 
-@property (nonatomic, assign) BOOL keepLooping;
 - (void)startProcessing;
 - (BOOL)readNextVideoFrame;
 
