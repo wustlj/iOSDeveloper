@@ -1,0 +1,2 @@
+This project is attempt to add some effect to a video, or append picture even video to a video.
+But now video can't add a new audio track. I'm trying to solve it. If you want to add a new audio track, you can use AVFoundation.

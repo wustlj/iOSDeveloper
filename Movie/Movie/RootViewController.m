@@ -43,10 +43,10 @@
     
     _dataArray = [[NSArray arrayWithObjects:
                    @"WriterViewController",
+                   @"WriterAppendImageViewController",
                    @"TransformViewController",
                    @"GridViewController",
                    @"ImageViewController",
-                   @"WriterAppendImageViewController",
                    @"ViewController", nil] retain];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
 }

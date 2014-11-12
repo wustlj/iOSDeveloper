@@ -60,6 +60,7 @@
 		B5C2FD6419F506910003DE6A /* GPUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6319F506910003DE6A /* GPUImage.m */; };
 		B5CD41791A10C0F900E764F8 /* GPUOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CD41781A10C0F900E764F8 /* GPUOutput.m */; };
 		B5D46E131A12164F0010BEED /* WriterAppendImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D46E121A12164F0010BEED /* WriterAppendImageViewController.m */; };
+		B5E1E83F1A1334FE00EF0E65 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B5E1E83E1A1334FE00EF0E65 /* README.md */; };
 		B5E65D771A0B7EDE00E10702 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E65D761A0B7EDE00E10702 /* ImageViewController.m */; };
 		B5E65D791A0B8B7800E10702 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B5E65D781A0B8B7800E10702 /* 1.png */; };
 		B5E65D7B1A0B925B00E10702 /* WID-small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B5E65D7A1A0B925B00E10702 /* WID-small.jpg */; };
@@ -160,6 +161,7 @@
 		B5CD41781A10C0F900E764F8 /* GPUOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUOutput.m; sourceTree = "<group>"; };
 		B5D46E111A12164F0010BEED /* WriterAppendImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WriterAppendImageViewController.h; sourceTree = "<group>"; };
 		B5D46E121A12164F0010BEED /* WriterAppendImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriterAppendImageViewController.m; sourceTree = "<group>"; };
+		B5E1E83E1A1334FE00EF0E65 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B5E65D751A0B7EDE00E10702 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		B5E65D761A0B7EDE00E10702 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		B5E65D781A0B8B7800E10702 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1.png; path = Movie/1.png; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 		04CFEB161963FE6C00E306C8 = {
 			isa = PBXGroup;
 			children = (
+				B5E1E83E1A1334FE00EF0E65 /* README.md */,
 				04CFEB5B196415E600E306C8 /* 1.MOV */,
 				B5E65D781A0B8B7800E10702 /* 1.png */,
 				B5E65D7A1A0B925B00E10702 /* WID-small.jpg */,
@@ -465,6 +468,7 @@
 				B5C2FD6419F506910003DE6A /* GPUImage.m in Sources */,
 				B5D46E131A12164F0010BEED /* WriterAppendImageViewController.m in Sources */,
 				04C7FD24197B934D0036C8E4 /* GPUFramebuffer.m in Sources */,
+				B5E1E83F1A1334FE00EF0E65 /* README.md in Sources */,
 				04CFEB331963FE6C00E306C8 /* AppDelegate.m in Sources */,
 				04CFEB2F1963FE6C00E306C8 /* main.m in Sources */,
 				B5CD41791A10C0F900E764F8 /* GPUOutput.m in Sources */,
