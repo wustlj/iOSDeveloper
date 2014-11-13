@@ -44,22 +44,12 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
 
  void main()
  {
-//     vec4 base = texture2D(sampler, textureCoordOut);
-//     vec4 overlay = texture2D(sampler2, textureCoordOut2);
-//     vec4 mask = texture2D(sampler3, textureCoordOut3);
-//
-//     mediump float lum = mask.r * 0.299 + mask.g * 0.587 + mask.b * 0.114;
-//
-//     gl_FragColor = mix(base, overlay, lum);
-
      vec4 base = texture2D(sampler, textureCoordOut);
      vec4 overlay = texture2D(sampler2, textureCoordOut2);
-     vec4 overlayMask = texture2D(sampler3, textureCoordOut3);
+     vec4 mask = texture2D(sampler3, textureCoordOut3);
      
-     lowp float maskValue = dot(overlayMask.rgb, luminanceWeighting);
-     lowp vec4 overColor = maskValue*overlay + (1.0-maskValue)*base;
-     
-     gl_FragColor = overColor;
+     float lum = dot(mask.rgb, luminanceWeighting);
+     gl_FragColor = mix(base, overlay, lum);
  }
 );
 
