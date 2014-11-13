@@ -20,4 +20,6 @@
 
 #import "GPUTwoInputFilter.h"
 
+#import "GPUThreeInputFilter.h"
+
 #endif

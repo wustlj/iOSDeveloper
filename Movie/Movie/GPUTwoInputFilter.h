@@ -13,7 +13,7 @@
     GLuint _secondTextureCoordinateAttribute;
     GLuint _secondSamplerSlot;
     GPUFramebuffer *_secondInputFramebuffer;
-    BOOL _hadReceivedFirstFrame;
-    BOOL _hadReceivedSecondFrame;
+    BOOL _hadReceivedFirstFrame, _hadReceivedSecondFrame;
+    BOOL _hadSetFirstTexture;
 }
 @end

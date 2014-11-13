@@ -14,5 +14,6 @@
     GLuint _threeSamplerSlot;
     GPUFramebuffer *_threeInputFramebuffer;
     BOOL _hadReceivedThreeFrame;
+    BOOL _hadSetSecondTexture;
 }
 @end

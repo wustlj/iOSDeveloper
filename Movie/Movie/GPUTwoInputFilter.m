@@ -74,6 +74,7 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
     }
     _hadReceivedFirstFrame = NO;
     _hadReceivedSecondFrame = NO;
+    _hadSetFirstTexture = NO;
     _firstInputFramebuffer = nil;
     _secondInputFramebuffer = nil;
     
@@ -104,6 +105,16 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     if (_hadReceivedFirstFrame && _hadReceivedSecondFrame) {
+        return;
+    }
+    
+    if (0 == textureIndex) {
+        _hadReceivedFirstFrame = YES;
+    } else if (1 == textureIndex) {
+        _hadReceivedSecondFrame = YES;
+    }
+    
+    if (_hadReceivedFirstFrame && _hadReceivedSecondFrame) {
         _hadReceivedFirstFrame = NO;
         _hadReceivedSecondFrame = NO;
         [self draw];
@@ -115,10 +126,9 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 - (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex {
     if (0 == textureIndex) {
         _firstInputFramebuffer = newInputFramebuffer;
-        _hadReceivedFirstFrame = YES;
+        _hadSetFirstTexture = YES;
     } else {
         _secondInputFramebuffer = newInputFramebuffer;
-        _hadReceivedSecondFrame = YES;
     }
 }
 
@@ -127,7 +137,7 @@ NSString *const kTwoFragmentShaderString = SHADER_STRING
 }
 
 - (NSInteger)nextAvailableTextureIndex {
-    if (_hadReceivedFirstFrame) {
+    if (_hadSetFirstTexture) {
         return 1;
     } else {
         return 0;

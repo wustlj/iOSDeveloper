@@ -39,16 +39,27 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
  uniform sampler2D sampler;
  uniform sampler2D sampler2;
  uniform sampler2D sampler3;
+ 
+ const mediump vec3 luminanceWeighting = vec3(0.2125, 0.7154, 0.0721);
 
  void main()
  {
+//     vec4 base = texture2D(sampler, textureCoordOut);
+//     vec4 overlay = texture2D(sampler2, textureCoordOut2);
+//     vec4 mask = texture2D(sampler3, textureCoordOut3);
+//
+//     mediump float lum = mask.r * 0.299 + mask.g * 0.587 + mask.b * 0.114;
+//
+//     gl_FragColor = mix(base, overlay, lum);
+
      vec4 base = texture2D(sampler, textureCoordOut);
      vec4 overlay = texture2D(sampler2, textureCoordOut2);
-     vec4 mask = texture2D(sampler3, textureCoordOut3);
-
-     mediump float lum = mask.r * 0.299 + mask.g * 0.587 + mask.b * 0.114;
-
-     gl_FragColor = mix(base, overlay, lum);
+     vec4 overlayMask = texture2D(sampler3, textureCoordOut3);
+     
+     lowp float maskValue = dot(overlayMask.rgb, luminanceWeighting);
+     lowp vec4 overColor = maskValue*overlay + (1.0-maskValue)*base;
+     
+     gl_FragColor = overColor;
  }
 );
 
@@ -60,6 +71,7 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
         return nil;
     }
     
+    _hadSetSecondTexture = NO;
     _hadReceivedThreeFrame = NO;
     _threeInputFramebuffer = nil;
     
@@ -97,6 +109,18 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
 
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex {
     if (_hadReceivedFirstFrame && _hadReceivedSecondFrame && _hadReceivedThreeFrame) {
+        return;
+    }
+    
+    if (0 == textureIndex) {
+        _hadReceivedFirstFrame = YES;
+    } else if (1 == textureIndex) {
+        _hadReceivedSecondFrame = YES;
+    } else {
+        _hadReceivedThreeFrame = YES;
+    }
+    
+    if (_hadReceivedFirstFrame && _hadReceivedSecondFrame && _hadReceivedThreeFrame) {
         _hadReceivedThreeFrame = NO;
         _hadReceivedFirstFrame = NO;
         _hadReceivedSecondFrame = NO;
@@ -109,18 +133,27 @@ NSString *const kThreeFragmentShaderString = SHADER_STRING
 - (void)setInputFramebuffer:(GPUFramebuffer *)newInputFramebuffer atIndex:(NSInteger)textureIndex {
     if (0 == textureIndex) {
         _firstInputFramebuffer = newInputFramebuffer;
-        _hadReceivedFirstFrame = YES;
+        _hadSetFirstTexture = YES;
     } else if (1 == textureIndex) {
         _secondInputFramebuffer = newInputFramebuffer;
-        _hadReceivedSecondFrame = YES;
+        _hadSetSecondTexture = YES;
     } else {
         _threeInputFramebuffer = newInputFramebuffer;
-        _hadReceivedThreeFrame = YES;
     }
 }
 
 - (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex {
     _textureSize = newSize;
+}
+
+- (NSInteger)nextAvailableTextureIndex {
+    if (_hadSetSecondTexture) {
+        return 2;
+    } else if (_hadSetFirstTexture) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 #pragma mark - 
