@@ -22,4 +22,6 @@
 
 #import "GPUThreeInputFilter.h"
 
+#import "GPUMutilMovie.h"
+
 #endif

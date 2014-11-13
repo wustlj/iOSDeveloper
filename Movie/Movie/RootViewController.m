@@ -43,6 +43,7 @@
     
     _dataArray = [[NSArray arrayWithObjects:
                    @"WriterViewController",
+                   @"MutilVideoViewController",
                    @"WriterAppendImageViewController",
                    @"TransformViewController",
                    @"GridViewController",

@@ -44,6 +44,7 @@
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) AVAsset *asset;
 @property (nonatomic, assign) BOOL isMask;
+@property (nonatomic, assign) CMTimeRange timeRange;
 
 - (id)initWithURL:(NSURL *)url;
 
