@@ -17,6 +17,7 @@
 
 - (id)initWithVideos:(NSArray *)videos;
 
+- (void)load;
 - (void)startProcessing;
 
 @end

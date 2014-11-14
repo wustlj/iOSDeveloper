@@ -10,13 +10,20 @@
 
 #import "GPUOutput.h"
 
+// BT.601 full range (ref: http://www.equasys.de/colorconversion.html)
+const GLfloat kColor601FullRange[] = {
+    1.0,    1.0,    1.0,
+    0.0,    -0.343, 1.765,
+    1.4,    -0.711, 0.0,
+};
+
 extern NSString *const kYUVVertexShaderString;
 extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
-extern const GLfloat kColorConversion601FullRange[];
 
 @interface GPUMutilMovie ()
 {
     NSArray *_videos;
+    NSMutableArray *_assets;
     
     AVAssetReader *_assetReader;
     AVAssetReaderTrackOutput *_videoTrackOutput;
@@ -40,6 +47,7 @@ extern const GLfloat kColorConversion601FullRange[];
     self = [super init];
     if (self) {
         _videos = [[NSArray alloc] initWithArray:videos];
+        _assets = [[NSMutableArray alloc] initWithCapacity:[videos count]];
         _processingIndex = 0;
         
         _textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
@@ -60,55 +68,53 @@ extern const GLfloat kColorConversion601FullRange[];
     [super dealloc];
 }
 
-
-- (AVURLAsset *)loadMovieTracks:(NSURL *)url completionHandler:(void (^)(void))handler
+- (void)load
 {
-    NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:inputOptions];
-    
-    [asset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
-        runSynchronouslyOnVideoProcessingQueue(^{
+    dispatch_group_t group = dispatch_group_create();
+
+    for (MovieCompositon *c in _videos) {
+        NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+        AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:c.videoURL options:inputOptions];
+
+        [_assets addObject:inputAsset];
+        
+        dispatch_group_enter(group);
+        [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
             NSError *error = nil;
-            AVKeyValueStatus tracksStatus = [asset statusOfValueForKey:@"tracks" error:&error];
+            AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
             if (!tracksStatus == AVKeyValueStatusLoaded)
             {
                 return;
             }
-            handler();
-        });
-    }];
-    return asset;
+            dispatch_group_leave(group);
+        }];
+    }
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        NSLog(@"all loaded");
+    });
 }
+
+//- (void)startProcessing
+//{
+//    if (_processingIndex < [_videos count]) {
+//        MovieCompositon *c = [_videos objectAtIndex:_processingIndex];
+//        [self processingMovie:c];
+//    } else {
+//        NSLog(@"all finished");
+//        _processingIndex = 0;
+//    }
+//}
 
 - (void)startProcessing
 {
-//    for (MovieCompositon *c in _videos) {
-//        NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-//        AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:c.videoURL options:inputOptions];
-//        
-//        typeof(self) __block blockSelf = self;
-//        
-//        [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
-//            runSynchronouslyOnVideoProcessingQueue(^{
-//                NSError *error = nil;
-//                AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
-//                if (!tracksStatus == AVKeyValueStatusLoaded)
-//                {
-//                    return;
-//                }
-//                [blockSelf processAsset:inputAsset];
-//                blockSelf = nil;
-//            });
-//        }];
-//    }
-
-    if (_processingIndex < [_videos count]) {
-        MovieCompositon *c = [_videos objectAtIndex:_processingIndex];
-        [self processingMovie:c];
-    } else {
-        NSLog(@"all finished");
-        _processingIndex = 0;
-    }
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        runSynchronouslyOnVideoProcessingQueue(^{
+            for (AVAsset *asset in _assets) {
+                [self processAsset:asset];
+            }
+        });
+    });
 }
 
 - (void)processingMovie:(MovieCompositon *)composition
@@ -137,7 +143,7 @@ extern const GLfloat kColorConversion601FullRange[];
     NSLog(@"%d finished", _processingIndex);
     _processingIndex++;
     
-    [self startProcessing];
+//    [self startProcessing];
 }
 
 - (void)processAsset:(AVAsset *)asset {
@@ -192,7 +198,6 @@ extern const GLfloat kColorConversion601FullRange[];
             [self processMovieFrame:movieFrame withSampleTime:movieTime];
             CMSampleBufferInvalidate(bufferRef);
             CFRelease(bufferRef);
-            
             return YES;
         } else {
             if (_assetReader.status == AVAssetReaderStatusCompleted) {
@@ -232,7 +237,6 @@ extern const GLfloat kColorConversion601FullRange[];
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     [self convertYUVToRGBOutput];
-    
     [self notifyTargetsNewOutputTexture:sampleTime];
     
     CFRelease(yPlaneTextureOut);
@@ -305,12 +309,6 @@ extern const GLfloat kColorConversion601FullRange[];
         1.0f, 0.0f,
         0.0f, 1.0f,
         1.0f, 1.0f,
-    };
-    
-    static const GLfloat kColor601FullRange[] = {
-        1.0,    1.0,    1.0,
-        0.0,    -0.343, 1.765,
-        1.4,    -0.711, 0.0,
     };
     
     glActiveTexture(GL_TEXTURE4);

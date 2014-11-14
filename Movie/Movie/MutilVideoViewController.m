@@ -17,6 +17,13 @@
 
 @implementation MutilVideoViewController
 
+- (void)dealloc {
+    [_baseMovie release];
+    [_glView release];
+    
+    [super dealloc];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,6 +48,11 @@
 
 - (void)startAction
 {
+    [_baseMovie startProcessing];
+}
+
+- (void)loadAction
+{
     if (!_baseMovie) {
         NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480" ofType:@"mp4"]];
         MovieCompositon *c1 = [[MovieCompositon alloc] initWithURL:videoURL];
@@ -50,19 +62,14 @@
         
         NSURL *videoURL3 = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_3" ofType:@"mp4"]];
         MovieCompositon *c3 = [[MovieCompositon alloc] initWithURL:videoURL3];
-
+        
         
         _baseMovie = [[GPUMutilMovie alloc] initWithVideos:@[c1, c2, c3]];
     }
     
     [_baseMovie addTarget:_glView];
     
-    [_baseMovie startProcessing];
-}
-
-- (void)loadAction
-{
-    
+    [_baseMovie load];
 }
 
 @end

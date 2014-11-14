@@ -48,16 +48,17 @@ NSString *const kGPUImagePassthroughFragmentShaderString = SHADER_STRING
     self = [super initWithFrame:frame];
     if (self) {
         [self setupLayer];
-        
-        [GPUContext useImageProcessingContext];
-        
-        program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kGPUImagePassthroughFragmentShaderString] retain];
-        
-        [program link];
-        
-        [GPUContext setActiveShaderProgram:program];
-        
+
         runSynchronouslyOnVideoProcessingQueue(^{
+            
+            [GPUContext useImageProcessingContext];
+            
+            program = [[[GPUContext sharedImageProcessingContext] programForVertexShaderString:kVertexShaderString fragmentShaderString:kGPUImagePassthroughFragmentShaderString] retain];
+            
+            [program link];
+            
+            [GPUContext setActiveShaderProgram:program];
+            
             _positionSlot = [program attributeSlot:@"vPosition"];
             _textureSlot = [program attributeSlot:@"textureCoord"];
             _samplerSlot = [program uniformIndex:@"inputImageTexture"];
