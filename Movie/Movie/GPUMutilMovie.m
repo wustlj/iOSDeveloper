@@ -24,6 +24,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 {
     NSArray *_videos;
     NSMutableArray *_assets;
+    NSMutableArray *_assetKeys;
     
     AVAssetReader *_assetReader;
     AVAssetReaderTrackOutput *_videoTrackOutput;
@@ -48,6 +49,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     if (self) {
         _videos = [[NSArray alloc] initWithArray:videos];
         _assets = [[NSMutableArray alloc] initWithCapacity:[videos count]];
+        _assetKeys = [[NSMutableArray alloc] initWithCapacity:[videos count]];
         _processingIndex = 0;
         
         _textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
@@ -73,10 +75,14 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     dispatch_group_t group = dispatch_group_create();
 
     for (MovieCompositon *c in _videos) {
+        if ([_assetKeys containsObject:[c.videoURL absoluteString]]) {
+            continue;
+        }
         NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
         AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:c.videoURL options:inputOptions];
-
+        
         [_assets addObject:inputAsset];
+        [_assetKeys addObject:[c.videoURL absoluteString]];
         
         dispatch_group_enter(group);
         [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
@@ -84,13 +90,14 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
             AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
             if (!tracksStatus == AVKeyValueStatusLoaded)
             {
-                return;
+                NSLog(@"Load (%@) tracks failed", _assets);
             }
             dispatch_group_leave(group);
         }];
     }
     
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        dispatch_release(group);
         NSLog(@"all loaded");
     });
 }
@@ -110,8 +117,13 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         runSynchronouslyOnVideoProcessingQueue(^{
-            for (AVAsset *asset in _assets) {
-                [self processAsset:asset];
+//            for (AVAsset *asset in _assets) {
+//                [self processAsset:asset];
+//            }
+            for (MovieCompositon *c in _videos) {
+                NSInteger indexOfMovie = [_assetKeys indexOfObject:[c.videoURL absoluteString]];
+                AVAsset *asset = [_assets objectAtIndex:indexOfMovie];
+                [self processAsset:asset withTimeRange:c.timeRange];
             }
         });
     });
@@ -132,7 +144,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
             {
                 return;
             }
-            [blockSelf processAsset:inputAsset];
+            [blockSelf processAsset:inputAsset withTimeRange:kCMTimeRangeZero];
             blockSelf = nil;
         });
     }];
@@ -146,8 +158,8 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 //    [self startProcessing];
 }
 
-- (void)processAsset:(AVAsset *)asset {
-    [self createReader:asset];
+- (void)processAsset:(AVAsset *)asset withTimeRange:(CMTimeRange)range {
+    [self createReader:asset withTimeRange:range];
     
     if ([_assetReader startReading]) {
         NSLog(@"%ld", (long)_assetReader.status);
@@ -162,7 +174,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     }
 }
 
-- (void)createReader:(AVAsset *)asset {
+- (void)createReader:(AVAsset *)asset withTimeRange:(CMTimeRange)range {
     [_assetReader release];
     _assetReader = nil;
     if (!_assetReader) {
@@ -182,6 +194,9 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
         
         if ([_assetReader canAddOutput:_videoTrackOutput]) {
             [_assetReader addOutput:_videoTrackOutput];
+        }
+        if (!CMTIMERANGE_IS_EMPTY(range) && CMTIMERANGE_IS_VALID(range)) {
+            _assetReader.timeRange = range;
         }
     }
 }
@@ -347,7 +362,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
         _timeRange = CMTimeRangeMake(kCMTimeZero, kCMTimePositiveInfinity);
         
         _videoURL = [url retain];
-        if (!CMTimeRangeEqual(range, kCMTimeRangeZero)) {
+        if (!CMTIMERANGE_IS_EMPTY(range)) {
             _timeRange = range;
         }
     }

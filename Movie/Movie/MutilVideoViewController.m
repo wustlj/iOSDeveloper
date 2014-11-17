@@ -58,13 +58,18 @@
         MovieCompositon *c1 = [[MovieCompositon alloc] initWithURL:videoURL];
         
         NSURL *videoURL2 = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
-        MovieCompositon *c2 = [[MovieCompositon alloc] initWithURL:videoURL2];
+        CMTimeRange range2 = CMTimeRangeFromTimeToTime(kCMTimeZero, CMTimeMakeWithSeconds(5, 600));
+        MovieCompositon *c2 = [[MovieCompositon alloc] initWithURL:videoURL2 timeRange:range2];
         
         NSURL *videoURL3 = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_3" ofType:@"mp4"]];
-        MovieCompositon *c3 = [[MovieCompositon alloc] initWithURL:videoURL3];
+        CMTimeRange range3 = CMTimeRangeFromTimeToTime(kCMTimeZero, CMTimeMakeWithSeconds(5, 600));
+        MovieCompositon *c3 = [[MovieCompositon alloc] initWithURL:videoURL3 timeRange:range3];
         
+        NSURL *videoURL4 = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_3" ofType:@"mp4"]];
+        CMTimeRange range4 = CMTimeRangeFromTimeToTime(CMTimeMakeWithSeconds(2, 600), CMTimeMakeWithSeconds(5, 600));
+        MovieCompositon *c4 = [[MovieCompositon alloc] initWithURL:videoURL4 timeRange:range4];
         
-        _baseMovie = [[GPUMutilMovie alloc] initWithVideos:@[c1, c2, c3]];
+        _baseMovie = [[GPUMutilMovie alloc] initWithVideos:@[c1, c2, c3, c4]];
     }
     
     [_baseMovie addTarget:_glView];
