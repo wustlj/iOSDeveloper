@@ -25,6 +25,8 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     AVAssetReaderTrackOutput *_videoTrackOutput;
     
     NSInteger _processingIndex;
+    CMTime  _baseTime;
+    CMTime _frameTime;
 }
 @end
 
@@ -36,6 +38,8 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
         _videos = [[NSArray alloc] initWithArray:videos];
         _assets = [[NSMutableDictionary alloc] initWithCapacity:[videos count]];
         _processingIndex = 0;
+        _baseTime = CMTimeMakeWithSeconds(0, 600);
+        _frameTime = CMTimeMakeWithEpoch(20, 600, 0);
         
         _yuv2rgb = [[GPUYuvToRgb alloc] init];
     }
@@ -86,17 +90,6 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     });
 }
 
-//- (void)startProcessing
-//{
-//    if (_processingIndex < [_videos count]) {
-//        MovieCompositon *c = [_videos objectAtIndex:_processingIndex];
-//        [self processingMovie:c];
-//    } else {
-//        NSLog(@"all finished");
-//        _processingIndex = 0;
-//    }
-//}
-
 - (void)startProcessing
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -107,38 +100,6 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
             }
         });
     });
-}
-
-- (void)processingMovie:(MovieCompositon *)composition
-{
-    NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:composition.videoURL options:inputOptions];
-    
-    typeof(self) __block blockSelf = self;
-    
-    [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
-        runSynchronouslyOnVideoProcessingQueue(^{
-            NSError *error = nil;
-            AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
-            if (!tracksStatus == AVKeyValueStatusLoaded)
-            {
-                return;
-            }
-            [blockSelf processAsset:inputAsset withTimeRange:kCMTimeRangeZero];
-            blockSelf = nil;
-        });
-    }];
-}
-
-- (void)currentMovieProcessFinished
-{
-    NSLog(@"%d finished", _processingIndex);
-    _processingIndex++;
-    
-    if (_processingIndex == [_videos count]) {
-        NSLog(@"all movie finished");
-    }
-//    [self startProcessing];
 }
 
 - (void)processAsset:(AVAsset *)asset withTimeRange:(CMTimeRange)range {
@@ -192,8 +153,8 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     if (_assetReader.status == AVAssetReaderStatusReading) {
         CMSampleBufferRef bufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
         if (bufferRef) {
-#ifdef DEBUG
             CMTime movieTime =  CMSampleBufferGetPresentationTimeStamp(bufferRef);
+#ifdef DEBUG
             CMTimeShow(movieTime);
 #endif
             CVImageBufferRef movieFrame = CMSampleBufferGetImageBuffer(bufferRef);
@@ -211,19 +172,34 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
             
             [_yuv2rgb processMovieFrame:movieFrame toFramebuffer:_outputFramebuffer];
             
-            [self notifyTargetsNewOutputTexture:movieTime];
+            [self notifyTargetsNewOutputTexture:_baseTime];
+            _baseTime = CMTimeAdd(_baseTime, _frameTime);
 
             CMSampleBufferInvalidate(bufferRef);
             CFRelease(bufferRef);
             return YES;
         } else {
             if (_assetReader.status == AVAssetReaderStatusCompleted) {
-//                [self endProcessing];
                 [self currentMovieProcessFinished];
             }
         }
     }
     return NO;
+}
+
+- (void)currentMovieProcessFinished
+{
+    NSLog(@"%d finished", _processingIndex);
+    _processingIndex++;
+    
+    if (_processingIndex == [_videos count]) {
+        NSLog(@"all movie finished");
+        
+        [self endProcessing];
+        
+        _baseTime = CMTimeMakeWithSeconds(0, 600);
+        _processingIndex = 0;
+    }
 }
 
 - (void)endProcessing {
@@ -234,10 +210,6 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
             [target endProcessing];
         }
     }
-}
-
-- (GLuint)outputTexture {
-    return _outputFramebuffer.texture;
 }
 
 @end

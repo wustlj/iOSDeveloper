@@ -12,10 +12,24 @@
 {
     GPUMutilMovie *_baseMovie;
     GPUView *_glView;
+    GPUMovieWriter *_movieWriter;
+    
+    CGAffineTransform preferredTransform;
+    CGSize size;
 }
 @end
 
 @implementation MutilVideoViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        preferredTransform = CGAffineTransformIdentity;
+        size = CGSizeMake(480, 480);
+    }
+    return self;
+}
 
 - (void)dealloc {
     [_baseMovie release];
@@ -41,6 +55,13 @@
     [btn2 setTitle:@"Load" forState:UIControlStateNormal];
     [btn2 addTarget:self action:@selector(loadAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn2];
+    
+    UIButton *btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn3 setFrame:CGRectMake(0, 434, 120, 50)];
+    [btn3 setBackgroundColor:[UIColor redColor]];
+    [btn3 setTitle:@"Write" forState:UIControlStateNormal];
+    [btn3 addTarget:self action:@selector(writeAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn3];
     
     _glView = [[GPUView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn.frame), 320, 320)];
     [self.view addSubview:_glView];
@@ -75,6 +96,54 @@
     [_baseMovie addTarget:_glView];
     
     [_baseMovie load];
+}
+
+- (void)writeAction
+{
+    NSURL *videoURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480" ofType:@"mp4"]];
+    [self initTransform:videoURL];
+    
+    if (!_movieWriter) {
+        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"2.MOV"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        }
+        _movieWriter = [[GPUMovieWriter alloc] initWithURL:[NSURL fileURLWithPath:path] size:size];
+        _movieWriter.transform = preferredTransform;
+        
+        __block typeof(self) oneself = self;
+        
+        _movieWriter.finishBlock = ^{
+            [oneself finishedBlock];
+            oneself = nil;
+        };
+    }
+    
+    [_baseMovie addTarget:_movieWriter];
+    
+    [_movieWriter startWriting];
+    
+    [_baseMovie startProcessing];
+}
+
+- (void)finishedBlock
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Write Finished" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+        [alertView release];
+    });
+}
+
+- (void)initTransform:(NSURL *)url
+{
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    AVAssetTrack *assetTrack = nil;
+    if ([[asset tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
+        assetTrack = [asset tracksWithMediaType:AVMediaTypeVideo][0];
+    }
+    preferredTransform = assetTrack.preferredTransform;
+    size = assetTrack.naturalSize;
 }
 
 @end
