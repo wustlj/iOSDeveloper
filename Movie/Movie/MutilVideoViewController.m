@@ -65,7 +65,7 @@
         CMTimeRange range3 = CMTimeRangeFromTimeToTime(kCMTimeZero, CMTimeMakeWithSeconds(5, 600));
         MovieCompositon *c3 = [[MovieCompositon alloc] initWithURL:videoURL3 timeRange:range3];
         
-        NSURL *videoURL4 = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_3" ofType:@"mp4"]];
+        NSURL *videoURL4 = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]];
         CMTimeRange range4 = CMTimeRangeFromTimeToTime(CMTimeMakeWithSeconds(2, 600), CMTimeMakeWithSeconds(5, 600));
         MovieCompositon *c4 = [[MovieCompositon alloc] initWithURL:videoURL4 timeRange:range4];
         
