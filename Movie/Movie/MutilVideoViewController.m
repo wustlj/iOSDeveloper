@@ -10,7 +10,7 @@
 
 @interface MutilVideoViewController ()
 {
-    GPUMutilMovie *_baseMovie;
+    GPUMultiMovie *_baseMovie;
     GPUView *_glView;
     GPUMovieWriter *_movieWriter;
     GPUFilter *_filter;
@@ -36,6 +36,7 @@
     [_baseMovie release];
     [_glView release];
     [_filter release];
+    [_movieWriter release];
     
     [super dealloc];
 }
@@ -92,7 +93,7 @@
         CMTimeRange range4 = CMTimeRangeFromTimeToTime(CMTimeMakeWithSeconds(2, 600), CMTimeMakeWithSeconds(5, 600));
         MovieCompositon *c4 = [[MovieCompositon alloc] initWithURL:videoURL4 timeRange:range4];
         
-        _baseMovie = [[GPUMutilMovie alloc] initWithVideos:@[c1, c2, c3, c4]];
+        _baseMovie = [[GPUMultiMovie alloc] initWithVideos:@[c1, c2, c3, c4]];
     }
     
     if (!_filter) {
@@ -132,6 +133,7 @@
     
     [_baseMovie startProcessing];
 }
+
 
 - (void)finishedBlock
 {

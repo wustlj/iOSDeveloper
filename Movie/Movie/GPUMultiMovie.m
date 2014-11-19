@@ -1,12 +1,12 @@
 //
-//  GPUMutilMovie.m
+//  GPUMultiMovie.m
 //  Movie
 //
 //  Created by lijian on 14/11/13.
 //  Copyright (c) 2014年 lijian. All rights reserved.
 //
 
-#import "GPUMutilMovie.h"
+#import "GPUMultiMovie.h"
 
 #import "GPUOutput.h"
 #import "GPUYuvToRgb.h"
@@ -14,7 +14,7 @@
 extern NSString *const kYUVVertexShaderString;
 extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 
-@interface GPUMutilMovie ()
+@interface GPUMultiMovie ()
 {
     NSArray *_videos;
     NSMutableDictionary *_assets;
@@ -30,7 +30,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 }
 @end
 
-@implementation GPUMutilMovie
+@implementation GPUMultiMovie
 
 - (id)initWithVideos:(NSArray *)videos {
     self = [super init];

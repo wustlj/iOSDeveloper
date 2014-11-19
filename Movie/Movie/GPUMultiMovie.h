@@ -1,5 +1,5 @@
 //
-//  GPUMutilMovie.h
+//  GPUMultiMovie.h
 //  Movie
 //
 //  Created by lijian on 14/11/13.
@@ -13,7 +13,7 @@
 
 #import "GPUOutput.h"
 
-@interface GPUMutilMovie : GPUOutput
+@interface GPUMultiMovie : GPUOutput
 
 - (id)initWithVideos:(NSArray *)videos;
 

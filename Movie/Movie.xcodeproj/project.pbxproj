@@ -61,7 +61,7 @@
 		B5CD41791A10C0F900E764F8 /* GPUOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CD41781A10C0F900E764F8 /* GPUOutput.m */; };
 		B5D46E131A12164F0010BEED /* WriterAppendImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D46E121A12164F0010BEED /* WriterAppendImageViewController.m */; };
 		B5D487FB1A1460050048F4DF /* ThreeInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FA1A1460050048F4DF /* ThreeInputViewController.m */; };
-		B5D487FE1A14985C0048F4DF /* GPUMutilMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FD1A14985C0048F4DF /* GPUMutilMovie.m */; };
+		B5D487FE1A14985C0048F4DF /* GPUMultiMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FD1A14985C0048F4DF /* GPUMultiMovie.m */; };
 		B5D488011A14A8E00048F4DF /* MutilVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D488001A14A8E00048F4DF /* MutilVideoViewController.m */; };
 		B5E04B2B1A1AEF5B00D35F75 /* GPUYuvToRgb.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E04B2A1A1AEF5B00D35F75 /* GPUYuvToRgb.m */; };
 		B5E1E83F1A1334FE00EF0E65 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B5E1E83E1A1334FE00EF0E65 /* README.md */; };
@@ -168,8 +168,8 @@
 		B5D46E121A12164F0010BEED /* WriterAppendImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriterAppendImageViewController.m; sourceTree = "<group>"; };
 		B5D487F91A1460050048F4DF /* ThreeInputViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeInputViewController.h; sourceTree = "<group>"; };
 		B5D487FA1A1460050048F4DF /* ThreeInputViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreeInputViewController.m; sourceTree = "<group>"; };
-		B5D487FC1A14985C0048F4DF /* GPUMutilMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUMutilMovie.h; sourceTree = "<group>"; };
-		B5D487FD1A14985C0048F4DF /* GPUMutilMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUMutilMovie.m; sourceTree = "<group>"; };
+		B5D487FC1A14985C0048F4DF /* GPUMultiMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUMultiMovie.h; sourceTree = "<group>"; };
+		B5D487FD1A14985C0048F4DF /* GPUMultiMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUMultiMovie.m; sourceTree = "<group>"; };
 		B5D487FF1A14A8E00048F4DF /* MutilVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutilVideoViewController.h; sourceTree = "<group>"; };
 		B5D488001A14A8E00048F4DF /* MutilVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutilVideoViewController.m; sourceTree = "<group>"; };
 		B5E04B291A1AEF5B00D35F75 /* GPUYuvToRgb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUYuvToRgb.h; sourceTree = "<group>"; };
@@ -294,8 +294,8 @@
 				B5CD41781A10C0F900E764F8 /* GPUOutput.m */,
 				04BE46D919761C9E00541C8F /* GPUMovie.h */,
 				04BE46DA19761C9E00541C8F /* GPUMovie.m */,
-				B5D487FC1A14985C0048F4DF /* GPUMutilMovie.h */,
-				B5D487FD1A14985C0048F4DF /* GPUMutilMovie.m */,
+				B5D487FC1A14985C0048F4DF /* GPUMultiMovie.h */,
+				B5D487FD1A14985C0048F4DF /* GPUMultiMovie.m */,
 				B5E04B291A1AEF5B00D35F75 /* GPUYuvToRgb.h */,
 				B5E04B2A1A1AEF5B00D35F75 /* GPUYuvToRgb.m */,
 				B5C2FD5F19F505AD0003DE6A /* GPUMovieWriter.h */,
@@ -485,7 +485,7 @@
 				041CA25F197E6AD40097B949 /* GPUPartFilter.m in Sources */,
 				04BA815A1973E1020025EA46 /* matrix.c in Sources */,
 				04CFEB391963FE6C00E306C8 /* ViewController.m in Sources */,
-				B5D487FE1A14985C0048F4DF /* GPUMutilMovie.m in Sources */,
+				B5D487FE1A14985C0048F4DF /* GPUMultiMovie.m in Sources */,
 				04C7FD28197BB7E10036C8E4 /* GPUFilter.m in Sources */,
 				043D568C197E40A400E7C3AC /* GPUThreeInputFilter.m in Sources */,
 				B5B500FD1A00CA2800802333 /* GridViewController.m in Sources */,

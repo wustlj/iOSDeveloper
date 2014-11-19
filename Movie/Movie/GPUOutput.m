@@ -72,4 +72,12 @@
     [_targetIndexs removeAllObjects];
 }
 
+- (void)endProcessing {
+    for (id<GPUInput> target in _targets) {
+        if ([target respondsToSelector:@selector(endProcessing)]) {
+            [target endProcessing];
+        }
+    }
+}
+
 @end
