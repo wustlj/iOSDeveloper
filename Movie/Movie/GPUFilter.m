@@ -160,4 +160,12 @@ NSString *const kFilterFragmentShaderString = SHADER_STRING
     }
 }
 
+- (void)endProcessing {    
+    for (id<GPUInput> target in _targets) {
+        if ([target respondsToSelector:@selector(endProcessing)]) {
+            [target endProcessing];
+        }
+    }
+}
+
 @end

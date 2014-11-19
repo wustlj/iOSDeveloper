@@ -13,6 +13,7 @@
     GPUMutilMovie *_baseMovie;
     GPUView *_glView;
     GPUMovieWriter *_movieWriter;
+    GPUFilter *_filter;
     
     CGAffineTransform preferredTransform;
     CGSize size;
@@ -34,6 +35,7 @@
 - (void)dealloc {
     [_baseMovie release];
     [_glView release];
+    [_filter release];
     
     [super dealloc];
 }
@@ -93,7 +95,12 @@
         _baseMovie = [[GPUMutilMovie alloc] initWithVideos:@[c1, c2, c3, c4]];
     }
     
-    [_baseMovie addTarget:_glView];
+    if (!_filter) {
+        _filter = [[GPUGridFilter alloc] init];
+    }
+    [_baseMovie addTarget:_filter];
+    
+    [_filter addTarget:_glView];
     
     [_baseMovie load];
 }
@@ -119,7 +126,7 @@
         };
     }
     
-    [_baseMovie addTarget:_movieWriter];
+    [_filter addTarget:_movieWriter];
     
     [_movieWriter startWriting];
     
