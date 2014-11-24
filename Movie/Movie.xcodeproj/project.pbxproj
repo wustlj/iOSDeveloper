@@ -58,6 +58,15 @@
 		B5B7857619FE414100A9D6AB /* system1920*1080.MOV in Resources */ = {isa = PBXBuildFile; fileRef = B5B7857519FE414100A9D6AB /* system1920*1080.MOV */; };
 		B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */; };
 		B5C2FD6419F506910003DE6A /* GPUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C2FD6319F506910003DE6A /* GPUImage.m */; };
+		B5CA9FC01A230ADA0017893F /* add.mov in Resources */ = {isa = PBXBuildFile; fileRef = B5CA9FBF1A230ADA0017893F /* add.mov */; };
+		B5CA9FC21A230AE40017893F /* mask.mov in Resources */ = {isa = PBXBuildFile; fileRef = B5CA9FC11A230AE40017893F /* mask.mov */; };
+		B5CA9FC51A230B660017893F /* GPUMV.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FC41A230B660017893F /* GPUMV.m */; };
+		B5CA9FC71A2314420017893F /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = B5CA9FC61A2314420017893F /* config.json */; };
+		B5CA9FCA1A2317260017893F /* MVParse.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FC91A2317260017893F /* MVParse.m */; };
+		B5CA9FD01A231ED20017893F /* CHANGELOG.md in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FCC1A231ED20017893F /* CHANGELOG.md */; };
+		B5CA9FD11A231ED20017893F /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FCE1A231ED20017893F /* JSONKit.m */; };
+		B5CA9FD21A231ED20017893F /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FCF1A231ED20017893F /* README.md */; };
+		B5CA9FD51A231F810017893F /* MVViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FD41A231F810017893F /* MVViewController.m */; };
 		B5CD41791A10C0F900E764F8 /* GPUOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CD41781A10C0F900E764F8 /* GPUOutput.m */; };
 		B5D46E131A12164F0010BEED /* WriterAppendImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D46E121A12164F0010BEED /* WriterAppendImageViewController.m */; };
 		B5D487FB1A1460050048F4DF /* ThreeInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FA1A1460050048F4DF /* ThreeInputViewController.m */; };
@@ -162,6 +171,19 @@
 		B5C2FD6019F505AD0003DE6A /* GPUMovieWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUMovieWriter.m; sourceTree = "<group>"; };
 		B5C2FD6219F506910003DE6A /* GPUImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImage.h; sourceTree = "<group>"; };
 		B5C2FD6319F506910003DE6A /* GPUImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImage.m; sourceTree = "<group>"; };
+		B5CA9FBF1A230ADA0017893F /* add.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = add.mov; path = Movie/add.mov; sourceTree = "<group>"; };
+		B5CA9FC11A230AE40017893F /* mask.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = mask.mov; path = Movie/mask.mov; sourceTree = "<group>"; };
+		B5CA9FC31A230B660017893F /* GPUMV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUMV.h; sourceTree = "<group>"; };
+		B5CA9FC41A230B660017893F /* GPUMV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUMV.m; sourceTree = "<group>"; };
+		B5CA9FC61A2314420017893F /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
+		B5CA9FC81A2317260017893F /* MVParse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVParse.h; sourceTree = "<group>"; };
+		B5CA9FC91A2317260017893F /* MVParse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVParse.m; sourceTree = "<group>"; };
+		B5CA9FCC1A231ED20017893F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		B5CA9FCD1A231ED20017893F /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		B5CA9FCE1A231ED20017893F /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		B5CA9FCF1A231ED20017893F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B5CA9FD31A231F810017893F /* MVViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVViewController.h; sourceTree = "<group>"; };
+		B5CA9FD41A231F810017893F /* MVViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVViewController.m; sourceTree = "<group>"; };
 		B5CD41771A10C0F900E764F8 /* GPUOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUOutput.h; sourceTree = "<group>"; };
 		B5CD41781A10C0F900E764F8 /* GPUOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUOutput.m; sourceTree = "<group>"; };
 		B5D46E111A12164F0010BEED /* WriterAppendImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WriterAppendImageViewController.h; sourceTree = "<group>"; };
@@ -232,6 +254,10 @@
 				04BE4E9219777966009DD70C /* Yh1.mp4 */,
 				B5B7857319FE3F4100A9D6AB /* system1080*1920.MOV */,
 				B5B7857519FE414100A9D6AB /* system1920*1080.MOV */,
+				B5CA9FBF1A230ADA0017893F /* add.mov */,
+				B5CA9FC11A230AE40017893F /* mask.mov */,
+				B5CA9FC61A2314420017893F /* config.json */,
+				B5CA9FCB1A231ED20017893F /* JSONKit */,
 				04CFEB281963FE6C00E306C8 /* Movie */,
 				04CFEB471963FE6C00E306C8 /* MovieTests */,
 				04CFEB211963FE6C00E306C8 /* Frameworks */,
@@ -271,6 +297,8 @@
 				B5B500EF1A00988D00802333 /* RootViewController.m */,
 				B5B500F51A00C20A00802333 /* BaseViewController.h */,
 				B5B500F61A00C20A00802333 /* BaseViewController.m */,
+				B5CA9FD31A231F810017893F /* MVViewController.h */,
+				B5CA9FD41A231F810017893F /* MVViewController.m */,
 				B5B500F11A009B7F00802333 /* WriterViewController.h */,
 				B5B500F21A009B7F00802333 /* WriterViewController.m */,
 				B5D487FF1A14A8E00048F4DF /* MutilVideoViewController.h */,
@@ -292,6 +320,10 @@
 				B5B500F41A00C00800802333 /* GPUHeader.h */,
 				B5CD41771A10C0F900E764F8 /* GPUOutput.h */,
 				B5CD41781A10C0F900E764F8 /* GPUOutput.m */,
+				B5CA9FC31A230B660017893F /* GPUMV.h */,
+				B5CA9FC41A230B660017893F /* GPUMV.m */,
+				B5CA9FC81A2317260017893F /* MVParse.h */,
+				B5CA9FC91A2317260017893F /* MVParse.m */,
 				04BE46D919761C9E00541C8F /* GPUMovie.h */,
 				04BE46DA19761C9E00541C8F /* GPUMovie.m */,
 				B5D487FC1A14985C0048F4DF /* GPUMultiMovie.h */,
@@ -361,6 +393,18 @@
 				04CFEB4A1963FE6C00E306C8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B5CA9FCB1A231ED20017893F /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				B5CA9FCC1A231ED20017893F /* CHANGELOG.md */,
+				B5CA9FCD1A231ED20017893F /* JSONKit.h */,
+				B5CA9FCE1A231ED20017893F /* JSONKit.m */,
+				B5CA9FCF1A231ED20017893F /* README.md */,
+			);
+			name = JSONKit;
+			path = Movie/JSONKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -452,9 +496,12 @@
 				04BE46DE19765E5900541C8F /* camera480.mp4 in Resources */,
 				04CFEB5A1963FFC400E306C8 /* end_meiyan_cn.mp4 in Resources */,
 				B5E65D7F1A0B9C3A00E10702 /* Brick.png in Resources */,
+				B5CA9FC21A230AE40017893F /* mask.mov in Resources */,
 				B5B7857419FE3F4100A9D6AB /* system1080*1920.MOV in Resources */,
 				04CFEB5C196415E600E306C8 /* 1.MOV in Resources */,
 				B5E65D7B1A0B925B00E10702 /* WID-small.jpg in Resources */,
+				B5CA9FC71A2314420017893F /* config.json in Resources */,
+				B5CA9FC01A230ADA0017893F /* add.mov in Resources */,
 				04CFEB2D1963FE6C00E306C8 /* InfoPlist.strings in Resources */,
 				04BACA821975226500C03A59 /* end_meiyan_en.mp4 in Resources */,
 				04CFEB361963FE6C00E306C8 /* Main.storyboard in Resources */,
@@ -480,6 +527,7 @@
 			files = (
 				04C7FD2B197BC6370036C8E4 /* GPUTwoInputFilter.m in Sources */,
 				B5B500F01A00988D00802333 /* RootViewController.m in Sources */,
+				B5CA9FD11A231ED20017893F /* JSONKit.m in Sources */,
 				04BE1602196695880008DEE3 /* GPUContext.m in Sources */,
 				04BE46DB19761C9E00541C8F /* GPUMovie.m in Sources */,
 				041CA25F197E6AD40097B949 /* GPUPartFilter.m in Sources */,
@@ -498,12 +546,17 @@
 				B5E1E83F1A1334FE00EF0E65 /* README.md in Sources */,
 				04CFEB331963FE6C00E306C8 /* AppDelegate.m in Sources */,
 				04CFEB2F1963FE6C00E306C8 /* main.m in Sources */,
+				B5CA9FCA1A2317260017893F /* MVParse.m in Sources */,
 				B5CD41791A10C0F900E764F8 /* GPUOutput.m in Sources */,
 				B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */,
 				B5E04B2B1A1AEF5B00D35F75 /* GPUYuvToRgb.m in Sources */,
 				04C14F111980AE9700B9640F /* GPUTransformFilter.m in Sources */,
+				B5CA9FC51A230B660017893F /* GPUMV.m in Sources */,
+				B5CA9FD01A231ED20017893F /* CHANGELOG.md in Sources */,
 				B5E65D771A0B7EDE00E10702 /* ImageViewController.m in Sources */,
+				B5CA9FD21A231ED20017893F /* README.md in Sources */,
 				B5B500F31A009B7F00802333 /* WriterViewController.m in Sources */,
+				B5CA9FD51A231F810017893F /* MVViewController.m in Sources */,
 				041CA25C197E557A0097B949 /* GPULineFilter.m in Sources */,
 				B5E1E8421A134A6200EF0E65 /* TwoInputViewController.m in Sources */,
 				B5B500FA1A00C37E00802333 /* TransformViewController.m in Sources */,
@@ -642,6 +695,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Movie/Movie-Prefix.pch";
 				INFOPLIST_FILE = "Movie/Movie-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "626af7d2-7f7e-4cf8-ae8b-09072000eb9d";
 				WRAPPER_EXTENSION = app;
@@ -657,6 +711,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Movie/Movie-Prefix.pch";
 				INFOPLIST_FILE = "Movie/Movie-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "626af7d2-7f7e-4cf8-ae8b-09072000eb9d";
 				WRAPPER_EXTENSION = app;

@@ -47,6 +47,7 @@
 @property (nonatomic, assign) CMTimeRange timeRange;
 
 - (id)initWithURL:(NSURL *)url;
+- (id)initWithAsset:(AVAsset *)asset;
 
 - (void)startProcessing;
 - (BOOL)readNextVideoFrame;

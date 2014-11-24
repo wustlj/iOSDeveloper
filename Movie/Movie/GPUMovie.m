@@ -72,6 +72,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     CMTime _lastFrameTime;
     dispatch_semaphore_t _semaphore;
 }
+
 @end
 
 @implementation GPUMovie
@@ -79,18 +80,33 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 - (id)initWithURL:(NSURL *)url {
     self = [super init];
     if (self) {
-        _isMask = NO;
-        _lastFrameTime = kCMTimeZero;
-        _timeRange = CMTimeRangeMake(kCMTimeZero, kCMTimePositiveInfinity);
-        _semaphore = dispatch_semaphore_create(0);
-        
         self.url = url;
         
-        [self setupYUVProgram];
+        [self commonInit];
         
-        _textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
+        [self setupYUVProgram];
     }
     return self;
+}
+
+- (id)initWithAsset:(AVAsset *)asset {
+    self = [super init];
+    if (self) {
+        self.asset = asset;
+        _isMask = YES;
+        
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit {
+    _isMask = NO;
+    _lastFrameTime = kCMTimeZero;
+    _timeRange = CMTimeRangeMake(kCMTimeZero, kCMTimePositiveInfinity);
+    _semaphore = dispatch_semaphore_create(0);
+    
+    _textureCacheRef = [[GPUContext sharedImageProcessingContext] coreVideoTextureCache];
 }
 
 - (void)dealloc {
@@ -104,6 +120,7 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
     
     Block_release(_completionBlock);
     Block_release(_currentFrameCompletionBlock);
+    Block_release(_semaphore);
     
     [_outputFramebuffer release];
         
@@ -113,6 +130,17 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 #pragma mark - Movie
 
 - (void)startProcessing {
+    if (self.url) {
+        [self loadAsset];
+        return;
+    }
+    
+    if (self.asset) {
+        [self processAsset];
+    }
+}
+
+- (void)loadAsset {
     NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
     AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:self.url options:inputOptions];
     
@@ -153,8 +181,8 @@ NSString *const kYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRIN
 - (void)processAsset {
     [self createReader];
     
-    if ([_assetReader startReading]) {
-        NSLog(@"%ld", (long)_assetReader.status);
+    if (![_assetReader startReading]) {
+        NSLog(@"start Reading failed(statue = %d, error = %@)", _assetReader.status, _assetReader.error);
     }
     
     if (_isMask) {
