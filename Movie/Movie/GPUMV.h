@@ -10,6 +10,7 @@
 
 @interface GPUMV : NSObject
 
+- (id)initWithMovies:(NSArray *)movies;
 - (void)loadMV:(NSString *)path;
 
 - (void)startMV;

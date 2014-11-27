@@ -18,7 +18,8 @@
 {
     NSMutableArray *_baseMovies;
     NSMutableArray *_maskMovies;
-    NSMutableDictionary *_assets;
+    NSMutableDictionary *_baseAssets;
+    NSMutableDictionary *_maskAssets;
 }
 
 @property (nonatomic, retain) NSString *configPath;
@@ -27,18 +28,22 @@
 
 @implementation GPUMV
 
-- (id)init {
+- (id)initWithMovies:(NSArray *)movies {
     self = [super init];
     if (self) {
-        _assets = [[NSMutableDictionary alloc] init];
+        _maskAssets = [[NSMutableDictionary alloc] init];
         _maskMovies = [[NSMutableArray alloc] init];
+        _baseMovies = [[NSMutableArray alloc] initWithArray:movies];
+        _baseAssets = [[NSMutableDictionary alloc]initWithCapacity:[movies count]];
     }
     return self;
 }
 
 - (void)dealloc {
-    [_assets release];
+    [_baseMovies release];
+    [_baseAssets release];
     [_maskMovies release];
+    [_maskAssets release];
     [_configPath release];
     
     [super dealloc];
@@ -74,7 +79,7 @@
         [_maskMovies removeAllObjects];
         [_maskMovies addObjectsFromArray:arr];
         
-        [self loadTrackValue];
+        [self loadMovieTrack];
     }];
 }
 
@@ -91,17 +96,17 @@
 
 #pragma mark - Pre-Load Tracks
 
-- (void)loadTrackValue {
+- (void)loadMovieTrack {
     dispatch_group_t group = dispatch_group_create();
     
     for (NSURL *url in _maskMovies) {
-        if ([[_assets allKeys] containsObject:[url absoluteString]]) {
+        if ([[_maskAssets allKeys] containsObject:[url absoluteString]]) {
             continue;
         }
         NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
         AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:url options:inputOptions];
         
-        [_assets setObject:inputAsset forKey:[url absoluteString]];
+        [_maskAssets setObject:inputAsset forKey:[url absoluteString]];
         
         dispatch_group_enter(group);
         [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
@@ -109,7 +114,28 @@
             AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
             if (!tracksStatus == AVKeyValueStatusLoaded)
             {
-                NSLog(@"<Warning>Load (%@) tracks failed", _assets);
+                NSLog(@"<Warning>Load (%@) tracks failed", inputAsset);
+            }
+            dispatch_group_leave(group);
+        }];
+    }
+    
+    for (NSURL *url in _baseMovies) {
+        if ([[_baseAssets allKeys] containsObject:[url absoluteString]]) {
+            continue;
+        }
+        NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+        AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:url options:inputOptions];
+        
+        [_baseAssets setObject:inputAsset forKey:[url absoluteString]];
+        
+        dispatch_group_enter(group);
+        [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
+            NSError *error = nil;
+            AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
+            if (!tracksStatus == AVKeyValueStatusLoaded)
+            {
+                NSLog(@"<Warning>Load (%@) tracks failed", inputAsset);
             }
             dispatch_group_leave(group);
         }];

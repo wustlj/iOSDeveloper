@@ -31,7 +31,11 @@
 
 - (void)startAction {
     if (!_gpuMV) {
-        _gpuMV = [[GPUMV alloc] init];
+        NSMutableArray *movies = [[NSMutableArray alloc] init];
+        [movies addObject:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480" ofType:@"mp4"]]];
+        [movies addObject:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_2" ofType:@"mp4"]]];
+        [movies addObject:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"camera480_3" ofType:@"mp4"]]];
+        _gpuMV = [[GPUMV alloc] initWithMovies:movies];
     }
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"config" ofType:@"json"];
