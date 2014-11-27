@@ -23,5 +23,7 @@
 #import "GPUThreeInputFilter.h"
 
 #import "GPUMultiMovie.h"
+#import "GPUMV.h"
+#import "MovieComposition.h"
 
 #endif

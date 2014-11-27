@@ -11,6 +11,8 @@
 #import "GPUOutput.h"
 #import "GPUYuvToRgb.h"
 
+#import "MovieComposition.h"
+
 extern NSString *const kYUVVertexShaderString;
 extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 
@@ -37,13 +39,29 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     if (self) {
         _videos = [[NSArray alloc] initWithArray:videos];
         _assets = [[NSMutableDictionary alloc] initWithCapacity:[videos count]];
-        _processingIndex = 0;
-        _baseTime = CMTimeMakeWithSeconds(0, 600);
-        _frameTime = CMTimeMakeWithEpoch(20, 600, 0);
         
-        _yuv2rgb = [[GPUYuvToRgb alloc] init];
+        [self commonInit];
     }
     return self;
+}
+
+- (id)initWithVideos:(NSArray *)videos withAssets:(NSMutableDictionary *)assets {
+    self = [super init];
+    if (self) {
+        _videos = [videos retain];
+        _assets = [assets retain];
+        
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit {
+    _processingIndex = 0;
+    _baseTime = CMTimeMakeWithSeconds(0, 600);
+    _frameTime = CMTimeMakeWithEpoch(20, 600, 0);
+    
+    _yuv2rgb = [[GPUYuvToRgb alloc] init];
 }
 
 - (void)dealloc
@@ -63,7 +81,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 {
     dispatch_group_t group = dispatch_group_create();
 
-    for (MovieCompositon *c in _videos) {
+    for (MovieComposition *c in _videos) {
         if ([[_assets allKeys] containsObject:[c.videoURL absoluteString]]) {
             continue;
         }
@@ -94,7 +112,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         runSynchronouslyOnVideoProcessingQueue(^{
-            for (MovieCompositon *c in _videos) {
+            for (MovieComposition *c in _videos) {
                 AVAsset *asset = [_assets objectForKey:[c.videoURL absoluteString]];
                 [self processAsset:asset withTimeRange:c.timeRange];
             }
@@ -210,36 +228,6 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
             [target endProcessing];
         }
     }
-}
-
-@end
-
-@implementation MovieCompositon
-
-- (id)initWithURL:(NSURL *)url
-{
-    return [self initWithURL:url timeRange:kCMTimeRangeZero];
-}
-
-- (id)initWithURL:(NSURL *)url timeRange:(CMTimeRange)range
-{
-    self = [super init];
-    if (self) {
-        _timeRange = CMTimeRangeMake(kCMTimeZero, kCMTimePositiveInfinity);
-        
-        _videoURL = [url retain];
-        if (!CMTIMERANGE_IS_EMPTY(range)) {
-            _timeRange = range;
-        }
-    }
-    return self;
-}
-
-- (void)dealloc
-{
-    [_videoURL release];
-    
-    [super dealloc];
 }
 
 @end

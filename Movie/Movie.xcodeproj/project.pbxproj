@@ -68,6 +68,7 @@
 		B5CA9FD21A231ED20017893F /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FCF1A231ED20017893F /* README.md */; };
 		B5CA9FD51A231F810017893F /* MVViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CA9FD41A231F810017893F /* MVViewController.m */; };
 		B5CD41791A10C0F900E764F8 /* GPUOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CD41781A10C0F900E764F8 /* GPUOutput.m */; };
+		B5D33E501A271EDB0003D2B5 /* MovieComposition.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D33E4F1A271EDB0003D2B5 /* MovieComposition.m */; };
 		B5D46E131A12164F0010BEED /* WriterAppendImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D46E121A12164F0010BEED /* WriterAppendImageViewController.m */; };
 		B5D487FB1A1460050048F4DF /* ThreeInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FA1A1460050048F4DF /* ThreeInputViewController.m */; };
 		B5D487FE1A14985C0048F4DF /* GPUMultiMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FD1A14985C0048F4DF /* GPUMultiMovie.m */; };
@@ -186,6 +187,8 @@
 		B5CA9FD41A231F810017893F /* MVViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVViewController.m; sourceTree = "<group>"; };
 		B5CD41771A10C0F900E764F8 /* GPUOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUOutput.h; sourceTree = "<group>"; };
 		B5CD41781A10C0F900E764F8 /* GPUOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUOutput.m; sourceTree = "<group>"; };
+		B5D33E4E1A271EDB0003D2B5 /* MovieComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieComposition.h; sourceTree = "<group>"; };
+		B5D33E4F1A271EDB0003D2B5 /* MovieComposition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieComposition.m; sourceTree = "<group>"; };
 		B5D46E111A12164F0010BEED /* WriterAppendImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WriterAppendImageViewController.h; sourceTree = "<group>"; };
 		B5D46E121A12164F0010BEED /* WriterAppendImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriterAppendImageViewController.m; sourceTree = "<group>"; };
 		B5D487F91A1460050048F4DF /* ThreeInputViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeInputViewController.h; sourceTree = "<group>"; };
@@ -324,6 +327,8 @@
 				B5CA9FC41A230B660017893F /* GPUMV.m */,
 				B5CA9FC81A2317260017893F /* MVParse.h */,
 				B5CA9FC91A2317260017893F /* MVParse.m */,
+				B5D33E4E1A271EDB0003D2B5 /* MovieComposition.h */,
+				B5D33E4F1A271EDB0003D2B5 /* MovieComposition.m */,
 				04BE46D919761C9E00541C8F /* GPUMovie.h */,
 				04BE46DA19761C9E00541C8F /* GPUMovie.m */,
 				B5D487FC1A14985C0048F4DF /* GPUMultiMovie.h */,
@@ -548,6 +553,7 @@
 				04CFEB2F1963FE6C00E306C8 /* main.m in Sources */,
 				B5CA9FCA1A2317260017893F /* MVParse.m in Sources */,
 				B5CD41791A10C0F900E764F8 /* GPUOutput.m in Sources */,
+				B5D33E501A271EDB0003D2B5 /* MovieComposition.m in Sources */,
 				B5C2FD6119F505AD0003DE6A /* GPUMovieWriter.m in Sources */,
 				B5E04B2B1A1AEF5B00D35F75 /* GPUYuvToRgb.m in Sources */,
 				04C14F111980AE9700B9640F /* GPUTransformFilter.m in Sources */,

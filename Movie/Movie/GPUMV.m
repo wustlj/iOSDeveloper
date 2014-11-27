@@ -13,13 +13,18 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "MVParse.h"
+#import "GPUMultiMovie.h"
+
+#import "MovieComposition.h"
 
 @interface GPUMV ()
 {
-    NSMutableArray *_baseMovies;
-    NSMutableArray *_maskMovies;
+    NSMutableArray *_baseResources;
+    NSMutableArray *_maskResources;
     NSMutableDictionary *_baseAssets;
     NSMutableDictionary *_maskAssets;
+    
+    GPUMultiMovie *_baseMovie;
 }
 
 @property (nonatomic, retain) NSString *configPath;
@@ -32,17 +37,17 @@
     self = [super init];
     if (self) {
         _maskAssets = [[NSMutableDictionary alloc] init];
-        _maskMovies = [[NSMutableArray alloc] init];
-        _baseMovies = [[NSMutableArray alloc] initWithArray:movies];
+        _maskResources = [[NSMutableArray alloc] init];
+        _baseResources = [[NSMutableArray alloc] initWithArray:movies];
         _baseAssets = [[NSMutableDictionary alloc]initWithCapacity:[movies count]];
     }
     return self;
 }
 
 - (void)dealloc {
-    [_baseMovies release];
+    [_baseResources release];
     [_baseAssets release];
-    [_maskMovies release];
+    [_maskResources release];
     [_maskAssets release];
     [_configPath release];
     
@@ -60,7 +65,9 @@
 }
 
 - (void)startMV {
+    [self load];
     
+    [_baseMovie startProcessing];
 }
 
 - (void)didEndMV {
@@ -76,8 +83,8 @@
 - (void)parse {
     [MVParse parse:self.configPath completionHandler:^(NSArray *arr) {
         NSLog(@"%@", arr);
-        [_maskMovies removeAllObjects];
-        [_maskMovies addObjectsFromArray:arr];
+        [_maskResources removeAllObjects];
+        [_maskResources addObjectsFromArray:arr];
         
         [self loadMovieTrack];
     }];
@@ -86,8 +93,9 @@
 #pragma mark - load and unload
 
 - (void)load {
-    
-    
+    if (!_baseMovie) {
+        _baseMovie = [[GPUMultiMovie alloc] initWithVideos:_baseResources withAssets:_baseAssets];
+    }
 }
 
 - (void)unload {
@@ -99,7 +107,7 @@
 - (void)loadMovieTrack {
     dispatch_group_t group = dispatch_group_create();
     
-    for (NSURL *url in _maskMovies) {
+    for (NSURL *url in _maskResources) {
         if ([[_maskAssets allKeys] containsObject:[url absoluteString]]) {
             continue;
         }
@@ -120,14 +128,14 @@
         }];
     }
     
-    for (NSURL *url in _baseMovies) {
-        if ([[_baseAssets allKeys] containsObject:[url absoluteString]]) {
+    for (MovieComposition *c in _baseResources) {
+        if ([[_baseAssets allKeys] containsObject:[c.videoURL absoluteString]]) {
             continue;
         }
         NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-        AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:url options:inputOptions];
+        AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:c.videoURL options:inputOptions];
         
-        [_baseAssets setObject:inputAsset forKey:[url absoluteString]];
+        [_baseAssets setObject:inputAsset forKey:[c.videoURL absoluteString]];
         
         dispatch_group_enter(group);
         [inputAsset loadValuesAsynchronouslyForKeys:@[@"tracks"] completionHandler:^{
@@ -149,6 +157,8 @@
 
 - (void)didLoadTrackValueFinished {
     NSLog(@"all loaded");
+    
+    [self startMV];
 }
 
 @end
