@@ -25,6 +25,7 @@
     NSMutableDictionary *_maskAssets;
     
     GPUMultiMovie *_baseMovie;
+    GPUFilter *_filter;
 }
 
 @property (nonatomic, retain) NSString *configPath;
@@ -75,7 +76,7 @@
 }
 
 - (void)cancelMV {
-    
+    [_baseMovie cancelProcessing];
 }
 
 #pragma mark - Parse
@@ -96,10 +97,18 @@
     if (!_baseMovie) {
         _baseMovie = [[GPUMultiMovie alloc] initWithVideos:_baseResources withAssets:_baseAssets];
     }
+    
+    if (!_filter) {
+        _filter = [[GPUGridFilter alloc] init];
+    }
+    
+    [_baseMovie addTarget:_filter];
+    [_filter addTarget:_glView];
 }
 
 - (void)unload {
-    
+    [_baseMovie removeAllTargets];
+    [_filter removeAllTargets];
 }
 
 #pragma mark - Pre-Load Tracks

@@ -29,6 +29,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     NSInteger _processingIndex;
     CMTime  _baseTime;
     CMTime _frameTime;
+    BOOL _processing;
 }
 @end
 
@@ -59,13 +60,12 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 - (void)commonInit {
     _processingIndex = 0;
     _baseTime = CMTimeMakeWithSeconds(0, 600);
-    _frameTime = CMTimeMakeWithEpoch(20, 600, 0);
+    _frameTime = CMTimeMakeWithEpoch(100, 600, 0);
     
     _yuv2rgb = [[GPUYuvToRgb alloc] init];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_videos release];
     [_assets release];
     [_assetReader release];
@@ -77,8 +77,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     [super dealloc];
 }
 
-- (void)load
-{
+- (void)load {
     dispatch_group_t group = dispatch_group_create();
 
     for (MovieComposition *c in _videos) {
@@ -108,11 +107,14 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     });
 }
 
-- (void)startProcessing
-{
+- (void)startProcessing {
+    _processing = YES;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         runSynchronouslyOnVideoProcessingQueue(^{
             for (MovieComposition *c in _videos) {
+                if (!_processing) {
+                    break;
+                }
                 AVAsset *asset = [_assets objectForKey:[c.videoURL absoluteString]];
                 [self processAsset:asset withTimeRange:c.timeRange];
             }
@@ -120,12 +122,22 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
     });
 }
 
+- (void)cancelProcessing {
+    _processing = NO;
+    [_assetReader cancelReading];
+}
+
 - (void)processAsset:(AVAsset *)asset withTimeRange:(CMTimeRange)range {
+    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+    
     [self createReader:asset withTimeRange:range];
     
     if ([_assetReader startReading]) {
         NSLog(@"%ld", (long)_assetReader.status);
     }
+    
+    CFAbsoluteTime currentFrameTime = (CFAbsoluteTimeGetCurrent() - startTime);
+    NSLog(@"createReader time : %f ms", 1000.0 * currentFrameTime);
     
     while (_assetReader.status == AVAssetReaderStatusReading) {
         [self readNextVideoFrameFromOutput:_videoTrackOutput];
@@ -169,8 +181,12 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 
 - (BOOL)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput {
     if (_assetReader.status == AVAssetReaderStatusReading) {
+        CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
         CMSampleBufferRef bufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
+        CFAbsoluteTime currentFrameTime = (CFAbsoluteTimeGetCurrent() - startTime);
+        NSLog(@"Current frame time : %f ms", 1000.0 * currentFrameTime);
         if (bufferRef) {
+            
             CMTime movieTime =  CMSampleBufferGetPresentationTimeStamp(bufferRef);
 #ifdef DEBUG
             CMTimeShow(movieTime);
@@ -195,6 +211,12 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
 
             CMSampleBufferInvalidate(bufferRef);
             CFRelease(bufferRef);
+            
+//            if (YES)
+//            {
+//                CFAbsoluteTime currentFrameTime = (CFAbsoluteTimeGetCurrent() - startTime);
+//                NSLog(@"Current frame time : %f ms", 1000.0 * currentFrameTime);
+//            }
             return YES;
         } else {
             if (_assetReader.status == AVAssetReaderStatusCompleted) {

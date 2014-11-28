@@ -73,6 +73,7 @@
 		B5D487FB1A1460050048F4DF /* ThreeInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FA1A1460050048F4DF /* ThreeInputViewController.m */; };
 		B5D487FE1A14985C0048F4DF /* GPUMultiMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D487FD1A14985C0048F4DF /* GPUMultiMovie.m */; };
 		B5D488011A14A8E00048F4DF /* MutilVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D488001A14A8E00048F4DF /* MutilVideoViewController.m */; };
+		B5D7C6791A287AA200577E9A /* move.MOV in Resources */ = {isa = PBXBuildFile; fileRef = B5D7C6781A287AA200577E9A /* move.MOV */; };
 		B5E04B2B1A1AEF5B00D35F75 /* GPUYuvToRgb.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E04B2A1A1AEF5B00D35F75 /* GPUYuvToRgb.m */; };
 		B5E1E83F1A1334FE00EF0E65 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B5E1E83E1A1334FE00EF0E65 /* README.md */; };
 		B5E1E8421A134A6200EF0E65 /* TwoInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5E1E8411A134A6200EF0E65 /* TwoInputViewController.m */; };
@@ -197,6 +198,7 @@
 		B5D487FD1A14985C0048F4DF /* GPUMultiMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUMultiMovie.m; sourceTree = "<group>"; };
 		B5D487FF1A14A8E00048F4DF /* MutilVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutilVideoViewController.h; sourceTree = "<group>"; };
 		B5D488001A14A8E00048F4DF /* MutilVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutilVideoViewController.m; sourceTree = "<group>"; };
+		B5D7C6781A287AA200577E9A /* move.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = move.MOV; path = Movie/move.MOV; sourceTree = "<group>"; };
 		B5E04B291A1AEF5B00D35F75 /* GPUYuvToRgb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUYuvToRgb.h; sourceTree = "<group>"; };
 		B5E04B2A1A1AEF5B00D35F75 /* GPUYuvToRgb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUYuvToRgb.m; sourceTree = "<group>"; };
 		B5E1E83E1A1334FE00EF0E65 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				B5E65D7A1A0B925B00E10702 /* WID-small.jpg */,
 				B5E65D7E1A0B9C3A00E10702 /* Brick.png */,
 				04BACA791975194C00C03A59 /* mao2.MOV */,
+				B5D7C6781A287AA200577E9A /* move.MOV */,
 				04BACA871975567900C03A59 /* PTstar.mp4 */,
 				04BE46DD19765E5900541C8F /* camera480.mp4 */,
 				04BE4E9419777B7B009DD70C /* camera480_2.mp4 */,
@@ -491,6 +494,7 @@
 				04CFEB3B1963FE6C00E306C8 /* Images.xcassets in Resources */,
 				04BE4E9519777B7B009DD70C /* camera480_2.mp4 in Resources */,
 				04BACA7C19751A6C00C03A59 /* meiyan_saturday.mp4 in Resources */,
+				B5D7C6791A287AA200577E9A /* move.MOV in Resources */,
 				B5B7857619FE414100A9D6AB /* system1920*1080.MOV in Resources */,
 				04BE4E9319777966009DD70C /* Yh1.mp4 in Resources */,
 				04BACA7E19751B3D00C03A59 /* trans_1_mask.mp4 in Resources */,

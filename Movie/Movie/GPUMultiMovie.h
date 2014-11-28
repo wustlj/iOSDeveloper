@@ -18,5 +18,6 @@
 
 - (void)load;
 - (void)startProcessing;
+- (void)cancelProcessing;
 
 @end

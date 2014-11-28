@@ -26,6 +26,7 @@
 
 - (void)addTarget:(id<GPUInput>)target;
 - (void)removeTarget:(id<GPUInput>)target;
+- (void)removeAllTargets;
 
 - (void)notifyTargetsNewOutputTexture:(CMTime)time;
 - (void)notifyTargetsNewOutputTexture:(CMTime)time withFramebuffer:(GPUFramebuffer *)framebuffer;
