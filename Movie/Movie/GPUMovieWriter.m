@@ -188,8 +188,8 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 //        if (_assetWriter.status != AVAssetWriterStatusWriting) {
 //            [_assetWriter startWriting];
 //        }
-        [_assetWriter startSessionAtSourceTime:frameTime];
-        startTime = frameTime;
+        startTime = CMTimeMakeWithEpoch(0, 600, 0);
+        [_assetWriter startSessionAtSourceTime:startTime];
     }
     
     [self draw];

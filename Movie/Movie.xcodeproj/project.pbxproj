@@ -81,6 +81,9 @@
 		B5E65D791A0B8B7800E10702 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B5E65D781A0B8B7800E10702 /* 1.png */; };
 		B5E65D7B1A0B925B00E10702 /* WID-small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B5E65D7A1A0B925B00E10702 /* WID-small.jpg */; };
 		B5E65D7F1A0B9C3A00E10702 /* Brick.png in Resources */ = {isa = PBXBuildFile; fileRef = B5E65D7E1A0B9C3A00E10702 /* Brick.png */; };
+		B5EDCA4E1A318AE40066B78B /* GPUReverseMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = B5EDCA4D1A318AE40066B78B /* GPUReverseMovie.m */; };
+		B5EDCA501A3192C80066B78B /* 0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B5EDCA4F1A3192C80066B78B /* 0.mp4 */; };
+		B5F6EF6B1A2C411400C5530C /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F6EF6A1A2C411400C5530C /* TestViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -209,6 +212,11 @@
 		B5E65D781A0B8B7800E10702 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1.png; path = Movie/1.png; sourceTree = "<group>"; };
 		B5E65D7A1A0B925B00E10702 /* WID-small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "WID-small.jpg"; path = "Movie/WID-small.jpg"; sourceTree = "<group>"; };
 		B5E65D7E1A0B9C3A00E10702 /* Brick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Brick.png; path = Movie/Brick.png; sourceTree = "<group>"; };
+		B5EDCA4C1A318AE40066B78B /* GPUReverseMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUReverseMovie.h; sourceTree = "<group>"; };
+		B5EDCA4D1A318AE40066B78B /* GPUReverseMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUReverseMovie.m; sourceTree = "<group>"; };
+		B5EDCA4F1A3192C80066B78B /* 0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0.mp4; sourceTree = "<group>"; };
+		B5F6EF691A2C411400C5530C /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
+		B5F6EF6A1A2C411400C5530C /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +256,7 @@
 				04BACA791975194C00C03A59 /* mao2.MOV */,
 				B5D7C6781A287AA200577E9A /* move.MOV */,
 				04BACA871975567900C03A59 /* PTstar.mp4 */,
+				B5EDCA4F1A3192C80066B78B /* 0.mp4 */,
 				04BE46DD19765E5900541C8F /* camera480.mp4 */,
 				04BE4E9419777B7B009DD70C /* camera480_2.mp4 */,
 				04C14F131980CD4500B9640F /* camera480_3.mp4 */,
@@ -303,6 +312,8 @@
 				B5B500EF1A00988D00802333 /* RootViewController.m */,
 				B5B500F51A00C20A00802333 /* BaseViewController.h */,
 				B5B500F61A00C20A00802333 /* BaseViewController.m */,
+				B5F6EF691A2C411400C5530C /* TestViewController.h */,
+				B5F6EF6A1A2C411400C5530C /* TestViewController.m */,
 				B5CA9FD31A231F810017893F /* MVViewController.h */,
 				B5CA9FD41A231F810017893F /* MVViewController.m */,
 				B5B500F11A009B7F00802333 /* WriterViewController.h */,
@@ -334,6 +345,8 @@
 				B5D33E4F1A271EDB0003D2B5 /* MovieComposition.m */,
 				04BE46D919761C9E00541C8F /* GPUMovie.h */,
 				04BE46DA19761C9E00541C8F /* GPUMovie.m */,
+				B5EDCA4C1A318AE40066B78B /* GPUReverseMovie.h */,
+				B5EDCA4D1A318AE40066B78B /* GPUReverseMovie.m */,
 				B5D487FC1A14985C0048F4DF /* GPUMultiMovie.h */,
 				B5D487FD1A14985C0048F4DF /* GPUMultiMovie.m */,
 				B5E04B291A1AEF5B00D35F75 /* GPUYuvToRgb.h */,
@@ -511,6 +524,7 @@
 				B5E65D7B1A0B925B00E10702 /* WID-small.jpg in Resources */,
 				B5CA9FC71A2314420017893F /* config.json in Resources */,
 				B5CA9FC01A230ADA0017893F /* add.mov in Resources */,
+				B5EDCA501A3192C80066B78B /* 0.mp4 in Resources */,
 				04CFEB2D1963FE6C00E306C8 /* InfoPlist.strings in Resources */,
 				04BACA821975226500C03A59 /* end_meiyan_en.mp4 in Resources */,
 				04CFEB361963FE6C00E306C8 /* Main.storyboard in Resources */,
@@ -548,6 +562,7 @@
 				B5B500FD1A00CA2800802333 /* GridViewController.m in Sources */,
 				04BE1605196695FA0008DEE3 /* GPUProgram.m in Sources */,
 				04D18883197FA57800495FEC /* GPUGridFilter.m in Sources */,
+				B5F6EF6B1A2C411400C5530C /* TestViewController.m in Sources */,
 				B5C2FD6419F506910003DE6A /* GPUImage.m in Sources */,
 				B5D488011A14A8E00048F4DF /* MutilVideoViewController.m in Sources */,
 				B5D46E131A12164F0010BEED /* WriterAppendImageViewController.m in Sources */,
@@ -568,6 +583,7 @@
 				B5B500F31A009B7F00802333 /* WriterViewController.m in Sources */,
 				B5CA9FD51A231F810017893F /* MVViewController.m in Sources */,
 				041CA25C197E557A0097B949 /* GPULineFilter.m in Sources */,
+				B5EDCA4E1A318AE40066B78B /* GPUReverseMovie.m in Sources */,
 				B5E1E8421A134A6200EF0E65 /* TwoInputViewController.m in Sources */,
 				B5B500FA1A00C37E00802333 /* TransformViewController.m in Sources */,
 				B5B500F71A00C20A00802333 /* BaseViewController.m in Sources */,

@@ -42,6 +42,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     _dataArray = [[NSArray arrayWithObjects:
+                   @"TestViewController",
                    @"MVViewController",
                    @"WriterViewController",
                    @"MutilVideoViewController",

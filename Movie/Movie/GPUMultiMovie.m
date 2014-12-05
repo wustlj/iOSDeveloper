@@ -169,6 +169,7 @@ extern NSString *const kYUVVideoRangeConversionForLAFragmentShaderString;
         [_videoTrackOutput release];
         _videoTrackOutput = nil;
         _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:vTrack outputSettings:outputSettings];
+        _videoTrackOutput.alwaysCopiesSampleData = NO;
         
         if ([_assetReader canAddOutput:_videoTrackOutput]) {
             [_assetReader addOutput:_videoTrackOutput];
