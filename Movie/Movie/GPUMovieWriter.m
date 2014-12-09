@@ -188,7 +188,7 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
 //        if (_assetWriter.status != AVAssetWriterStatusWriting) {
 //            [_assetWriter startWriting];
 //        }
-        startTime = CMTimeMakeWithEpoch(0, 600, 0);
+        startTime = frameTime;
         [_assetWriter startSessionAtSourceTime:startTime];
     }
     
@@ -212,6 +212,8 @@ NSString *const kMovieFragmentShaderString = SHADER_STRING
             if (_assetWriter.status == AVAssetWriterStatusFailed) {
                 NSLog(@"%@", _assetWriter.error);
             }
+        } else {
+            NSLog(@"write frame success");
         }
         CVPixelBufferUnlockBaseAddress(pixel_buffer, 0);
     };

@@ -25,6 +25,14 @@
 
 @implementation TestViewController
 
+- (void)dealloc {
+    [_glView release];
+    [_baseMovie release];
+    [_movieWriter release];
+    
+    [super dealloc];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 

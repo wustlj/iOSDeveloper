@@ -12,6 +12,8 @@
 #import "GPUOutput.h"
 #import "GPUYuvToRgb.h"
 
+#define FRAGMENT_TIME 300.0f
+
 @interface GPUReverseMovie ()
 {
     GPUYuvToRgb *_yuv2rgb;
@@ -21,6 +23,9 @@
     
     CMTime _duration;
     NSInteger _index;
+    NSMutableArray *_framebufferArray;
+    
+    CMTime _baseTime;
 }
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) AVAsset *asset;
@@ -34,14 +39,23 @@
     if (self) {
         self.url = url;
         
-        _duration = CMTimeMakeWithEpoch(3000, 600, 0);
         _yuv2rgb = [[GPUYuvToRgb alloc] init];
         
-        GLint max;
-        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max);
-        NSLog(@"%d", max);
+        _framebufferArray = [[NSMutableArray alloc] init];
+        _baseTime = CMTimeMakeWithEpoch(0, 600, 0);
     }
     return self;
+}
+
+- (void)dealloc {
+    [_url release];
+    [_asset release];
+    [_yuv2rgb release];
+    [_framebufferArray release];
+    [_assetReader release];
+    [_videoTrackOutput release];
+    
+    [super dealloc];
 }
 
 - (void)startProcessing {
@@ -51,6 +65,7 @@
 - (void)loadAsset {
     NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
     AVURLAsset *inputAsset = [AVURLAsset URLAssetWithURL:self.url options:inputOptions];
+    self.asset = inputAsset;
     
     typeof(self) __block blockSelf = self;
     
@@ -62,15 +77,34 @@
             {
                 return;
             }
-            blockSelf.asset = inputAsset;
-            [blockSelf processAsset];
+            
+            [blockSelf processAssetFragment];
             blockSelf = nil;
         });
     }];
 }
 
-- (void)processAsset {
-    [self createReader];
+- (void)processAssetFragment {
+    CMTime duration = [self.asset duration];
+    CMTime scaleDuration = CMTimeConvertScale(duration, 600, kCMTimeRoundingMethod_Default);
+    
+    int value = (int)scaleDuration.value;
+    int count = ceil(value/FRAGMENT_TIME);
+    
+    for (int i = count - 1; i >= 0; i--) {
+        CMTime et = CMTimeMakeWithEpoch(FRAGMENT_TIME * (i + 1), 600, 0);
+        CMTime st = CMTimeMakeWithEpoch(FRAGMENT_TIME * i, 600, 0);
+        
+        CMTimeRange range = CMTimeRangeFromTimeToTime(st, et);
+        
+        _index = i;
+        
+        [self processAsset:range];
+    }
+}
+
+- (void)processAsset:(CMTimeRange)range {
+    [self createReader:range];
     
     if (![_assetReader startReading]) {
         NSLog(@"start Reading failed(statue = %d, error = %@)", _assetReader.status, _assetReader.error);
@@ -85,7 +119,7 @@
     }
 }
 
-- (void)createReader {
+- (void)createReader:(CMTimeRange)range {
     [_assetReader release];
     _assetReader = nil;
     if (!_assetReader) {
@@ -96,15 +130,19 @@
             return;
         }
         
-        NSArray *videoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
-        AVAssetTrack *vTrack = [videoTracks objectAtIndex:0];
-        NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
-        _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:vTrack outputSettings:outputSettings];
+        [_videoTrackOutput release];
+        _videoTrackOutput = nil;
+        if (!_videoTrackOutput) {
+            NSArray *videoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
+            AVAssetTrack *vTrack = [videoTracks objectAtIndex:0];
+            NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)};
+            _videoTrackOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:vTrack outputSettings:outputSettings];
+        }
         
         if ([_assetReader canAddOutput:_videoTrackOutput]) {
             [_assetReader addOutput:_videoTrackOutput];
         }
-        _assetReader.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithEpoch(200, 600, 0));
+        _assetReader.timeRange = range;
     }
 }
 
@@ -130,12 +168,18 @@
             }
             
             if (!_outputFramebuffer) {
-                _outputFramebuffer = [[GPUFramebuffer alloc] initWithSize:_textureSize];
+                _outputFramebuffer = [[GPUFramebuffer alloc] initOnlyTextureWithSize:_textureSize];
             }
             
-            [_yuv2rgb processMovieFrame:movieFrame toFramebuffer:_outputFramebuffer];
+            GPUFramebuffer *fb = [[GPUFramebuffer alloc] initOnlyTextureWithSize:_textureSize];
             
-            [self notifyTargetsNewOutputTexture:CMTimeSubtract(_duration, movieTime)];
+            [_yuv2rgb processMovieFrame:movieFrame toFramebuffer:fb];
+            
+            [_framebufferArray addObject:fb];
+            
+            [fb release];
+            
+//            [self notifyTargetsNewOutputTexture:CMTimeSubtract(_duration, movieTime)];
             
             CMSampleBufferInvalidate(bufferRef);
             CFRelease(bufferRef);
@@ -156,13 +200,30 @@
 }
 
 - (void)endProcessing {
-    NSLog(@"reverse movie end processing");
+    NSLog(@"reading movie range end");
     
-    for (id<GPUInput> target in _targets) {
-        if ([target respondsToSelector:@selector(endProcessing)]) {
-            [target endProcessing];
+    [self writeFramebuffer];
+    
+    if (_index == 0) {
+        for (id<GPUInput> target in _targets) {
+            if ([target respondsToSelector:@selector(endProcessing)]) {
+                [target endProcessing];
+            }
         }
     }
+}
+
+- (void)writeFramebuffer {
+    int num = (int)[_framebufferArray count];
+    
+    for (int i = num - 1; i >= 0; i--) {
+        GPUFramebuffer *fb = _framebufferArray[i];
+        [self notifyTargetsNewOutputTexture:_baseTime withFramebuffer:fb];
+        
+        _baseTime = CMTimeAdd(_baseTime, CMTimeMakeWithEpoch(20, 600, 0));
+    }
+    
+    [_framebufferArray removeAllObjects];
 }
 
 @end

@@ -47,6 +47,8 @@
 - (void)dealloc {
     [self destroyFramebuffer];
     
+    NSLog(@"Framebuffer dealloc");
+    
     [super dealloc];
 }
 
@@ -54,16 +56,28 @@
 {
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUContext useImageProcessingContext];
-        glActiveTexture(GL_TEXTURE1);
+        
+//        glActiveTexture(GL_TEXTURE6);
         glGenTextures(1, &_outputTexture);
         glBindTexture(GL_TEXTURE_2D, _outputTexture);
-        // This is necessary for non-power-of-two textures
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
-        // Must set
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _size.width, _size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glGenFramebuffers(1, &_framebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
+        
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _outputTexture, 0);
+        
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        NSAssert(status == GL_FRAMEBUFFER_COMPLETE, @"Incomplete filter FBO: %d", status);
+        
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     });
     
     // TODO: Handle mipmaps
@@ -81,6 +95,7 @@
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         NSAssert(status == GL_FRAMEBUFFER_COMPLETE, @"Incomplete filter FBO: %d", status);
         glBindTexture(GL_TEXTURE_2D, 0);
+//        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     });
 }
 
