@@ -8,6 +8,8 @@
 
 #import "RootViewController.h"
 
+#import "JSONKit.h"
+
 @interface RootViewController ()
 {
     NSArray *_dataArray;
@@ -54,6 +56,14 @@
                    @"ThreeInputViewController",
                    @"ViewController", nil] retain];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"mvlist" ofType:nil];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    
+    NSDictionary *dic = [data objectFromJSONData];
+    
+    NSLog(@"%@",dic);
+    
 }
 
 - (void)didReceiveMemoryWarning
