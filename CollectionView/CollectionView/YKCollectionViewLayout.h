@@ -17,4 +17,6 @@
 @property (nonatomic, strong) NSIndexPath *draggingIndexPath;
 @property (nonatomic) CGPoint draggingCenter;
 
+- (void)resetDragging;
+
 @end

@@ -14,6 +14,10 @@
 @property (nonatomic) CGSize contentSize;
 @property (nonatomic) CGFloat lineSpacing;
 
+@property (nonatomic) CGRect draggingOriginFrame;
+
+@property (nonatomic, strong) NSMutableDictionary *itemDictionary;
+
 @end
 
 @implementation YKCollectionViewLayout
@@ -22,6 +26,7 @@
     self = [super init];
     if (self) {
         _itemArray = [NSMutableArray array];
+        _itemDictionary = [NSMutableDictionary dictionary];
         _lineSpacing = 1.0;
     }
     return self;
@@ -49,9 +54,6 @@
     for (int section = 0; section < sectionCount; section++) {
         NSInteger itemCount = [self.collectionView numberOfItemsInSection:section];
         
-        // 当前section下所有attribute
-        NSMutableArray *array = [NSMutableArray arrayWithCapacity:itemCount];
-        
         for (int item = 0; item < itemCount; item++) {
             if (x + self.itemSize.width > w) {
                 // 超过边界,需要换行
@@ -63,7 +65,7 @@
             UICollectionViewLayoutAttributes *attribute = [self layoutAttributesForItemAtIndexPath:indexPath];
             attribute.frame = CGRectMake(x, y, self.itemSize.width, self.itemSize.height);
             [self.itemArray addObject:attribute];
-            [array addObject:attribute];
+            [self.itemDictionary setObject:attribute forKey:indexPath];
             
             x += self.itemSize.width + self.lineSpacing;
         }
@@ -107,6 +109,47 @@
         layoutAttributes.zIndex = 100;
     } else {
         layoutAttributes.zIndex = 0;
+    }
+}
+
+- (void)resetDragging {    
+    [self resetFrame];
+    
+    self.draggingIndexPath = nil;
+    
+    [self invalidateLayout];
+}
+
+- (void)resetFrame {
+    CGFloat x = self.sectionInset.left;
+    CGFloat y = self.sectionInset.top + self.lineSpacing;
+    CGFloat w = CGRectGetWidth(self.collectionView.bounds) - self.sectionInset.right;
+    
+    NSInteger sectionCount = [self.collectionView numberOfSections];
+    
+    NSInteger index = 0;
+    
+    for (int section = 0; section < sectionCount; section++) {
+        NSInteger itemCount = [self.collectionView numberOfItemsInSection:section];
+        
+        for (int item = 0; item < itemCount; item++) {
+            if (x + self.itemSize.width > w) {
+                // 超过边界,需要换行
+                x = self.sectionInset.left;
+                y += self.itemSize.height + self.lineSpacing;
+            }
+            
+            UICollectionViewLayoutAttributes *attribute = [self.itemArray objectAtIndex:index];
+            attribute.frame = CGRectMake(x, y, self.itemSize.width, self.itemSize.height);
+            [self.itemArray addObject:attribute];
+            
+            x += self.itemSize.width + self.lineSpacing;
+            index ++;
+        }
+        
+        // 下一个section从新布局
+        x = self.sectionInset.left;
+        y += self.itemSize.height + self.lineSpacing;
     }
 }
 

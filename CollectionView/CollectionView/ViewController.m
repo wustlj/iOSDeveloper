@@ -108,9 +108,7 @@
 - (void)endInteractiveMovement {
     YKCollectionViewLayout *layout = (YKCollectionViewLayout *)self.collectionView.collectionViewLayout;
 
-    layout.draggingIndexPath = nil;
-    
-    [layout invalidateLayout];
+    [layout resetDragging];
 }
 
 - (void)cancelInteractiveMovement {
