@@ -101,14 +101,26 @@
     return attribute;
 }
 
+- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
+    UICollectionViewLayoutAttributes *attribute = [self.itemDictionary objectForKey:itemIndexPath];
+    return attribute;
+}
+
+- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
+    UICollectionViewLayoutAttributes *attribute = [self.itemDictionary objectForKey:itemIndexPath];
+    return attribute;
+}
+
 #pragma mark -
 
 - (void)applyDragAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
     if ([layoutAttributes.indexPath isEqual:self.draggingIndexPath]) {
         layoutAttributes.center = self.draggingCenter;
         layoutAttributes.zIndex = 100;
+        layoutAttributes.transform = CGAffineTransformMakeScale(1.3, 1.3);
     } else {
         layoutAttributes.zIndex = 0;
+        layoutAttributes.transform = CGAffineTransformIdentity;
     }
 }
 
@@ -117,7 +129,9 @@
     
     self.draggingIndexPath = nil;
     
-    [self invalidateLayout];
+    [UIView animateWithDuration:0.25 animations:^{
+        [self invalidateLayout];
+    }];
 }
 
 - (void)resetFrame {
@@ -140,7 +154,11 @@
             }
             
             UICollectionViewLayoutAttributes *attribute = [self.itemArray objectAtIndex:index];
-            attribute.frame = CGRectMake(x, y, self.itemSize.width, self.itemSize.height);
+            if ([attribute.indexPath isEqual:self.draggingIndexPath]) {
+                attribute.frame = CGRectMake(x, y, self.itemSize.width, self.itemSize.height);
+            } else {
+                attribute.frame = CGRectMake(x, y, self.itemSize.width, self.itemSize.height);
+            }
             [self.itemArray addObject:attribute];
             
             x += self.itemSize.width + self.lineSpacing;
@@ -151,6 +169,51 @@
         x = self.sectionInset.left;
         y += self.itemSize.height + self.lineSpacing;
     }
+}
+
+- (void)swapItemIfNeeded {
+    CGRect draggingFrame = makeRectWithCenter(_draggingCenter, _itemSize, 1.3);
+
+    __block NSIndexPath *exchangeIndexPath = nil;
+    
+    [self.collectionView.indexPathsForVisibleItems enumerateObjectsUsingBlock:^(NSIndexPath *obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isEqual:self.draggingIndexPath]) {
+            return;
+        }
+        
+        UICollectionViewLayoutAttributes *attributes = [self.itemDictionary objectForKey:obj];
+        if (CGRectContainsRect(draggingFrame, attributes.frame)) {
+            exchangeIndexPath = obj;
+            *stop = YES;
+        }
+    }];
+
+    if (exchangeIndexPath) {
+        UICollectionViewLayoutAttributes *draggingAttributes = [self.itemDictionary objectForKey:self.draggingIndexPath];
+        NSInteger draggingIndex = [self.itemArray indexOfObject:draggingAttributes];
+        
+        UICollectionViewLayoutAttributes *exchangeAttributes = [self.itemDictionary objectForKey:exchangeIndexPath];
+        NSInteger exchangeIndex = [self.itemArray indexOfObject:exchangeAttributes];
+        
+        [self.itemArray removeObject:draggingAttributes];
+        [self.itemArray insertObject:draggingAttributes atIndex:exchangeIndex];
+                
+        [self resetFrame];
+        
+        [UIView animateWithDuration:0.1 animations:^{
+            [self invalidateLayout];
+        }];
+    }
+}
+
+CGRect makeRectWithCenter(CGPoint center, CGSize size, CGFloat multiply) {
+    CGRect rect = CGRectZero;
+    rect.origin.x = center.x - multiply * size.width / 2;
+    rect.origin.y = center.y - multiply * size.height / 2;
+    rect.size.width = multiply * size.width;
+    rect.size.height = multiply * size.height;
+    
+    return rect;
 }
 
 @end

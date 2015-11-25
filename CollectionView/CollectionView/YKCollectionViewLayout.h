@@ -19,4 +19,6 @@
 
 - (void)resetDragging;
 
+- (void)swapItemIfNeeded;
+
 @end

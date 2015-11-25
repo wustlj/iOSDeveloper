@@ -103,6 +103,8 @@
     layout.draggingCenter = targetPosition;
     
     [layout invalidateLayout];
+    
+    [layout swapItemIfNeeded];
 }
 
 - (void)endInteractiveMovement {
