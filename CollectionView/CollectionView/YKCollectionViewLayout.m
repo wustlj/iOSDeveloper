@@ -159,7 +159,6 @@
             } else {
                 attribute.frame = CGRectMake(x, y, self.itemSize.width, self.itemSize.height);
             }
-            [self.itemArray addObject:attribute];
             
             x += self.itemSize.width + self.lineSpacing;
             index ++;

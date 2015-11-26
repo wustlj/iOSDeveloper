@@ -78,6 +78,8 @@
     [gestureRecognizer setTranslation:CGPointZero inView:self.collectionView];
     
     [self updateInteractiveMovementTargetPosition:draggingCenter];
+    
+    [self scrollIfNeededWhenDraggingCell:collectionCell];
 }
 
 - (void)didTouchesEnded:(YKCollectionViewCell *)collectionCell gestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer {
@@ -115,6 +117,50 @@
 
 - (void)cancelInteractiveMovement {
     [self endInteractiveMovement];
+}
+
+#pragma mark - 
+
+- (void)scrollIfNeededWhenDraggingCell:(UICollectionViewCell *)draggingCell {
+    YKCollectionViewLayout *layout = (YKCollectionViewLayout *)self.collectionView.collectionViewLayout;
+    
+    if (layout.draggingIndexPath == nil) return;
+    
+    CGPoint newOffset = self.collectionView.contentOffset;
+    CGPoint cellCenter = layout.draggingCenter;
+
+    // down
+    CGFloat bottomY = self.collectionView.contentOffset.y + CGRectGetHeight(self.collectionView.frame);
+    if (bottomY < CGRectGetMaxY(draggingCell.frame) - 10) {
+        newOffset.y += 1;
+        
+        if (newOffset.y + CGRectGetHeight(self.collectionView.bounds) > self.collectionView.contentSize.height) {
+            return; // Stop moving, went too far
+        }
+        cellCenter.y += 1;
+    }
+    
+    // up
+    CGFloat topY = self.collectionView.contentOffset.y;
+    if (CGRectGetMinY(draggingCell.frame) + 10 < topY) {
+        // We're scrolling up
+        newOffset.y -= 1;
+        
+        if (newOffset.y <= 0) {
+            return; // Stop moving, went too far
+        }
+        
+        // adjust cell's center by 1
+        cellCenter.y -= 1;
+    }
+    
+    self.collectionView.contentOffset = newOffset;
+    layout.draggingCenter = cellCenter;
+    [layout invalidateLayout];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self scrollIfNeededWhenDraggingCell:draggingCell];
+    });
 }
 
 @end
