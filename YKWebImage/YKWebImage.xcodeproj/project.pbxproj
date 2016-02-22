@@ -456,6 +456,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = YKWebImage/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.youku.YKWebImage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -467,6 +468,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = YKWebImage/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.youku.YKWebImage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -540,6 +542,7 @@
 				B5EE3AD61C7AEB530054F1FE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B5EE3AD71C7AEB530054F1FE /* Build configuration list for PBXNativeTarget "YKWebImageTests" */ = {
 			isa = XCConfigurationList;
@@ -548,6 +551,7 @@
 				B5EE3AD91C7AEB530054F1FE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B5EE3ADA1C7AEB530054F1FE /* Build configuration list for PBXNativeTarget "YKWebImageUITests" */ = {
 			isa = XCConfigurationList;
@@ -556,6 +560,7 @@
 				B5EE3ADC1C7AEB530054F1FE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
