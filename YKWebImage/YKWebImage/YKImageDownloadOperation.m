@@ -9,7 +9,9 @@
 #import "YKImageDownloadOperation.h"
 
 @interface YKImageDownloadOperation () <NSURLConnectionDataDelegate>
-
+{
+    NSInteger _expectedSize;
+}
 @property (nonatomic, assign, getter=isExecuting) BOOL executing;
 @property (nonatomic, assign, getter=isFinished) BOOL finished;
 
@@ -32,9 +34,12 @@
         _request = request;
         _progressBlock = [progressBlock copy];
         _completedBlock = [completedBlock copy];
-        
     }
     return self;
+}
+
+- (void)dealloc {
+    NSLog(@"YKImageDownloadOperation dealloc");
 }
 
 - (void)start {
@@ -44,10 +49,21 @@
             return;
         }
         
+        self.executing = YES;
         self.urlConnection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO];
     }
     
     [self.urlConnection start];
+    
+    CFRunLoopRun();
+    
+    if (!self.finished) {
+        [self.urlConnection cancel];
+    }
+}
+
+- (BOOL)isAsynchronous {
+    return YES;
 }
 
 - (void)setFinished:(BOOL)finished {
@@ -62,25 +78,78 @@
     [self didChangeValueForKey:@"isExecuting"];
 }
 
+- (void)cancel {
+    if (self.finished) return;
+    
+    [super cancel];
+    
+    [self.urlConnection cancel];
+    self.finished = YES;
+    self.executing = NO;
+    
+    CFRunLoopStop(CFRunLoopGetCurrent());
+}
+
 #pragma mark - NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    self.receivedData = [[NSMutableData alloc] init];
+    NSLog(@"%@", response);
+    
+    if (![response respondsToSelector:@selector(statusCode)] || ([(NSHTTPURLResponse *)response statusCode] < 400 && [(NSHTTPURLResponse *)response statusCode] != 304)) {
+        _expectedSize = response.expectedContentLength;
+        self.receivedData = [[NSMutableData alloc] initWithCapacity:_expectedSize];
+    } else {
+        NSUInteger code = [((NSHTTPURLResponse *)response) statusCode];
+
+        if (code == 304) {
+            [self cancel];
+        } else {
+            [self.urlConnection cancel];
+        }
+        
+        if (self.completedBlock) {
+            NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:code userInfo:@{NSURLErrorFailingURLErrorKey: self.request.URL}];
+            self.completedBlock(nil, error, YES);
+        }
+        CFRunLoopStop(CFRunLoopGetCurrent());
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [self.receivedData appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    if (_completedBlock) {
-        UIImage *image = [UIImage imageWithData:self.receivedData];
-        _completedBlock(image, YES);
+    
+    if (self.progressBlock) {
+        self.progressBlock(self.receivedData.length, _expectedSize);
     }
 }
 
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    CFRunLoopStop(CFRunLoopGetCurrent());
+    
+    if (self.completedBlock) {
+        UIImage *image = [UIImage imageWithData:self.receivedData];
+        
+        uint8_t c;
+        [self.receivedData getBytes:&c length:1];
+        NSLog(@"%hhu", c);
+        
+        self.completedBlock(image, nil, YES);
+    }
+    
+    self.finished = YES;
+    self.executing = NO;
+}
+
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"%@", error);
+
+    CFRunLoopStop(CFRunLoopGetCurrent());
+
     self.receivedData = nil;
+    
+    if (self.completedBlock) {
+        self.completedBlock(nil, error, YES);
+    }
 }
 
 @end

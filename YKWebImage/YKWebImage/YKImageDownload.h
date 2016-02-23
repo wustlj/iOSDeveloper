@@ -12,15 +12,16 @@
 @class YKImageDownloadOperation;
 
 typedef void(^YKImageDownloadProgressBlock)(NSInteger receivedSize, NSInteger expectedSize);
-typedef void(^YKImageDownloadCompletedBlock)(UIImage *image, BOOL isFinished);
+typedef void(^YKImageDownloadCompletedBlock)(UIImage *image, NSError *error, BOOL isFinished);
 
 @interface YKImageDownload : NSObject
 
 @property NSInteger maxConcurrentDownloadCount;
+@property NSTimeInterval downloadTimeoutInterval;
 
-- (YKImageDownload *)shareInstance;
++ (YKImageDownload *)shareInstance;
 
-- (YKImageDownloadOperation *)downloadImageWithURL:(NSString *)url progress:(YKImageDownloadProgressBlock)progressBlock completed:(YKImageDownloadCompletedBlock)completedBlock;
+- (YKImageDownloadOperation *)downloadImageWithURL:(NSURL *)url progress:(YKImageDownloadProgressBlock)progressBlock completed:(YKImageDownloadCompletedBlock)completedBlock;
 
 - (void)setSuspended:(BOOL)suspended;
 

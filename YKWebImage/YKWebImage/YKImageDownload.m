@@ -22,11 +22,12 @@
     if (self) {
         _downloadQueue = [[NSOperationQueue alloc] init];
         _downloadQueue.maxConcurrentOperationCount = 6;
+        _downloadTimeoutInterval = 15;
     }
     return self;
 }
 
-- (YKImageDownload *)shareInstance {
++ (YKImageDownload *)shareInstance {
     static YKImageDownload *shareInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -36,8 +37,8 @@
     return shareInstance;
 }
 
-- (YKImageDownloadOperation *)downloadImageWithURL:(NSString *)url progress:(YKImageDownloadProgressBlock)progressBlock completed:(YKImageDownloadCompletedBlock)completedBlock {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+- (YKImageDownloadOperation *)downloadImageWithURL:(NSURL *)url progress:(YKImageDownloadProgressBlock)progressBlock completed:(YKImageDownloadCompletedBlock)completedBlock {
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:self.downloadTimeoutInterval];
     YKImageDownloadOperation *operation = [[YKImageDownloadOperation alloc] initWithRequest:request progress:progressBlock completed:completedBlock];
     [_downloadQueue addOperation:operation];
     

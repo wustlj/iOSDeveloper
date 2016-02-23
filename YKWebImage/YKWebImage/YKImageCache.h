@@ -12,6 +12,6 @@
 
 @property(nonatomic, assign) BOOL shouldCacheInMemory;
 
-- (YKImageCache *)shareInstance;
++ (YKImageCache *)shareInstance;
 
 @end

@@ -17,4 +17,6 @@
              progress:(YKImageDownloadProgressBlock)progressBlock
             completed:(YKImageDownloadCompletedBlock)completedBlock;
 
+- (void)cancel;
+
 @end
