@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 #import "YKImageDownload.h"
+#import "YKImageCache.h"
+#import "UIImageView+YKImageCache.h"
 
 @interface ViewController () <UITableViewDataSource, UITableViewDelegate>
 {
@@ -28,6 +30,10 @@
     [self.view addSubview:_tableView];
     
     [self setupData];
+    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [[YKImageCache shareInstance] cleanCache];
+//    });
 }
 
 - (void)setupData {
@@ -42,6 +48,19 @@
     for (int i=0; i<100; i++) {
         [_dataArray addObject:[NSString stringWithFormat:@"https://s3.amazonaws.com/fast-image-cache/demo-images/FICDDemoImage%03d.jpg", i]];
     }
+
+#pragma Test Cache
+/*
+    [_dataArray addObject:@"lifebuoy.png"];
+    [_dataArray addObject:@"lollipop.png"];
+    [_dataArray addObject:@"stats.png"];
+    [_dataArray addObject:@"zen-icons-pen.png"];
+    for (NSString *name in _dataArray) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[name pathExtension]];
+        UIImage *image = [UIImage imageWithContentsOfFile:path];
+        [[YKImageCache shareInstance] storeImage:image forKey:name];
+    }
+ */
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,16 +85,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
     }
     
-    cell.imageView.image = nil;
-    [[YKImageDownload shareInstance] downloadImageWithURL:[NSURL URLWithString:_dataArray[indexPath.row]]
-                                                 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                                     NSLog(@"%ld,%ld,%f", (long)receivedSize, (long)expectedSize, (float)receivedSize/expectedSize);
-                                                 } completed:^(UIImage *image, NSError *error, BOOL isFinished) {
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         cell.imageView.image = image;
-                                                         [cell setNeedsLayout];
-                                                     });
-                                                 }];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:_dataArray[indexPath.row]] placeholderImage:[UIImage imageNamed:@"2015sdj_002.png"]];
     
     cell.textLabel.text = [_dataArray[indexPath.row] lastPathComponent];
     

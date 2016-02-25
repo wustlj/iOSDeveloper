@@ -22,7 +22,7 @@
     if (self) {
         _downloadQueue = [[NSOperationQueue alloc] init];
         _downloadQueue.maxConcurrentOperationCount = 6;
-        _downloadTimeoutInterval = 15;
+        _downloadTimeoutInterval = 30;
     }
     return self;
 }

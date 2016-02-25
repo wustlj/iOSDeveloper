@@ -18,6 +18,12 @@
 		B5EE3AE21C7AECDB0054F1FE /* YKImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B5EE3AE11C7AECDB0054F1FE /* YKImageCache.m */; settings = {ASSET_TAGS = (); }; };
 		B5EE3AE51C7AED250054F1FE /* YKImageDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = B5EE3AE41C7AED250054F1FE /* YKImageDownload.m */; settings = {ASSET_TAGS = (); }; };
 		B5EE3AE81C7AED3D0054F1FE /* YKImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B5EE3AE71C7AED3D0054F1FE /* YKImageDownloadOperation.m */; settings = {ASSET_TAGS = (); }; };
+		B5F2D4341C7ED78200DAA884 /* UIImageView+YKImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F2D4331C7ED78200DAA884 /* UIImageView+YKImageCache.m */; settings = {ASSET_TAGS = (); }; };
+		B5F2D4361C7EE00500DAA884 /* 2015sdj_002.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F2D4351C7EE00500DAA884 /* 2015sdj_002.png */; settings = {ASSET_TAGS = (); }; };
+		B5F54EEC1C7DB6EC00CEC32D /* lifebuoy.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F54EE81C7DB6EC00CEC32D /* lifebuoy.png */; settings = {ASSET_TAGS = (); }; };
+		B5F54EED1C7DB6EC00CEC32D /* lollipop.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F54EE91C7DB6EC00CEC32D /* lollipop.png */; settings = {ASSET_TAGS = (); }; };
+		B5F54EEE1C7DB6EC00CEC32D /* stats.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F54EEA1C7DB6EC00CEC32D /* stats.png */; settings = {ASSET_TAGS = (); }; };
+		B5F54EEF1C7DB6EC00CEC32D /* zen-icons-pen.png in Resources */ = {isa = PBXBuildFile; fileRef = B5F54EEB1C7DB6EC00CEC32D /* zen-icons-pen.png */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +66,13 @@
 		B5EE3AE41C7AED250054F1FE /* YKImageDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKImageDownload.m; sourceTree = "<group>"; };
 		B5EE3AE61C7AED3D0054F1FE /* YKImageDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKImageDownloadOperation.h; sourceTree = "<group>"; };
 		B5EE3AE71C7AED3D0054F1FE /* YKImageDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKImageDownloadOperation.m; sourceTree = "<group>"; };
+		B5F2D4321C7ED78200DAA884 /* UIImageView+YKImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+YKImageCache.h"; sourceTree = "<group>"; };
+		B5F2D4331C7ED78200DAA884 /* UIImageView+YKImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+YKImageCache.m"; sourceTree = "<group>"; };
+		B5F2D4351C7EE00500DAA884 /* 2015sdj_002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2015sdj_002.png; sourceTree = "<group>"; };
+		B5F54EE81C7DB6EC00CEC32D /* lifebuoy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lifebuoy.png; sourceTree = "<group>"; };
+		B5F54EE91C7DB6EC00CEC32D /* lollipop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lollipop.png; sourceTree = "<group>"; };
+		B5F54EEA1C7DB6EC00CEC32D /* stats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stats.png; sourceTree = "<group>"; };
+		B5F54EEB1C7DB6EC00CEC32D /* zen-icons-pen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zen-icons-pen.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +134,11 @@
 				B5EE3AB61C7AEB530054F1FE /* Assets.xcassets */,
 				B5EE3AB81C7AEB530054F1FE /* LaunchScreen.storyboard */,
 				B5EE3ABB1C7AEB530054F1FE /* Info.plist */,
+				B5F54EE81C7DB6EC00CEC32D /* lifebuoy.png */,
+				B5F54EE91C7DB6EC00CEC32D /* lollipop.png */,
+				B5F54EEA1C7DB6EC00CEC32D /* stats.png */,
+				B5F54EEB1C7DB6EC00CEC32D /* zen-icons-pen.png */,
+				B5F2D4351C7EE00500DAA884 /* 2015sdj_002.png */,
 				B5EE3AAA1C7AEB530054F1FE /* Supporting Files */,
 			);
 			path = YKWebImage;
@@ -175,6 +193,8 @@
 		B5EE3ADF1C7AEC3C0054F1FE /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				B5F2D4321C7ED78200DAA884 /* UIImageView+YKImageCache.h */,
+				B5F2D4331C7ED78200DAA884 /* UIImageView+YKImageCache.m */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -283,8 +303,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5F54EEF1C7DB6EC00CEC32D /* zen-icons-pen.png in Resources */,
 				B5EE3ABA1C7AEB530054F1FE /* LaunchScreen.storyboard in Resources */,
+				B5F54EEE1C7DB6EC00CEC32D /* stats.png in Resources */,
 				B5EE3AB71C7AEB530054F1FE /* Assets.xcassets in Resources */,
+				B5F2D4361C7EE00500DAA884 /* 2015sdj_002.png in Resources */,
+				B5F54EEC1C7DB6EC00CEC32D /* lifebuoy.png in Resources */,
+				B5F54EED1C7DB6EC00CEC32D /* lollipop.png in Resources */,
 				B5EE3AB51C7AEB530054F1FE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -315,6 +340,7 @@
 				B5EE3AAF1C7AEB530054F1FE /* AppDelegate.m in Sources */,
 				B5EE3AE81C7AED3D0054F1FE /* YKImageDownloadOperation.m in Sources */,
 				B5EE3AE51C7AED250054F1FE /* YKImageDownload.m in Sources */,
+				B5F2D4341C7ED78200DAA884 /* UIImageView+YKImageCache.m in Sources */,
 				B5EE3AAC1C7AEB530054F1FE /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
